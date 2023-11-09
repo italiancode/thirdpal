@@ -1,0 +1,31 @@
+{
+  "name": "tokenmama-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"tailwindcss -i .\\src\\css\\input.scss -o .\\src\\css\\tailwind.css --watch\" \"twlit --output .\\src\\css\\twlit.js --input .\\src\\css\\tailwind.css \" ",
+    "build": "cross-env VITE_APP_URL=tokenmama-94630.web.app vite build",
+    "preview": "vite preview",
+    "update-build-version": "node ./utils/buildVersion.cjs",
+    "postbuild": "copy _redirects dist && npm run update-build-version",
+    "deploy": "npm run build && firebase deploy --only hosting"
+  },
+  "dependencies": {
+    "@vaadin/router": "^1.7.5",
+    "firebase": "^10.4.0",
+    "firebase-admin": "^11.11.0",
+    "lit": "^2.7.2",
+    "page": "^1.11.6",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "postcss-preset-env": "^9.2.0",
+    "tailwindcss": "^3.3.5",
+    "twlit": "^0.0.1-alpha.37"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "sass": "^1.69.5",
+    "vite": "^4.3.9"
+  }
+}

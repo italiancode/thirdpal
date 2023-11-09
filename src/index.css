@@ -1,0 +1,24 @@
+:root {
+  display: grid;
+  margin: 0;
+  height: 100vh;
+  grid-template:
+    "messages" 1fr
+    "input" auto
+    "keyboard" env(keyboard-inset-height, 0px);
+}
+
+body {
+  margin: 0;
+  background-color: #fff;
+}
+
+a:host {
+  cursor: pointer;
+}
+
+@viewport {
+  width: device-width;
+  height: device-height;
+  viewport-fit: cover;
+}
