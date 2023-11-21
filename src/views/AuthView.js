@@ -4,7 +4,7 @@ import "./auth/RegistrationView";
 
 import "../components/SocialLinks";
 
-import appLogo from "../module/config/app-config";
+import appLogo, { appMainPath } from "../module/config/app-config";
 
 import globalSemanticCSS from "../css/global-semanticCSS";
 
@@ -12,19 +12,22 @@ class AuthView extends LitElement {
   static styles = [
     globalSemanticCSS,
     css`
+      :host {
+        display: block; /* Add padding to the main content */
+        width: 100%;
+        height: fit-content
+      }
       /* Auth Container Styles */
-
       .auth-container {
         display: flex;
         flex-direction: row; /* Flex direction for responsiveness */
         align-items: center;
         justify-content: start;
-        height: inherit;
-        padding: 0 7%;
+        height: 100%;
+        padding: 0 auto;
       }
 
       /* Banner Container Styles */
-
       .banner-container {
         display: grid;
         place-items: center;
@@ -36,7 +39,6 @@ class AuthView extends LitElement {
       }
 
       /* Form Container Styles */
-
       .form-container {
         display: grid;
         place-items: center;
@@ -46,10 +48,9 @@ class AuthView extends LitElement {
       }
 
       /* Form Card Styles */
-
       .form-card {
         width: 100%;
-        max-width: 320px;
+        max-width: 70%;
         padding: 20px;
         background: #fff;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -64,7 +65,6 @@ class AuthView extends LitElement {
       }
 
       /* Switch Container Styles */
-
       .switch-container {
         text-align: center;
         display: flex;
@@ -83,12 +83,7 @@ class AuthView extends LitElement {
       }
 
       .switch-container a {
-        color: #0077cc;
-        text-decoration: none;
-        text-align: center;
         padding: 0.4rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
       }
 
       .switch-container a:hover {
@@ -96,14 +91,12 @@ class AuthView extends LitElement {
       }
 
       /* Banner Container Image Styles */
-
       .banner-container img {
         max-width: 100%;
         height: auto;
       }
 
       /* Logo Slogan Container Styles */
-
       .logo-slogan-container {
         display: flex;
         align-items: center;
@@ -117,14 +110,7 @@ class AuthView extends LitElement {
         height: auto;
       }
 
-      .slogan {
-        font-size: 26px;
-        color: #303030;
-        text-align: center;
-      }
-
       /* Media Query for Small Screens */
-
       @media (max-width: 935px) {
         .auth-container {
           flex-direction: column;
@@ -142,11 +128,26 @@ class AuthView extends LitElement {
         }
       }
 
-      /* Meta Description Container Styles */
+      @media (min-width: 935px) {
+        .auth-container {
+          padding: 0 5%;
+        }
+      }
 
+      /* Meta Description Container Styles */
       .meta-desc-container {
         text-align: center;
         margin-top: auto;
+      }
+
+      /* #app-sub-header {
+        color: #354955;
+      } */
+
+      #meta-description {
+        font-size: 16px;
+        margin-top: 15px;
+        line-height: 1.5;
       }
     `,
   ];
@@ -166,45 +167,45 @@ class AuthView extends LitElement {
 
   render() {
     return html`
-      <div class="auth">
-        <div class="auth-container">
-          <div class="banner-container">
-            <div class="logo-slogan-container">
-              <app-logo src=${appLogo} alt="Token Mama Logo"></app-logo>
+      <div class="auth-container">
+        <div class="banner-container">
+          <div class="logo-slogan-container">
+            <app-logo src=${appLogo} alt="Token Mama Logo"></app-logo>
 
-              <h2 class="">
-                Experience effortless conversions for even the most challenging
-                tokens.
-              </h2>
-              <social-links></social-links>
-              <div class="meta-desc-container">
-                <p>
-                  <a href="/">TokenMama</a> empowers you to effortlessly
-                  exchange and convert hard-to-swap tokens and coins across
-                  various blockchain networks, putting the power of
-                  decentralized finance in your hands.
-                </p>
-              </div>
+            <h2 id="app-sub-header" class="app-sub-header">
+              TokenMama: A Vigilant Eye for Your Blockchain Assets
+            </h2>
+
+            <social-links></social-links>
+
+            <div class="meta-desc-container">
+              <p id="meta-description">
+                <a href=${appMainPath}>TokenMama</a> provides unparalleled
+                <b>vigilance</b> for your <b>blockchain assets</b>, offering a
+                watchful eye and dedicated protection. Safeguard your
+                investments with TokenMama's <b>vigilant monitoring</b> and
+                <b>personalized care</b>.
+              </p>
             </div>
           </div>
-          <div class="form-container">
-            <div class="form-card">
-              <h2>${this.currentView === "login" ? "Log in" : "Register"}</h2>
-              ${this.currentView === "login"
-                ? html`<login-view></login-view>`
-                : html`<registration-view></registration-view>`}
-              <div class="switch-container">
-                <p @click=${this.toggleView}>
-                  ${this.currentView === "login"
-                    ? "Don't have an account? "
-                    : "Already have an account? "}
-                </p>
-                <a @click=${this.toggleView}>
-                  ${this.currentView === "login"
-                    ? "Register here"
-                    : "Log in here"}
-                </a>
-              </div>
+        </div>
+        <div class="form-container">
+          <div class="form-card">
+            <h2>${this.currentView === "login" ? "Log in" : "Register"}</h2>
+            ${this.currentView === "login"
+              ? html`<login-view></login-view>`
+              : html`<registration-view></registration-view>`}
+            <div class="switch-container">
+              <p @click=${this.toggleView}>
+                ${this.currentView === "login"
+                  ? "Don't have an account? "
+                  : "Already have an account? "}
+              </p>
+              <a @click=${this.toggleView}>
+                ${this.currentView === "login"
+                  ? "Register here"
+                  : "Log in here"}
+              </a>
             </div>
           </div>
         </div>

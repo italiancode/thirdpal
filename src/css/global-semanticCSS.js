@@ -1,14 +1,31 @@
 import { css } from "lit";
 
 const globalSemanticCSS = css`
+  @font-face {
+    font-family: "Montserrat";
+    src: url("./fonts/Montserrat/Montserrat-VariableFont_wght.ttf")
+      format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
   /* Base Styles */
+  * {
+    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
+      sans-serif;
+    color: #2c3e50; /* Dark charcoal */
+  }
 
   /* Paragraph Styles */
   p {
-    font-family: "Your Font Here", sans-serif; /* Replace with your preferred font */
+    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
+      sans-serif; /* Replace with your preferred font */
     font-size: 16px; /* Adjust the font size as needed */
     line-height: 1.5; /* Adjust line height as needed */
-    color: #555; /* Choose a suitable text color */
+    color: #2c3e50; /* Dark charcoal */
+    background-color: #fff;
+
+    margin-top: 15px;
   }
 
   /* Link Styles */
@@ -16,8 +33,9 @@ const globalSemanticCSS = css`
     text-decoration: none; /* Remove default underlines */
     color: #0077cc; /* Choose a link color that complements your design */
     transition: color 0.2s; /* Add a smooth color transition on hover */
+    cursor: pointer;
+    text-align: center;
 
-    /* Style links on hover */
     &:hover {
       color: #005599; /* Slightly darker color on hover */
     }
@@ -40,7 +58,7 @@ const globalSemanticCSS = css`
     font-style: italic; /* Italicize blockquotes */
     border-left: 2px solid #0077cc; /* Add a left border for emphasis */
     padding: 10px; /* Add some padding for spacing */
-    color: #555; /* Choose a suitable text color for blockquotes */
+    color: #34495e; /* Slightly lighter */
   }
 
   /* Responsive Header Styles for h1 - h6 */
@@ -52,7 +70,8 @@ const globalSemanticCSS = css`
   h4,
   h5,
   h6 {
-    font-family: "Your Font Here", sans-serif; /* Replace with your preferred font */
+    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
+      sans-serif; /* Replace with your preferred font */
     margin: 0; /* Remove default margins */
     line-height: 1.2; /* Adjust line height as needed */
     margin-top: 1rem;
@@ -105,27 +124,27 @@ const globalSemanticCSS = css`
 
   /* Modern text colors for headers */
   h1 {
-    color: #333; /* Choose a suitable dark color */
+    color: #2c3e50; /* Dark charcoal */
   }
 
   h2 {
-    color: #555; /* Slightly lighter than h1 */
+    color: #34495e; /* Slightly lighter */
   }
 
   h3 {
-    color: #777; /* Even lighter */
+    color: #4a6572; /* Even lighter */
   }
 
   h4 {
-    color: #999; /* Subtle color for h4 */
+    color: #6c7a89; /* Subtle color for h4 */
   }
 
   h5 {
-    color: #bbb; /* Slightly lighter than h4 */
+    color: #8295a7; /* Slightly lighter than h4 */
   }
 
   h6 {
-    color: #ddd; /* Lightest color for h6 */
+    color: #a5b7c2; /* Lightest color for h6 */
   }
 
   /* Form Styles */
@@ -168,12 +187,14 @@ const globalSemanticCSS = css`
     border: 1px solid #ccc;
     transition: all 0.3s ease;
     padding: 0 2%;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   /* Input Focus Styles */
 
   input:focus {
-    border-color: blue;
+    border-color: #359bce;
   }
 
   .form-item label {
@@ -186,6 +207,7 @@ const globalSemanticCSS = css`
     font-weight: bold;
     background: #fff;
     padding: 0 10px;
+    margin-top: -0.3rem;
     color: #999;
     pointer-events: none;
     transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -198,7 +220,7 @@ const globalSemanticCSS = css`
   }
 
   .form-item input:focus + label {
-    color: blue;
+    color: #359bce;
   }
 
   /* Checkbox Styles */
@@ -217,14 +239,14 @@ const globalSemanticCSS = css`
 
   .check-container label {
     cursor: pointer;
-    color: #333;
+    color: #2c3e50; /* Dark charcoal */
     font-size: 14px;
   }
 
   /* Button Styles */
 
   .form-button {
-    background-color: #1a5ee3;
+    background-color: #359bce;
     color: #fff;
     padding: 10px 20px;
     border: none;

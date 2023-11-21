@@ -1,7 +1,10 @@
 // path: ./module/config/app-config.js
-
+// color: #359ece;
+// text-color: #2c3e50; /* Dark charcoal */
 import appLogo from "/tm.webp";
 export default appLogo;
+
+export const appMainColor = "#359bce";
 
 // Determine the protocol based on the environment
 const isProduction = import.meta.env.MODE === "production";

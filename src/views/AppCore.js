@@ -20,18 +20,22 @@ class AppCore extends LitElement {
       header-view {
         grid-row: 1; /* Place the header at the top */
         background-color: #fff;
-        color: #555;
+        color: inherit;
       }
 
       main {
         background-color: #fff;
-        color: #555;
-        padding: 20px; /* Add padding to the main content */
+        color: inherit;
+        padding: 20px;
+        display: flex; /* Add padding to the main content */
+        width: 100%;
+        height: 100%;
+        align-items: center;
       }
 
       footer {
         background-color: #fff;
-        color: #555;
+        color: inherit;
         padding: 20px;
         text-align: center;
       }

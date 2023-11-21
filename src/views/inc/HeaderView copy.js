@@ -149,7 +149,7 @@ class HeaderView extends LitElement {
               </li>
             </ul>
 
-            <div id="menu-modal" class="menu-modal">
+            <div id="menu-modal" class="menu-modal flex">
               <!--  -->
               <div
                 @click=${this.toggleMenu}
@@ -157,14 +157,14 @@ class HeaderView extends LitElement {
               ></div>
               <!--  -->
               <div id="menu-container" class="menu-container">
-                <div class="w-full p-3 flex justify-end bg-blue-500">
+                <div class="w-full p-3 flex justify-end ">
                   <div class="w-1/6 link-container p-1">
                     <a
                       href="javascript:void(0);"
                       @click=${this.toggleMenu}
-                      class="flex items-center justify-center p-1 m-0 h-full bg-white"
+                      class="flex items-center justify-center p-1 m-0 h-fit bg-white"
                     >
-                      <label class="close-button">X</label>
+                      <label class="close-button"> X </label>
                     </a>
                   </div>
                 </div>
@@ -237,6 +237,7 @@ class HeaderView extends LitElement {
       /* Reset and Common Styles */
       :host {
         display: block;
+        font-family: Arial, sans-serif;
       }
 
       /* Header Styles */
@@ -306,8 +307,8 @@ class HeaderView extends LitElement {
         border-radius: 50px;
         background-color: #fff;
         display: flex;
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
         align-items: center;
         justify-content: center;
         text-decoration: none;
@@ -368,7 +369,7 @@ class HeaderView extends LitElement {
         background: rgba(0, 0, 0, 0.5);
         justify-content: center;
         align-items: center;
-        z-index: 999;
+        z-index: 998;
       }
 
       .menu-modal.active {
@@ -376,13 +377,7 @@ class HeaderView extends LitElement {
       }
 
       .close-modal {
-        background-color: transparent;
-      }
-
-      /* Close Button Styles */
-      .close-button {
-        background-color: #fff;
-        cursor: pointer;
+        background-color: #00000000;
       }
 
       /* Menu Container Styles */
@@ -393,8 +388,17 @@ class HeaderView extends LitElement {
         position: absolute;
         right: 0;
         width: 50%;
-        height: 100%;
-        z-index: 1;
+        height: 100vh;
+      }
+
+      /* Close Button Styles */
+      .close-button {
+        color: #354955;
+        font-size: 12px;
+        font-weight: normal;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        cursor: pointer;
       }
 
       /* Menu Item Container Styles */

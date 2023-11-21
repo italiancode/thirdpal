@@ -37,10 +37,10 @@ export class AppElement extends LitElement {
       <!--  -->
       <app-core>
         <slot> </slot>
-      </app-core>
 
-      <!--  -->
-      <session-timeout-modal></session-timeout-modal>
+        <!--  -->
+        <session-timeout-modal></session-timeout-modal>
+      </app-core>
     `;
   }
 
