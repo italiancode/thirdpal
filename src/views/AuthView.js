@@ -7,15 +7,17 @@ import "../components/SocialLinks";
 import appLogo, { appMainPath } from "../module/config/app-config";
 
 import globalSemanticCSS from "../css/global-semanticCSS";
+import { TWStyles } from "../css/twlit";
 
 class AuthView extends LitElement {
   static styles = [
+    TWStyles,
     globalSemanticCSS,
     css`
       :host {
         display: block; /* Add padding to the main content */
         width: 100%;
-        height: fit-content
+        height: fit-content;
       }
       /* Auth Container Styles */
       .auth-container {
@@ -173,18 +175,15 @@ class AuthView extends LitElement {
             <app-logo src=${appLogo} alt="Token Mama Logo"></app-logo>
 
             <h2 id="app-sub-header" class="app-sub-header">
-              TokenMama: A Vigilant Eye for Your Blockchain Assets
+              TokenMama: Unleash the Power of Authentic Airdrops
             </h2>
 
             <social-links></social-links>
 
             <div class="meta-desc-container">
               <p id="meta-description">
-                <a href=${appMainPath}>TokenMama</a> provides unparalleled
-                <b>vigilance</b> for your <b>blockchain assets</b>, offering a
-                watchful eye and dedicated protection. Safeguard your
-                investments with TokenMama's <b>vigilant monitoring</b> and
-                <b>personalized care</b>.
+                Empowering Authentic Crypto Users:
+                <a href=${appMainPath}>TokenMama</a> Ensures Genuine Airdrops.
               </p>
             </div>
           </div>

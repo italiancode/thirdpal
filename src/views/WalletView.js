@@ -3,11 +3,9 @@ import { getFirestoreUserData } from "../utils/firestoreUtils";
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import "../components/AddWallet.js";
-
 import "./inc/overview/Wallets.js";
-import "../components/AirdropsComponent.js";
 
-class DashboardView extends LitElement {
+class WalletView extends LitElement {
   static styles = [TWStyles, globalSemanticCSS, css``];
 
   static properties = {};
@@ -42,10 +40,12 @@ class DashboardView extends LitElement {
   render() {
     return html`
       <div class="grid gap-3">
-        <airdrops-component></airdrops-component>
+        <add-wallet></add-wallet>
+
+        <wallet-overview></wallet-overview>
       </div>
     `;
   }
 }
 
-customElements.define("dashboard-view", DashboardView);
+customElements.define("wallet-view", WalletView);

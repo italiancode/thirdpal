@@ -27,10 +27,10 @@ class AppCore extends LitElement {
         background-color: #fff;
         color: inherit;
         padding: 20px;
-        display: flex; /* Add padding to the main content */
+        display: grid; /* Add padding to the main content */
         width: 100%;
         height: 100%;
-        align-items: center;
+        align-items: start;
       }
 
       footer {

@@ -175,7 +175,7 @@ const globalSemanticCSS = css`
     outline: none;
     width: 100%;
     box-sizing: border-box;
-    padding: 1rem;
+    padding: 0.5rem;
     transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -257,6 +257,41 @@ const globalSemanticCSS = css`
 
   .form-button:hover {
     background-color: #0056b3;
+  }
+
+  .toast-message {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: #fff;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #359ece; /* Background color */
+  }
+
+  .toast-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+
+  .toast-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
+
+  /* Positioning for top/bottom */
+  .toast-top {
+    top: 20px; /* Adjust as needed for top position */
+  }
+
+  .toast-bottom {
+    bottom: 20px; /* Adjust as needed for bottom position */
   }
 `;
 

@@ -11,13 +11,14 @@ import { firestore_db } from "../../../utils/firebase";
 import globalSemanticCSS from "../../css/global-semanticCSS";
 import { TWStyles } from "../../css/twlit";
 
-import logo from "../../../public/logo.webp";
+import logo from "../../../public/tm.webp";
 
 class HeaderView extends LitElement {
   static properties = {
     currentBuildVersion: { type: String },
     authenticated: { type: Boolean },
     topLinkTxet: { type: String },
+    topLinkHref: { type: String },
     isOpen: false,
   };
 
@@ -26,9 +27,25 @@ class HeaderView extends LitElement {
     this.currentBuildVersion = "Loading...";
     this.authenticated = false;
     this.hideDynamicLink = window.innerWidth <= 768;
-    this.topLinkTxet = "Wallets";
-    this.topLinkHref = "/dashboard";
     this.fetchBuildVersion();
+
+    // Bind 'this' to the event listener function
+    this.handlePopState = this.handlePopState.bind(this);
+
+    // Add event listener for 'popstate' when the component is constructed
+    window.addEventListener("popstate", this.handlePopState);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // Remove event listener when the component is removed from the DOM
+    window.removeEventListener("popstate", this.handlePopState);
+  }
+
+  // Function to handle 'popstate' event
+  handlePopState() {
+    // Call 'updated' method to update the header based on the current URL
+    this.updated(new Map());
   }
 
   async firstUpdated() {
@@ -77,6 +94,11 @@ class HeaderView extends LitElement {
     }
   }
 
+  toggleMenu() {
+    const menuContainer = this.shadowRoot.getElementById("menu-modal");
+    menuContainer.classList.toggle("active");
+  }
+
   async logOut() {
     await logout();
     window.location.href = appMainPath;
@@ -86,9 +108,44 @@ class HeaderView extends LitElement {
     window.location.href = appLoginRoute;
   }
 
-  toggleMenu() {
-    const menuContainer = this.shadowRoot.getElementById("menu-modal");
-    menuContainer.classList.toggle("active");
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    const currentPath = window.location.pathname;
+    const pathMapping = {
+      "/airdrops": { text: "Airdrops", href: "/airdrops" },
+      "/blogs": { text: "Blogs", href: "/blogs" },
+      "/docs": { text: "Docs", href: "/docs" },
+      "/reports": { text: "Reports", href: "/reports" },
+      "/dashboard": { text: "Dashboard", href: "/dashboard" },
+      "/wallets": { text: "Wallets", href: "/wallets" },
+    };
+
+    if (currentPath.startsWith("/airdrop/")) {
+      const parts = currentPath.split("/");
+      const id = parts[2];
+
+      this.topLinkTxet = "Airdrop";
+      this.topLinkHref = `/airdrop/${id}`;
+    } else if (currentPath in pathMapping) {
+      this.topLinkTxet = pathMapping[currentPath].text;
+      this.topLinkHref = pathMapping[currentPath].href;
+    } else {
+      this.topLinkTxet = "Welcome";
+      this.topLinkHref = "/";
+    }
+    // Check if an update is needed and if one is already scheduled
+    if (!this._updateScheduled) {
+      // Set a flag to indicate that an update has been scheduled
+      this._updateScheduled = true;
+
+      // Request an update asynchronously using requestAnimationFrame
+      requestAnimationFrame(() => {
+        // Reset the flag before triggering the update
+        this._updateScheduled = false;
+        this.requestUpdate();
+      });
+    }
   }
 
   render() {
@@ -96,56 +153,124 @@ class HeaderView extends LitElement {
       <header>
         <div class="header">
           <div class="flex items-center gap-3">
-            <div class="">
-              <a href=${appMainPath} class="">
-                <img src=${logo} class="logo" />
-              </a>
-            </div>
+            <a
+              href="${appMainPath}"
+              class="rounded-full overflow-hidden border-4"
+            >
+              <img src="${logo}" class="w-9" />
+            </a>
 
-            <div class="link-container">
-              <a href="/faqs" class="nav-icon-link nav-item flex items-center">
-                <label class="nav-icon-text hidden">FAQs</label>
-                <label class="nav-icon">?</label>
-              </a>
-            </div>
+            <a href="/faqs" class="nav-icon-link nav-item flex items-center">
+              <span
+                class="nav-icon bg-gray-300 rounded-full p-2 text-white font-bold text-lg"
+                >?</span
+              >
+            </a>
           </div>
 
           <nav class="app-links font-bold text-md">
             <ul class="link-container flex gap-3 justify-between">
-              <li id="dynamic-links" class="flex gap-3">
-                ${!this.hideDynamicLink
-                  ? html`
-                      <div class="link-container">
-                        <a href="/home" class="nav-item">Home</a>
-                      </div>
-                      <div class="link-container">
-                        <a href="/reports" class="nav-item">Reports</a>
-                      </div>
-                    `
-                  : ""}
-              </li>
-              <li id="top-links" class="flex gap-3">
-                <div class="link-container">
-                  <a href=${this.topLinkHref} class="nav-item"
-                    >${this.topLinkTxet}</a
-                  >
-                </div>
-              </li>
+              ${!this.hideDynamicLink
+                ? html`
+                    ${this.topLinkHref !== "/airdrops"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/airdrops"
+                              class="nav-item ${"/airdrops" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Airdrops</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                    ${this.topLinkHref !== "/blogs"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/blogs"
+                              class="nav-item ${"/blogs" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Blogs</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                    ${this.topLinkHref !== "/docs"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/docs"
+                              class="nav-item ${"/docs" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Docs</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                    ${this.topLinkHref !== "/reports"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/reports"
+                              class="nav-item ${"/reports" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Reports</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                    ${this.topLinkHref !== "/dashboard"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/dashboard"
+                              class="nav-item ${"/dashboard" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Dashboard</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                    ${this.topLinkHref !== "/wallets"
+                      ? html`
+                          <li id="dynamic-links" class="flex">
+                            <a
+                              href="/wallets"
+                              class="nav-item ${"/wallets" ===
+                              window.location.pathname
+                                ? "active"
+                                : ""}"
+                              >Wallets</a
+                            >
+                          </li>
+                        `
+                      : ""}
+                  `
+                : ""}
 
-              <li>
-                <div class="link-container">
-                  <a
-                    href="javascript:void(0);"
-                    @click=${this.toggleMenu}
-                    class="nav-icon-link nav-item flex items-center"
-                  >
-                    <svg height="24" width="24" fill="currentcolor">
-                      <path
-                        d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                      ></path>
-                    </svg>
-                  </a>
-                </div>
+              <li id="dynamic-links" class="flex">
+                <a
+                  href="javascript:void(0);"
+                  @click=${this.toggleMenu}
+                  class="nav-icon-link nav-item flex items-center"
+                >
+                  <svg height="24" width="24" fill="currentcolor">
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    ></path>
+                  </svg>
+                </a>
               </li>
             </ul>
 
@@ -156,38 +281,50 @@ class HeaderView extends LitElement {
                 class="w-full h-full close-modal"
               ></div>
               <!--  -->
-              <div id="menu-container" class="menu-container">
-                <div class="w-full p-3 flex justify-end bg-blue-500">
-                  <div class="w-1/6 link-container p-1">
-                    <a
-                      href="javascript:void(0);"
-                      @click=${this.toggleMenu}
-                      class="flex items-center justify-center p-1 m-0 h-full bg-white"
-                    >
-                      <label class="close-button">X</label>
-                    </a>
-                  </div>
-                </div>
-
+              <div
+                id="menu-container"
+                @click=${this.toggleMenu}
+                class="menu-container"
+              >
                 <div class="grid">
                   <div class="menu-item-container grid gap-3">
-                    <div class="link-container nav-item p-1">
-                      <a href="/home" class="">Home</a>
-                    </div>
-                    <div class="link-container nav-item p-1">
-                      <a href="/reports" class="">Reports</a>
-                    </div>
-                    <div class="link-container nav-item p-1">
-                      <a href="/faqs" class=""> FAQs </a>
-                    </div>
+                    <a
+                      href="/airdrops"
+                      class="link-container nav-item p-1 text-start"
+                      >Airdrops</a
+                    >
+
+                    <a
+                      href="/blogs"
+                      class="link-container nav-item p-1 text-start"
+                      >Blogs</a
+                    >
+
+                    <a
+                      href="/docs"
+                      class="link-container nav-item p-1 text-start"
+                      >Docs</a
+                    >
+
+                    <a
+                      href="/reports"
+                      class="link-container nav-item p-1 text-start"
+                      >Reports</a
+                    >
                   </div>
 
                   <div class="menu-item-container grid gap-3">
-                    <div class="link-container nav-item">
-                      <a href=${this.topLinkHref} class=""
-                        >${this.topLinkTxet}</a
-                      >
-                    </div>
+                    <a
+                      href="/dashboard"
+                      class="link-container nav-item p-1 text-start"
+                      >Dashboard</a
+                    >
+
+                    <a
+                      href="/wallets"
+                      class="link-container nav-item p-1 text-start"
+                      >Wallets</a
+                    >
                   </div>
 
                   <div class="menu-item-container grid gap-3">
@@ -224,7 +361,17 @@ class HeaderView extends LitElement {
         </div>
 
         <div id="app-core" class="app-core">
-          Build Version: ${this.currentBuildVersion}
+          <div>Build Version: ${this.currentBuildVersion}</div>
+
+          <div id="top-links active-link" class="flex">
+            <a
+              href=${this.topLinkHref}
+              class="nav-item ${this.topLinkHref === window.location.pathname
+                ? "active"
+                : ""}"
+              >${this.topLinkTxet}</a
+            >
+          </div>
         </div>
       </header>
     `;
@@ -245,7 +392,7 @@ class HeaderView extends LitElement {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1rem 0 1rem 0;
+        padding: 1rem 0.5rem 1rem 0.5rem;
         padding-bottom: 0;
       }
 
@@ -406,7 +553,7 @@ class HeaderView extends LitElement {
 
       /* Navigation Item Styles */
       .nav-item {
-        padding: 9px;
+        padding: 7.5px;
         text-decoration: none;
         cursor: pointer;
         display: block;
@@ -417,6 +564,12 @@ class HeaderView extends LitElement {
       .nav-item:hover,
       .toggle-menu-icon:hover,
       .nav-icon-link:hover .nav-icon {
+        color: #2980b9;
+        background-color: #b3b3b32a;
+        border-radius: 5px;
+      }
+
+      .nav-item.active {
         color: #2980b9;
         background-color: #b3b3b32a;
         border-radius: 5px;

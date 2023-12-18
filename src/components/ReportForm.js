@@ -58,35 +58,37 @@ class ReportForm extends LitElement {
     this.userData = await getFirestoreUserData();
     if (this.userData) {
       this.userId = this.userData.userId;
+    } else {
+      this.userId = false;
     }
   }
 
   async submitReport() {
-    if (this.userData) {
-      const issueTitle = this.shadowRoot.getElementById("issue-title").value;
-      const issue = this.shadowRoot.getElementById("issue").value;
-      const userName = this.shadowRoot.getElementById("gorvenment-name").value;
-      const userEmail = this.shadowRoot.getElementById("user-email").value;
-      const walletAddress =
-        this.shadowRoot.getElementById("wallet-address").value;
+    const issueTitle = this.shadowRoot.getElementById("issue-title").value;
+    const issue = this.shadowRoot.getElementById("issue").value;
+    const userName = this.shadowRoot.getElementById("gorvenment-name").value;
+    const userEmail = this.shadowRoot.getElementById("user-email").value;
+    const walletAddress =
+      this.shadowRoot.getElementById("wallet-address").value;
 
-      // Now you can send both the issue title and description to the reportIssue function
-      await reportIssue(
-        issueTitle,
-        issue,
-        this.userId,
-        userName,
-        userEmail,
-        walletAddress
-      );
+    const userId = this.userId || null; // Use the stored userId if available, otherwise set as null
 
-      // Clear the form by resetting the input field values
-      this.shadowRoot.getElementById("issue-title").value = "";
-      this.shadowRoot.getElementById("issue").value = "";
-      this.shadowRoot.getElementById("gorvenment-name").value = "";
-      this.shadowRoot.getElementById("user-email").value = "";
-      this.shadowRoot.getElementById("wallet-address").value = "";
-    }
+    // Send the report with the respective userId
+    await reportIssue(
+      issueTitle,
+      issue,
+      userId,
+      userName,
+      userEmail,
+      walletAddress
+    );
+
+    // Clear the form by resetting the input field values
+    this.shadowRoot.getElementById("issue-title").value = "";
+    this.shadowRoot.getElementById("issue").value = "";
+    this.shadowRoot.getElementById("gorvenment-name").value = "";
+    this.shadowRoot.getElementById("user-email").value = "";
+    this.shadowRoot.getElementById("wallet-address").value = "";
   }
 
   render() {

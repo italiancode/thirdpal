@@ -1,9 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{html,js}", "./*.html"],
+  content: [
+    "./src/**/*.{html,js}",
+    "./*.html",
+    "./node_modules/tw-elements/dist/js/**/*.js",
+  ],
 
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tw-elements/dist/plugin.cjs")],
+  darkMode: "class",
 };
