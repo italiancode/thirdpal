@@ -44,7 +44,7 @@ class AirdropsView extends LitElement {
       <div>
         <h2 class="text-2xl font-bold mb-4">All Airdrops</h2>
         <div
-          class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          class="grid gap-5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         >
           ${this.airdrops.map(
             (airdrop, index) => html`
@@ -56,21 +56,21 @@ class AirdropsView extends LitElement {
                     </div>
                     <div class="airdrop-details grid gap-2 text-sm">
                       <div>
-                        <span class="network-info font-semibold"
-                          ><label class="">Network: </label
+                        <span class="network-info"
+                          ><label class="font-semibold">Network: </label
                           >${airdrop.network}</span
                         >
                         |
-                        <span class="">
-                          <label class="reward-info font-semibold">Task:</label>
+                        <span class="reward-info">
+                          <label class="font-semibold">Task:</label>
                           ${airdrop.type}
                         </span>
                       </div>
 
                       <div>
-                        <span class="reward-info font-semibold">
-                          <label>Reward:</label> ${airdrop.totalRewards}
-                          ${airdrop.rewardToken}
+                        <span class="reward-info">
+                          <label class="font-semibold">Reward:</label>
+                          ${airdrop.totalRewards} ${airdrop.rewardToken}
                         </span>
                       </div>
 

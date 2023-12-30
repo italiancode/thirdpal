@@ -6,6 +6,7 @@ import wallets from "../pages/wallets.js";
 import Airdrops from "../pages/airdrops.js";
 
 import AirdropDetails from "../pages/airdrop-details.js";
+import airdropSubmission from "../pages/airdrop-submission.js";
 
 // route page config
 export const page_config = {
@@ -56,5 +57,14 @@ export const page_config = {
     name: "airdrop",
     component: AirdropDetails,
     meta: { title: "", description: "" },
+  },
+
+  // PAGES ONLY
+  airdropSubmission: {
+    path: "/adsub",
+    name: "airdrop submission",
+    component: airdropSubmission,
+    meta: { title: "", description: "" },
+    displayInAppElement: false, // Specify whether to display in appElement
   },
 };

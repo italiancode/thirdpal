@@ -42,13 +42,20 @@ class LoginView extends LitElement {
         <!-- Login form fields -->
         <div class="form">
           <div class="form-item">
-            <input type="email" id="login-email" placeholder="" required />
+            <input
+              type="email"
+              aria-label="email"
+              id="login-email"
+              placeholder=""
+              required
+            />
             <label for="email">Email</label>
           </div>
 
           <div class="form-item">
             <input
               type="password"
+              aria-label="password"
               id="login-password"
               placeholder=""
               required

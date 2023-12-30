@@ -9,23 +9,23 @@ export const airdropData = [
       contactEmail: "organizer1@example.com",
       projectImage: "",
     },
-    type: "Social Media",
     network: "ETH",
+    type: "Social Media",
+    taskName: "Follow on Twitter",
+    taskDescription: "Follow our Twitter account.",
+    taskType: "Social Media",
     task: {
       id: 1,
-      taskName: "Follow on Twitter",
-      description: "Follow our Twitter account.",
-      taskType: "Social Media",
       taskData: {
         platform: "Twitter",
         username: "sample_twitter",
         link: "https://twitter.com/sample_twitter",
       },
-      reward: "50 tokens",
-      completionCriteria:
-        "Follow the Twitter account and stay followed until the end of the airdrop.",
-      completed: false, // Status of completion for the user
     },
+    reward: "50 tokens",
+    completionCriteria:
+      "Follow the Twitter account and stay followed until the end of the airdrop.",
+    completed: false, // Status of completion for the user
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",
@@ -33,6 +33,12 @@ export const airdropData = [
     participants: [
       {
         userId: 123,
+        completedTasks: [1], // IDs of completed tasks by the user
+        claimed: false, // Whether the user has claimed the reward
+      },
+
+      {
+        userId: 321,
         completedTasks: [1], // IDs of completed tasks by the user
         claimed: false, // Whether the user has claimed the reward
       },
@@ -52,21 +58,21 @@ export const airdropData = [
     },
     type: "Social Media",
     network: "BSC",
+    taskName: "Follow on Twitter",
+    taskDescription: "Follow our Twitter account.",
+    taskType: "Social Media",
     task: {
       id: 1,
-      taskName: "Follow on Twitter",
-      description: "Follow our Twitter account.",
-      taskType: "Social Media",
       taskData: {
         platform: "Twitter",
         username: "sample_twitter",
         link: "https://twitter.com/sample_twitter",
       },
-      reward: "50 tokens",
-      completionCriteria:
-        "Follow the Twitter account and stay followed until the end of the airdrop.",
-      completed: false, // Status of completion for the user
     },
+    reward: "50 tokens",
+    completionCriteria:
+      "Follow the Twitter account and stay followed until the end of the airdrop.",
+    completed: false, // Status of completion for the user
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",
@@ -93,24 +99,24 @@ export const airdropData = [
     },
     type: "Quiz",
     network: "ARB",
+    taskName: "Educational Quiz",
+    taskDescription:
+      "Complete an educational quiz related to blockchain or the organizer's project.",
+    taskType: "Quiz",
     task: {
-      id: 4,
-      taskName: "Educational Quiz",
-      description:
-        "Complete an educational quiz related to blockchain or the organizer's project.",
-      taskType: "Quiz",
+      id: 1,
       taskData: {
         quizLink: "[Link to the quiz]",
         score: "[Score achieved in the quiz]",
       },
-      reward: 50,
-      completionCriteria:
-        "Achieve a passing score in the quiz within the given attempts.",
-      example:
-        "Complete the blockchain fundamentals quiz with a minimum score of 80% to earn 50 tokens.",
-
-      completed: false,
     },
+    reward: 50,
+    completionCriteria:
+      "Achieve a passing score in the quiz within the given attempts.",
+    example:
+      "Complete the blockchain fundamentals quiz with a minimum score of 80% to earn 50 tokens.",
+
+    completed: false,
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",
@@ -137,25 +143,25 @@ export const airdropData = [
     },
     type: "Token Swap",
     network: "ARB",
+    taskName: "Token Swap",
+    taskDescription:
+      "Swap a specific amount of tokens for the organizer's token.",
+    taskType: "Token Swap",
     task: {
-      id: 4,
-      taskName: "Token Swap",
-      description:
-        "Swap a specific amount of tokens for the organizer's token.",
-      taskType: "Token Swap",
+      id: 1,
       taskData: {
         platform: "[Exchange Name/Platform]",
         amount: "[Amount to Swap]",
         transactionID: "[Transaction ID after successful swap]",
       },
-      reward: 100,
-      completionCriteria:
-        "Successful token swap completed within the specified deadline.",
-      example:
-        "Swap 0.1 ETH for XYZ tokens on Uniswap and submit the transaction ID.",
-
-      completed: false,
     },
+    reward: 100,
+    completionCriteria:
+      "Successful token swap completed within the specified deadline.",
+    example:
+      "Swap 0.1 ETH for XYZ tokens on Uniswap and submit the transaction ID.",
+
+    completed: false,
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",
@@ -182,24 +188,24 @@ export const airdropData = [
     },
     type: "Referral",
     network: "SOL",
+    taskName: "Referral Program",
+    taskDescription:
+      "Invite friends to join the Airdrop using your referral link or code.",
+    taskType: "Referral",
     task: {
-      id: 5,
-      taskName: "Referral Program",
-      description:
-        "Invite friends to join the Airdrop using your referral link or code.",
-      taskType: "Referral",
+      id: 1,
       taskData: {
         referralLinkCode: "[Unique referral link or code]",
         invitedUsers: "[List of invited users]",
       },
-      reward: 20,
-      completionCriteria:
-        "Invited users successfully join the Airdrop and complete at least one task.",
-      example:
-        "Invite friends to join using your referral link, and for each successful referral, earn 20 tokens.",
-
-      completed: false,
     },
+    reward: 20,
+    completionCriteria:
+      "Invited users successfully join the Airdrop and complete at least one task.",
+    example:
+      "Invite friends to join using your referral link, and for each successful referral, earn 20 tokens.",
+
+    completed: false,
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",
@@ -226,24 +232,24 @@ export const airdropData = [
     },
     type: "Content Creation",
     network: "ETH",
+    taskName: "Create Content",
+    taskDescription:
+      "Create original content (article, video, artwork, etc.) about the organizer's project.",
+    taskType: "Content Creation",
     task: {
-      id: 6,
-      taskName: "Create Content",
-      description:
-        "Create original content (article, video, artwork, etc.) about the organizer's project.",
-      taskType: "Content Creation",
+      id: 1,
       taskData: {
         contentLink: "[Link to the created content]",
         contentType: "[Type of content created]",
       },
-      reward: 200,
-      completionCriteria:
-        "Submitted content should meet the organizer's quality standards and be shared on social media or a specific platform.",
-      example:
-        "Create an informative article/video about the project and share it on Twitter with a specific hashtag.",
-
-      completed: false,
     },
+    reward: 200,
+    completionCriteria:
+      "Submitted content should meet the organizer's quality standards and be shared on social media or a specific platform.",
+    example:
+      "Create an informative article/video about the project and share it on Twitter with a specific hashtag.",
+
+    completed: false,
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     rewardToken: "USDT",

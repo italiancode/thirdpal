@@ -16,7 +16,7 @@ export const appAPI = `${protocol}${window.location.hostname}:3000`;
 export const database = "firebase";
 export const singleContentBG = "#fff";
 
-export const appMainPath = "/home";
+export const appMainPath = "/";
 
 export const appLoginRoute = "/";
 export const routePathAfterRegitration = "/";

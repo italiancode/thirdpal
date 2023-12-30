@@ -3,7 +3,7 @@ import { getFirestoreUserData } from "../utils/firestoreUtils";
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import "../components/AddWallet.js";
-import "./inc/overview/Wallets.js";
+import "../components/Wallets.js";
 
 class WalletView extends LitElement {
   static styles = [TWStyles, globalSemanticCSS, css``];

@@ -6,6 +6,8 @@ import {
 } from "../utils/firestoreUtils";
 import globalSemanticCSS from "../css/global-semanticCSS";
 
+import pasteIcon from "../../public/icons/paste.png";
+
 // Initialization for ES Users
 
 class AddWallet extends LitElement {
@@ -84,7 +86,7 @@ class AddWallet extends LitElement {
     this.toastMessage = "";
     this.walletInput = "";
     this.selectedNetwork = ""; // Initialize selected network
-    this.networks = ["ETH", "BSC", "ARB", "SOL"]; // Define available networks
+    this.networks = ["ETH", "BSC", "ARB"]; // Define available networks
 
     this.userEmail = null;
     this.userId = null;
@@ -190,6 +192,23 @@ class AddWallet extends LitElement {
     return false;
   }
 
+  async pasteWalletAddress() {
+    try {
+      const clipboardData = await navigator.clipboard.readText();
+      const walletInput = this.shadowRoot.getElementById("walletAddress");
+
+      if (walletInput) {
+        walletInput.value = clipboardData;
+        walletInput.dispatchEvent(
+          new Event("input", { bubbles: true, composed: true })
+        );
+      }
+    } catch (error) {
+      console.error("Error pasting wallet address:", error);
+      // Handle errors or display a message to the user if clipboard access fails
+    }
+  }
+
   handleToastMessage(message, type) {
     this.toastMessage =
       type === "error" ? `error:${message}` : `success:${message}`;
@@ -205,36 +224,63 @@ class AddWallet extends LitElement {
           <h3>Add Wallet Address:</h3>
           <!-- <label for="walletAddress">Add Wallet Address:</label> -->
           <div class="add-wallet">
-            <div class="select-network">
-              <select
-                id="networkSelection"
-                class="h-8 text-sm bg-white border border-gray-300 rounded-md outline-none"
-                @change=${(e) => (this.selectedNetwork = e.target.value)}
+            <div class="grid gap-1">
+              <label for="id" class="block text-sm font-medium text-gray-500"
+                >Blockchain network</label
               >
-                <option value="" selected disabled hidden>
-                  Select Network
-                </option>
-                ${this.networks.map(
-                  (network) =>
-                    html` <option value=${network}>${network}</option> `
-                )}
-              </select>
+              <div class="select-network">
+                <select
+                  id="networkSelection"
+                  class="h-8 text-sm bg-white border border-gray-300 rounded-md outline-none"
+                  @change=${(e) => (this.selectedNetwork = e.target.value)}
+                >
+                  <option value="" selected disabled hidden>
+                    Select Network
+                  </option>
+                  ${this.networks.map(
+                    (network) =>
+                      html` <option value=${network}>${network}</option> `
+                  )}
+                </select>
+              </div>
             </div>
-            <div class="relative flex h-10 w-full min-w-[200px] max-w-[24rem]">
-              <input
-                id="walletAddress"
-                type="text"
-                class="block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
-                placeholder="Enter Wallet Address"
-                .value=${this.walletInput}
-                @input=${(e) => (this.walletInput = e.target.value)}
-                required
-              />
+            <div class="grid gap-1">
+              <label for="id" class="block text-sm font-medium text-gray-500"
+                >Wallet address</label
+              >
+              <div
+                class="relative flex h-10 w-full min-w-[200px] max-w-[24rem]"
+              >
+                <input
+                  id="walletAddress"
+                  type="text"
+                  class="block w-full rounded-md border-0 py-1.5 pr-11 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
+                  placeholder="Enter Wallet Address"
+                  .value=${this.walletInput}
+                  @input=${(e) => (this.walletInput = e.target.value)}
+                  required
+                />
 
+                <button
+                  class="absolute right-1 top-1 z-10 select-none rounded py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white transition-all"
+                  type="button"
+                  @click=${this.pasteWalletAddress}
+                >
+                  <img
+                    src=${pasteIcon}
+                    alt="paste-icon"
+                    height="16"
+                    width="16"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              class="flex w-full min-w-[200px] max-w-[24rem] justify-end mt-5"
+            >
               <button
-                class="absolute right-1 top-1 z-10 select-none rounded bg-green-500 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none peer-placeholder-shown:pointer-events-none peer-placeholder-shown:bg-blue-gray-500 peer-placeholder-shown:opacity-50 peer-placeholder-shown:shadow-none"
+                class="rounded bg-green-500 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
                 type="button"
-                data-ripple-light="true"
                 @click=${this.updateWalletAddress}
               >
                 Add Wallet

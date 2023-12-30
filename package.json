@@ -5,30 +5,35 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"tailwindcss -i .\\src\\css\\input.scss -o .\\src\\css\\tailwind.css --watch\" \"twlit --output .\\src\\css\\twlit.js --input .\\src\\css\\tailwind.css \" ",
+    "clear-cache": "vite build --clearCache",
     "build": "cross-env VITE_APP_URL=tokenmama-94630.web.app vite build",
     "preview": "vite preview",
     "update-build-version": "node ./utils/buildVersion.cjs",
     "postbuild": "copy _redirects dist && npm run update-build-version",
+    "lighthouse": "concurrently \"vite preview\" \"lighthouse http://localhost:4173 --budget-path=./budget.json --view\" ",
+    "light-build": "node utils/clean-lighthouse-report.js && cross-env VITE_APP_URL=http://localhost:4173 vite build && concurrently \"npm run lighthouse\" ",
     "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
-    "@vaadin/router": "^1.7.5",
+    "@google-cloud/firestore": "^7.1.0",
+    "@wagmi/core": "^1.4.12",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/html": "^2.7.1",
     "firebase": "^10.4.0",
     "firebase-admin": "^11.11.0",
     "lit": "^2.7.2",
     "page": "^1.11.6",
-    "postcss": "^8.4.31",
-    "postcss-cli": "^10.1.0",
-    "postcss-preset-env": "^9.2.0",
     "tailwindcss": "^3.3.5",
     "tw-elements": "^1.1.0",
     "twlit": "^0.0.1-alpha.37"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.1",
     "concurrently": "^8.2.2",
+    "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.69.5",
-    "vite": "^4.3.9"
+    "vite": "^5.0.10"
   }
 }

@@ -20,6 +20,7 @@ export async function storeUserDataInFirestore(user) {
       userId: user.uid,
       walletAddress: "", // Add walletAddress logic here if needed
       passKey: "",
+      isOrganizer: false,
     };
 
     await setDoc(doc(firestore_db, "users", user.uid), userData);
@@ -50,27 +51,6 @@ export async function updateUserDataInFirestore(
     throw error; // You can handle or log the error as needed.
   }
 }
-
-// // Update the user's targetData in Firestore
-// export async function updateUserDataInFirestore(
-//   userDocId,
-//   targetData,
-//   dataInput
-// ) {
-//   const userRef = doc(firestore_db, "users", userDocId);
-
-//   // Create an object to update the specific targetData field
-//   const dataToUpdate = {};
-//   dataToUpdate[targetData] = dataInput;
-
-//   try {
-//     await updateDoc(userRef, dataToUpdate);
-//     console.log("User data updated successfully.");
-//   } catch (error) {
-//     console.error("Error updating user data:", error);
-//     throw error; // You can handle or log the error as needed.
-//   }
-// }
 
 export async function getFirestoreUserData() {
   try {

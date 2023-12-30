@@ -4,8 +4,9 @@ import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import "../components/AddWallet.js";
 
-import "./inc/overview/Wallets.js";
+import "../components/Wallets.js";
 import "../components/AirdropsComponent.js";
+import "../components/AirdropSubmission.js";
 
 class DashboardView extends LitElement {
   static styles = [TWStyles, globalSemanticCSS, css``];

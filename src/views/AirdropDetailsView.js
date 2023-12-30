@@ -56,10 +56,10 @@ class AirdropDetailsView extends LitElement {
         <p>Description: ${airdrop.description}</p>
         <h2>Task:</h2>
         <div class="task">
-          <strong>${task.taskName}</strong>
-          <p>${task.description}</p>
-          <p class="task-type">Type: ${task.taskType}</p>
-          <p>Reward: ${task.reward}</p>
+          <strong>${airdrop.taskName}</strong>
+          <p>${airdrop.taskDescription}</p>
+          <p class="task-type">Type: ${airdrop.taskType}</p>
+          <p>Reward: ${airdrop.reward}</p>
           <!-- Include other task details as needed -->
         </div>
       </div>

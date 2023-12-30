@@ -68,7 +68,13 @@ class RegistrationView extends LitElement {
             </div> -->
 
             <div class="form-item">
-              <input type="email" id="register-email" placeholder="" required />
+              <input
+                type="email"
+                aria-label="email"
+                id="register-email"
+                placeholder=""
+                required
+              />
               <label for="email">Email</label>
             </div>
 
@@ -87,6 +93,7 @@ class RegistrationView extends LitElement {
             <div class="form-item">
               <input
                 type="password"
+                aria-label="password"
                 id="register-password"
                 placeholder=""
                 required

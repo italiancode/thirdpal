@@ -19,7 +19,6 @@ class SocialLinks extends LitElement {
         height: 35px;
         gap: 10px;
         margin-left: auto;
-        justify-content: center;
         align-items: center;
       }
 

@@ -14,17 +14,13 @@ const globalSemanticCSS = css`
     font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
       sans-serif;
     color: #2c3e50; /* Dark charcoal */
+    letter-spacing: 0.03rem;
+    line-height: 1.5;
   }
 
   /* Paragraph Styles */
   p {
-    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
-      sans-serif; /* Replace with your preferred font */
-    font-size: 16px; /* Adjust the font size as needed */
-    line-height: 1.5; /* Adjust line height as needed */
-    color: #2c3e50; /* Dark charcoal */
-    background-color: #fff;
-
+    color: #2c3e50;
     margin-top: 15px;
   }
 
@@ -259,6 +255,31 @@ const globalSemanticCSS = css`
     background-color: #0056b3;
   }
 
+  /* Navigation Item Styles */
+  .nav-item {
+    padding: 7.5px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    display: block;
+    opacity: 1;
+    transition: color 0.3s, background-color 0.3s;
+  }
+
+  .nav-item:hover,
+  .toggle-menu-icon:hover,
+  .nav-icon-link:hover .nav-icon {
+    color: #2980b9;
+    background-color: #b3b3b32a;
+    border-radius: 5px;
+  }
+
+  .nav-item.active {
+    color: #2980b9;
+    background-color: #b3b3b32a;
+    border-radius: 5px;
+  }
+
   .toast-message {
     position: fixed;
     left: 50%;
@@ -271,18 +292,27 @@ const globalSemanticCSS = css`
     justify-content: center;
     align-items: center;
     background-color: #359ece; /* Background color */
+    top: 50%; /* Position at vertical center */
+    bottom: unset; /* Remove bottom positioning */
+    transform: translate(-50%, -50%); /* Center horizontally and vertically */
+    width: 300px; /* Set the width as needed */
+    height: 100px; /* Set the height as needed */
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transition: opacity 0.3s ease-in-out;
   }
 
   .toast-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
+    background-color: #0000003b;
+    border: 1px solid #c3e6cb;
+    color: #fff;
   }
 
   .toast-error {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
+    background-color: #0000003b;
+    border: 1px solid #721c24;
+    color: #fff;
   }
 
   /* Positioning for top/bottom */

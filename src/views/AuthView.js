@@ -17,7 +17,8 @@ class AuthView extends LitElement {
       :host {
         display: block; /* Add padding to the main content */
         width: 100%;
-        height: fit-content;
+        height: 100%;
+        align-items: center;
       }
       /* Auth Container Styles */
       .auth-container {
@@ -34,6 +35,7 @@ class AuthView extends LitElement {
         display: grid;
         place-items: center;
         text-align: center;
+
         width: 100%;
         max-width: 50%;
         height: 100%;
@@ -52,7 +54,7 @@ class AuthView extends LitElement {
       /* Form Card Styles */
       .form-card {
         width: 100%;
-        max-width: 70%;
+        max-width: 90%;
         padding: 20px;
         background: #fff;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -69,7 +71,7 @@ class AuthView extends LitElement {
       /* Switch Container Styles */
       .switch-container {
         text-align: center;
-        display: flex;
+        display: block;
         justify-content: start;
         gap: auto;
         margin: auto;
@@ -169,22 +171,29 @@ class AuthView extends LitElement {
 
   render() {
     return html`
-      <div class="auth-container">
+      <div class="auth-container gap-5">
         <div class="banner-container">
           <div class="logo-slogan-container">
-            <app-logo src=${appLogo} alt="Token Mama Logo"></app-logo>
+            <responsive-image-frame
+              mainSrc="${appLogo}"
+              alt="Token Mama icon logo"
+              fallbackLabel="this is our website logo"
+              type="optimized"
+              class=" w-52 h-52"
+            >
+            </responsive-image-frame>
 
-            <h2 id="app-sub-header" class="app-sub-header">
-              TokenMama: Unleash the Power of Authentic Airdrops
-            </h2>
-
-            <social-links></social-links>
-
-            <div class="meta-desc-container">
-              <p id="meta-description">
-                Empowering Authentic Crypto Users:
-                <a href=${appMainPath}>TokenMama</a> Ensures Genuine Airdrops.
-              </p>
+            <div class="flex flex-col justify-start text-start">
+              <h2 id="app-sub-header" class="app-sub-header text-start">
+                TokenMama: Unleash the Power of Authentic Airdrops
+              </h2>
+              <social-links></social-links>
+              <div class="meta-desc-container text-start">
+                <p id="meta-description" class="text-start">
+                  Empowering Authentic Crypto Users:
+                  <a href=${appMainPath}>TokenMama</a> Ensures Genuine Airdrops.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -200,7 +209,7 @@ class AuthView extends LitElement {
                   ? "Don't have an account? "
                   : "Already have an account? "}
               </p>
-              <a @click=${this.toggleView}>
+              <a @click=${this.toggleView} class="nav-item">
                 ${this.currentView === "login"
                   ? "Register here"
                   : "Log in here"}

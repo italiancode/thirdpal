@@ -2,28 +2,27 @@ import { LitElement, html, css } from "lit";
 import {
   getFirestoreUserData,
   updateUserDataInFirestore,
-} from "../../../utils/firestoreUtils";
-import { TWStyles } from "../../../css/twlit";
-import globalSemanticCSS from "../../../css/global-semanticCSS";
-
-import kebab from "../../../../public/icons/menu-kebab-vertical-2-svgrepo-com.svg";
-import copyIcon from "../../../../public/icons/copy.png";
-import ethIcon from "../../../../public/icons/eth.png";
-import bscIcon from "../../../../public/icons/bsc.png";
-import arbIcon from "../../../../public/icons/arb.png";
-import solIcon from "../../../../public/icons/sol.png";
+} from "../utils/firestoreUtils";
+import { TWStyles } from "../css/twlit";
+import globalSemanticCSS from "../css/global-semanticCSS";
+import kebab from "../../public/icons/menu-kebab-vertical-2-svgrepo-com.svg";
+import copyIcon from "../../public/icons/copy.png";
+import verifiedIcon from "../../public/icons/verified.png";
+import ethIcon from "../../public/icons/eth.png";
+import bscIcon from "../../public/icons/bsc.png";
+import arbIcon from "../../public/icons/arb.png";
+// import solIcon from "/../../public/icons/sol.png";
+import { getAccount } from "@wagmi/core";
 
 class Wallet extends LitElement {
   static styles = [
     TWStyles,
     globalSemanticCSS,
     css`
-      /* Additions and Modifications for Enhanced Styles */
       :host {
         padding: 0;
       }
 
-      /* Modified Dropdown Styles */
       .dropdown {
         position: relative;
         display: inline-flex;
@@ -62,7 +61,7 @@ class Wallet extends LitElement {
     walletAddresses: { type: Array },
     userEmail: { type: String },
     userId: { type: String },
-    walletBalances: { type: Array }, // Add this line
+    walletBalances: { type: Array },
     toastMessage: { type: String },
   };
 
@@ -81,15 +80,12 @@ class Wallet extends LitElement {
   }
 
   async fetchUserData() {
-    // Fetch user data, including wallet addresses
     const userData = await getFirestoreUserData();
 
     if (userData) {
       this.walletAddresses = userData.walletAddresses || [];
       this.userEmail = userData.email;
       this.userId = userData.userId;
-
-      // Call generateDummyBalances after setting walletAddresses
       this.generateDummyBalances(this.walletAddresses);
     }
   }
@@ -99,19 +95,35 @@ class Wallet extends LitElement {
       `dropdown-content-${index}`
     );
     if (dropContainer) {
-      dropContainer.classList.toggle("active");
+      const isActive = dropContainer.classList.contains("active");
+      dropContainer.classList.toggle("active", !isActive);
     }
 
     const allDropdowns = this.shadowRoot.querySelectorAll(".dropdown-content");
-    allDropdowns.forEach((dropdown, i) => {
-      if (i !== index && dropdown.classList.contains("active")) {
+    allDropdowns.forEach((dropdown) => {
+      if (
+        dropdown.id !== `dropdown-content-${index}` &&
+        dropdown.classList.contains("active")
+      ) {
+        dropdown.classList.remove("active");
+      }
+    });
+  }
+
+  handleButtonBlur(event) {
+    const dropdownContents =
+      this.shadowRoot.querySelectorAll(".dropdown-content");
+
+    dropdownContents.forEach((dropdown) => {
+      const isClickInsideDropdown = dropdown.contains(event.relatedTarget);
+      if (!isClickInsideDropdown) {
         dropdown.classList.remove("active");
       }
     });
   }
 
   async removeWalletAddress(index) {
-    this.walletAddresses.splice(index, 1);
+    const removedAddress = this.walletAddresses.splice(index, 1)[0];
 
     try {
       await updateUserDataInFirestore(
@@ -124,6 +136,7 @@ class Wallet extends LitElement {
         "success"
       );
     } catch (error) {
+      this.walletAddresses.splice(index, 0, removedAddress);
       this.handleToastMessage(
         "Failed to remove wallet address. Please try again.",
         "error"
@@ -135,28 +148,79 @@ class Wallet extends LitElement {
     this.toastMessage =
       type === "error" ? `error:${message}` : `success:${message}`;
     setTimeout(() => {
-      this.toastMessage = ""; // Clear the toast message after a delay
+      this.toastMessage = "";
     }, 3000);
   }
 
-  // Modify the generateDummyBalances function
   generateDummyBalances() {
-    const getUserBalance = false; // Set getUserBalance to the desired configuration value
+    const getUserBalance = false;
 
-    // Generate dummy balances for existing wallet addresses
     this.walletAddresses.forEach((wallet) => {
       wallet.balance = getUserBalance
         ? Math.floor(Math.random() * 1000)
-        : "Not authorized"; // Update balance based on verification setting
+        : "Not authorized";
     });
 
-    // Update the user data in Firestore with updated balances only if verification is set to true
     if (getUserBalance) {
       updateUserDataInFirestore(
         this.userId,
         "walletAddresses",
         this.walletAddresses
       );
+    }
+  }
+
+  async verifyWalletOwnership(walletAddress, network) {
+    // Function to open the Web3 modal
+    const wallet = getAccount();
+
+    if (!wallet.isConnected) {
+      this.handleToastMessage(
+        "Please connect your wallet to proceed.",
+        "error"
+      );
+    } else {
+      if (wallet.address !== walletAddress) {
+        this.handleToastMessage(
+          "Please connect the correct wallet address to verify.",
+          "error"
+        );
+      } else {
+        const walletToUpdate = this.walletAddresses.find(
+          (walletItem) =>
+            walletItem.address === walletAddress &&
+            walletItem.network === network
+        );
+
+        if (walletToUpdate && !walletToUpdate.verified) {
+          // Update the found wallet's 'verified' field to true
+          walletToUpdate.verified = true;
+
+          try {
+            // Update the Firestore document with the modified 'walletAddresses' array
+            await updateUserDataInFirestore(
+              this.userId,
+              "walletAddresses",
+              this.walletAddresses
+            );
+            this.handleToastMessage(
+              "Wallet address verified successfully!",
+              "success"
+            );
+          } catch (error) {
+            console.error("Error updating wallet address:", error);
+            this.handleToastMessage(
+              "Failed to verify the wallet address. Please try again.",
+              "error"
+            );
+          }
+        } else {
+          this.handleToastMessage(
+            "This wallet address is already verified or not found for the specified network.",
+            "error"
+          );
+        }
+      }
     }
   }
 
@@ -193,9 +257,6 @@ class Wallet extends LitElement {
                           class="text-sm font-medium w-full grid justify-between"
                         >
                           <div class="w-full flex justify-start">
-                            <!-- Display network icon -->
-                            ${this.renderNetworkIcon(wallet.network)}
-
                             <!-- Display wallet address -->
                             <label>
                               ${wallet.address &&
@@ -232,11 +293,23 @@ class Wallet extends LitElement {
                               </button>
                             </label>
 
-                            <label
-                              class="text-xs text-gray-400 font-normal ml-3"
-                            >
-                              ${wallet.verified ? "Yes" : "Not verified"}
-                            </label>
+                            <div class="flex gap-1 ml-2">
+                              <label class="text-xs text-gray-400 font-normal">
+                                ${wallet.verified
+                                  ? html`
+                                      <img
+                                        src=${verifiedIcon}
+                                        alt="verified-icon"
+                                        height="16"
+                                        width="16"
+                                      />
+                                    `
+                                  : "Not verified"}
+                              </label>
+
+                              <!-- Display network icon -->
+                              ${this.renderNetworkIcon(wallet.network)}
+                            </div>
                           </div>
 
                           <div class="w-full flex justify-start mt-3">
@@ -251,8 +324,9 @@ class Wallet extends LitElement {
 
                         <div class="dropdown">
                           <button
-                            @click=${() => this.toggleDropdown(index)}
-                            class="p-2 text-sm font-medium text-gray-900 bg-transparent rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none"
+                            @click=${(event) => this.toggleDropdown(index)}
+                            @blur=${this.handleButtonBlur}
+                            class="p-2 text-sm font-medium text-gray-900 bg-transparent rounded-lg hover:bg-gray-100 focus:outline-none"
                           >
                             <img
                               src=${kebab}
@@ -266,10 +340,33 @@ class Wallet extends LitElement {
                             id="dropdown-content-${index}"
                             class="hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dropdown-content"
                           >
+                            ${!wallet.verified
+                              ? html`
+                                  <div class="py-2 w-full">
+                                    <a
+                                      href="javascript:void(0);"
+                                      @click=${() => {
+                                        this.verifyWalletOwnership(
+                                          wallet.address,
+                                          wallet.network
+                                        ); // Pass both wallet address and network
+                                        this.toggleDropdown(index);
+                                      }}
+                                      class="block text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                      Verify Wallet
+                                    </a>
+                                  </div>
+                                `
+                              : ""}
+
                             <div class="py-2 w-full">
                               <a
                                 href="javascript:void(0);"
-                                @click=${() => this.removeWalletAddress(index)}
+                                @click=${() => {
+                                  this.removeWalletAddress(index);
+                                  this.toggleDropdown(index);
+                                }}
                                 class="block text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >Remove</a
                               >
@@ -296,8 +393,8 @@ class Wallet extends LitElement {
         return `https://bscscan.com/address/${address}`;
       case "ARB":
         return `https://arbiscan.io/address/${address}`;
-      case "SOL":
-        return `https://explorer.solana.com/address/${address}`;
+      // case "SOL":
+      //   return `https://explorer.solana.com/address/${address}`;
       // Add more cases for other networks if needed
 
       // Default case if network not recognized
@@ -320,9 +417,9 @@ class Wallet extends LitElement {
       case "ARB":
         iconSrc = arbIcon;
         break;
-      case "SOL":
-        iconSrc = solIcon;
-        break;
+      // case "SOL":
+      //   iconSrc = solIcon;
+      //   break;
       default:
         iconSrc = "https://example.com/default-icon.png"; // Default icon URL for unrecognized networks
         break;

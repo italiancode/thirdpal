@@ -3,6 +3,8 @@ import globalSemanticCSS from "../css/global-semanticCSS";
 import { TWStyles } from "../css/twlit";
 import "./inc/HeaderView";
 import { appMainPath, appName } from "../module/config/app-config";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore_db } from "../../utils/firebase";
 
 class AppCore extends LitElement {
   static styles = [
@@ -27,10 +29,10 @@ class AppCore extends LitElement {
         background-color: #fff;
         color: inherit;
         padding: 20px;
-        display: grid; /* Add padding to the main content */
+        display: block; /* Add padding to the main content */
         width: 100%;
         height: 100%;
-        align-items: start;
+        align-items: auto;
       }
 
       footer {
@@ -42,15 +44,24 @@ class AppCore extends LitElement {
     `,
   ];
 
+  static properties = {};
+
+  constructor() {
+    super();
+  }
+
   render() {
     return html`
       <header-view></header-view>
       <main class="p-5 m-auto">
         <slot> </slot>
       </main>
-      <footer class="flex justify-between">
-        <a href=${appMainPath}><h2>${appName}</h2></a>
-        <label> 2024</label>
+
+      <footer class="grid gap-3">
+        <div class="flex justify-between">
+          <a href=${appMainPath}><h2>${appName}</h2></a>
+          <label> 2024</label>
+        </div>
       </footer>
     `;
   }

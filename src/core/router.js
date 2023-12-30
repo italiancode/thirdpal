@@ -6,6 +6,7 @@ import { isAuthenticated } from "../utils/authUtils";
 import { page_config } from "./routes";
 
 import "../views/404/NotFoundView";
+import { getFirestoreUserData } from "../utils/firestoreUtils";
 
 class Router {
   constructor() {
@@ -20,17 +21,47 @@ class Router {
     this.listeners.push(callback);
   }
 
+  renderUnauthorized() {
+    this.renderElement(
+      "/unauthorized",
+      html`<unauthorized-view></unauthorized-view>`, // Replace with your unauthorized view/component
+      "Unauthorized Access"
+    );
+  }
+
+  async checkOrganizerAccess(context, next) {
+    const authenticated = await isAuthenticated();
+    const organizerRoutes = ["/adsub", "/data" /* Add more routes here */];
+    const isOrganizerRoute = organizerRoutes.includes(context.pathname);
+
+    if (authenticated && isOrganizerRoute) {
+      const user = await getFirestoreUserData();
+      if (!user || !user.isOrganizer) {
+        // For non-organizer users trying to access organizer-required routes
+        console.log("User is not authorized as an organizer for this route.");
+        this.renderer.renderUnauthorized(); // Render unauthorized view
+        return;
+      }
+    }
+
+    // Proceed to render the route for authenticated users or other routes
+    next();
+  }
+
   initializeRoutes() {
-    // Define your regular routes
     for (const pageKey in page_config) {
       const x_page = page_config[pageKey];
-      page(x_page.path, (context, next) => {
-        this.renderer.renderPage(
-          context.pathname,
-          x_page.name,
-          x_page.component
-        );
-      });
+      page(
+        x_page.path,
+        this.checkOrganizerAccess.bind(this),
+        (context, next) => {
+          this.renderer.renderPage(
+            context.pathname,
+            x_page.name,
+            x_page.component
+          );
+        }
+      );
     }
 
     // Add a catch-all route for 404 errors
@@ -40,11 +71,7 @@ class Router {
   }
 
   start() {
-    window.addEventListener("popstate", () => {
-      page(window.location.pathname);
-    });
-
-    page();
+    page.start(); // Start page.js router
   }
 }
 
