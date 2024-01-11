@@ -1,6 +1,6 @@
 import { html, css, LitElement } from "lit";
 
-class HomeView extends LitElement {
+class ReportView extends LitElement {
   static properties = {
     sliderValue: { type: Number },
   };
@@ -8,13 +8,15 @@ class HomeView extends LitElement {
   constructor() {
     super();
     this.sliderValue = 0;
+    import("../components/ReportForm");
   }
 
   static styles = css``;
 
   render() {
-    return html``;
+    return html`<report-form></report-form>`;
   }
 }
 
-customElements.define("home-view", HomeView);
+customElements.define("report-view", ReportView);
+export default ReportView;

@@ -8,6 +8,8 @@ import appLogo, {
 import globalSemanticCSS from "../../css/global-semanticCSS";
 import { TWStyles } from "../../css/twlit";
 
+// import { web3modal } from "../../module/Web3/web3-config";
+// import { getAccount } from "@wagmi/core";
 import { auth } from "../../../utils/firebase";
 import { isAuthenticated } from "../../utils/authUtils";
 
@@ -23,6 +25,9 @@ class HeaderView extends LitElement {
   constructor() {
     super();
     this.currentPath = "";
+
+    this.wallet = "";
+
     this.hideDynamicLink = window.innerWidth <= 768;
     this.authenticated = false;
     this.checkUserAuthAccess();
@@ -35,7 +40,7 @@ class HeaderView extends LitElement {
 
   async checkUserAuthAccess() {
     this.authenticated = await isAuthenticated();
-
+    console.log(this.authenticated);
   }
 
   async logout() {
@@ -54,6 +59,87 @@ class HeaderView extends LitElement {
   isLinkActive(linkPath) {
     return window.location.pathname === linkPath;
   }
+
+  // async triggerConnectWalletModal() {
+  //   if (web3modal) {
+  //     try {
+  //       await web3modal.openModal(); // Use await to open the wallet modal
+  //       await this.checkWalletConnectionState();
+  //     } catch (error) {
+  //       console.error("Error connecting wallet:", error);
+  //     }
+  //   }
+  // }
+
+  // async checkWalletConnectionState() {
+  //   const wallet = getAccount();
+
+  //   // Check if the wallet instance exists and is connected
+  //   if (wallet.status === "connected" || wallet.status === "reconnecting") {
+  //     try {
+  //       // Update the Connect Wallet button based on the wallet status
+  //       await this.updateConnectWalletButton();
+  //     } catch (error) {
+  //       console.error("Error updating Connect Wallet button:", error);
+  //     }
+  //   } else if (wallet.status === "connecting") {
+  //     await this.waitForConnection();
+  //   }
+  // }
+
+  // async waitForConnection() {
+  //   const maxAttempts = 5; // Set a maximum number of attempts to prevent infinite looping
+  //   let attempts = 0;
+
+  //   while (attempts < maxAttempts) {
+  //     await this.delay(11000); // Wait for a brief period before rechecking the wallet status
+
+  //     const wallet = getAccount();
+
+  //     if (wallet.status !== "connecting") {
+  //       break;
+  //     }
+
+  //     attempts++;
+  //   }
+
+  //   // After the loop, check the final status
+  //   const wallet = getAccount();
+  //   if (wallet.status === "connecting") {
+  //     // Handle the situation where the wallet is still connecting after max attempts
+  //     console.log("Wallet is still connecting after maximum attempts.");
+  //   } else {
+  //     // Wallet status changed from "connecting", update the UI or take necessary actions
+  //     this.updateScheduled = true;
+  //   }
+  // }
+
+  // // Function to create a delay using Promises
+  // delay(ms) {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // }
+
+  // async updateConnectWalletButton() {
+  //   const wallet = getAccount();
+  //   try {
+  //     const connectWalletButton =
+  //       this.shadowRoot.querySelector(".connect-wallet");
+
+  //     if (wallet.status === "connected" || wallet.status === "reconnecting") {
+  //       // Display a partial wallet address in the button text
+  //       const partialAddress = `${wallet.address.substr(
+  //         0,
+  //         4
+  //       )}....${wallet.address.substr(-4)}`;
+  //       connectWalletButton.textContent = partialAddress;
+  //     } else if (wallet.status === "disconnected") {
+  //       // If the wallet is disconnected, display "Connect" in the button text
+  //       connectWalletButton.textContent = "Connect";
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating Connect Wallet button:", error);
+  //   }
+  // }
 
   render() {
     return html`
@@ -74,6 +160,18 @@ class HeaderView extends LitElement {
               </responsive-image-frame>
             </a>
           </div>
+
+          <!-- <div class="flex gap-3 h-12 rounded-full border-4 overflow-hidden">
+            <button
+              @click=${this.triggerConnectWalletModal}
+              class="connect-wallet p-2 px-3 rounded-full shadow text-center text-sm font-medium"
+              aria-label="Connect Wallet"
+              role="button"
+              tabindex="0"
+            >
+              Connect
+            </button>
+          </div> -->
 
           <a href="/faqs" class="nav-icon-link nav-item flex items-center">
             <span
@@ -313,6 +411,46 @@ class HeaderView extends LitElement {
     }
   }
 
+  async updated() {
+    // this.pathMapping = {
+    //   "/airdrops": { text: "Airdrops", href: "/airdrops" },
+    //   "/blogs": { text: "Blogs", href: "/blogs" },
+    //   "/docs": { text: "Docs", href: "/docs" },
+    //   "/reports": { text: "Reports", href: "/reports" },
+    //   "/dashboard": { text: "Dashboard", href: "/dashboard" },
+    //   "/wallets": { text: "Wallets", href: "/wallets" },
+    // };
+
+    // this.currentPath = window.location.pathname;
+
+    // if (this.currentPath.startsWith("/airdrop/")) {
+    //   const parts = this.currentPath.split("/");
+    //   const id = parts[2];
+
+    //   this.topLinkTxet = "Airdrop";
+    //   this.topLinkHref = `/airdrop/${id}`;
+    // } else if (this.currentPath in this.pathMapping) {
+    //   this.topLinkTxet = this.pathMapping[this.currentPath].text;
+    //   this.topLinkHref = this.pathMapping[this.currentPath].href;
+    // } else {
+    //   this.topLinkTxet = "Welcome";
+    //   this.topLinkHref = "/";
+    // }
+
+    // Fetch the wallet status
+    this.wallet = getAccount();
+
+    if (
+      this.wallet.status === "connected" ||
+      this.wallet.status === "disconnected"
+    ) {
+      await this.updateConnectWalletButton(); // Added 'await' to make sure the update is completed before proceeding
+    }
+
+    requestAnimationFrame(() => {
+      this.requestUpdate();
+    });
+  }
   static styles = [
     globalSemanticCSS,
     TWStyles,

@@ -1,9 +1,15 @@
 // path: ./module/component/Web3/data.js
-import { mainnet, arbitrum, arbitrumGoerli } from "@wagmi/core/chains";
+import {
+  mainnet,
+  arbitrum,
+  arbitrumGoerli,
+  bsc,
+  zkSync,
+} from "@wagmi/core/chains";
 
 export const projectId = "8761be608384668413cc8c576ffa62da";
 
-export const chains = [mainnet, arbitrum, arbitrumGoerli];
+export const chains = [mainnet, bsc, arbitrum, zkSync, arbitrumGoerli];
 
 export const contractAbi = [
   {

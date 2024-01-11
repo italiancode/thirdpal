@@ -20,12 +20,6 @@ class AddWallet extends LitElement {
         padding: 20px;
         background-color: #fff;
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .select-network {
-        display: flex;
-        padding: 10px 0 20px 0;
       }
 
       .form-container {
@@ -221,10 +215,10 @@ class AddWallet extends LitElement {
     return html`
       <div class="mb-5 grid">
         <div class="mb-5 sm:w-full md:w-1/2 lg:w-1/3">
-          <h3>Add Wallet Address:</h3>
+          <h2 class="mb-3">Add Wallet Address:</h2>
           <!-- <label for="walletAddress">Add Wallet Address:</label> -->
-          <div class="add-wallet">
-            <div class="grid gap-1">
+          <div class="add-wallet border">
+            <div class="grid gap-1 mb-5">
               <label for="id" class="block text-sm font-medium text-gray-500"
                 >Blockchain network</label
               >

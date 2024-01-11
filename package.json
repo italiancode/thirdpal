@@ -18,6 +18,8 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@google-cloud/firestore": "^7.1.0",
+    "@lit-labs/motion": "^1.0.6",
+    "@vaadin/router": "^1.7.5",
     "@wagmi/core": "^1.4.12",
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/html": "^2.7.1",

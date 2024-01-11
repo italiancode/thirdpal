@@ -19,11 +19,9 @@ if ("maxTouchPoints" in navigator) {
   }
 }
 
-console.log("hasTouchScreen:", hasTouchScreen); // Log the value of hasTouchScreen
-
 // Check if the device has a touch screen
 if (hasTouchScreen) {
-  console.log("Device has a touch screen."); // Log that the device has a touch screen
+  // console.log("Device has a touch screen."); // Log that the device has a touch screen
 
   document.addEventListener("DOMContentLoaded", function () {
     // _input_fields and _scan_fields are DOM node lists with the relevant elements

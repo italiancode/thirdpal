@@ -28,15 +28,16 @@ class ResponsiveImageFrame extends LitElement {
       }
 
       .thumbnail-container {
-        width: 200px;
-        height: 200px;
+        width: inherit;
+        height: auto;
+        object-fit: contain;
         /* margin: 0 auto; */
         display: block;
       }
 
       img {
         width: inherit;
-        height: inherit;
+        height: auto;
         object-fit: contain;
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
@@ -91,16 +92,6 @@ class ResponsiveImageFrame extends LitElement {
 
       .thumb-image {
         cursor: pointer;
-      }
-
-      @media (max-width: 768px) {
-        .image-container {
-          height: 25vh; /* Set height as 50% of viewport height on mobile */
-        }
-        .thumbnail-container {
-          height: 10vh;
-          width: auto;
-        }
       }
     `,
   ];
@@ -167,12 +158,6 @@ class ResponsiveImageFrame extends LitElement {
     }
   }
 
-  // Function to handle click on the thumb image
-  handleThumbClick() {
-    // Redirect the user to the main image when the thumb is clicked
-    window.location.href = this.mainSrc;
-  }
-
   render() {
     const isThumbnailType = this.type === "thumbnail";
     const containerClass = isThumbnailType
@@ -186,12 +171,7 @@ class ResponsiveImageFrame extends LitElement {
         ${this.loaded
           ? html`
               <!-- Only display the image if loaded -->
-              <img
-                src="${this.optImageSrc}"
-                alt="${this.alt}"
-                class="loaded"
-                @click="${this.handleThumbClick}"
-              />
+              <img src="${this.optImageSrc}" alt="${this.alt}" class="loaded" />
             `
           : html`
               <!-- Placeholder image (thumbnail) -->
@@ -203,12 +183,7 @@ class ResponsiveImageFrame extends LitElement {
                     </div>`
                   : ""}
                 <!-- Thumb image with click event listener -->
-                <img
-                  src="${thumbnail}"
-                  alt="${this.alt}"
-                  class="thumb-image"
-                  @click="${this.handleThumbClick}"
-                />
+                <img src="${thumbnail}" alt="${this.alt}" class="thumb-image" />
               </div>
             `}
       </div>

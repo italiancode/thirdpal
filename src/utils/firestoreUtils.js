@@ -99,3 +99,5 @@ export async function reportIssue(
     console.error("Error submitting report: ", error);
   }
 }
+
+export async function storeAirdropTaskTypes() {}

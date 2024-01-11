@@ -30,3 +30,5 @@ class NotFoundView extends LitElement {
 }
 
 customElements.define("not-found-view", NotFoundView);
+
+export default NotFoundView;

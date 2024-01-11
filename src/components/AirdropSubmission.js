@@ -2,7 +2,7 @@ import { LitElement, html, css } from "lit";
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import { firestore_db } from "../../utils/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 class AirdropSubmission extends LitElement {
   static styles = [
@@ -14,7 +14,7 @@ class AirdropSubmission extends LitElement {
   ];
 
   static airdropTaskTypes = [
-    { id: 1, name: "Social Media" },
+    { id: 1, name: "Social" },
     { id: 2, name: "Quiz" },
     { id: 3, name: "Token Swap" },
     { id: 4, name: "Referral" },
@@ -25,9 +25,11 @@ class AirdropSubmission extends LitElement {
   constructor() {
     super();
     this.selectedAirdrop = {};
+    this.selectedTaskType = "";
     this.airdropForm = {
       id: "",
-      name: "",
+      title: "",
+      slug: "",
       description: "",
       organizer: {
         name: "",
@@ -63,64 +65,209 @@ class AirdropSubmission extends LitElement {
     this.generateNewID();
   }
 
-  selectAirdrop(event) {
-    const selectedAirdropId = parseInt(event.target.value);
-    const selectedAirdrop = AirdropSubmission.airdropTaskTypes.find(
-      (type) => type.id === selectedAirdropId
-    );
-
-    if (selectedAirdrop) {
-      this.airdropForm.taskType = selectedAirdrop.id; 
-      const airdropFormsCollection = collection(firestore_db, "airdropForms");
-
-      addDoc(airdropFormsCollection, this.airdropForm)
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-          this.clearForm(); // Clear the form after successful submission if needed
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
-    }
-  }
-
   generateNewID() {
     const timestamp = Date.now().toString();
     const random = Math.floor(Math.random() * 1000).toString();
     this.airdropForm.id = timestamp + random; // Update the ID property
   }
 
+  handleTaskTypeChange(event) {
+    const selectedTaskTypeId = event.target.value;
+
+    if (selectedTaskTypeId) {
+      // Find the selected task type based on the ID
+      const selectedTaskType = AirdropSubmission.airdropTaskTypes.find(
+        (taskType) => taskType.id === parseInt(selectedTaskTypeId)
+      );
+
+      if (selectedTaskType) {
+        this.selectedTaskType = selectedTaskTypeId;
+
+        // Set both id and name for the taskType in the form
+        this.airdropForm.taskType = {
+          id: selectedTaskTypeId,
+          name: selectedTaskType.name,
+        };
+
+        // Trigger an update to re-render the component
+        this.requestUpdate();
+      }
+    }
+  }
+
+  renderTaskInputs() {
+    switch (parseInt(this.selectedTaskType)) {
+      case 1: // Social Media
+        if (!this.airdropForm.task) {
+          this.airdropForm.task = {
+            taskData: {
+              platform: "",
+              username: "",
+              link: "",
+            },
+          };
+        }
+        return html`
+          <div class="mb-6">
+            <div class="grid gap-1">
+              <label for="socialMediaPlatform" class="block mb-1"
+                >Platform:</label
+              >
+              <input
+                type="text"
+                id="socialMediaPlatform"
+                name="socialMediaPlatform"
+                .value="${this.airdropForm.task.taskData.platform || ""}"
+                @input="${(e) =>
+                  (this.airdropForm.task.taskData.platform = e.target.value)}"
+                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 mb-3"
+              />
+            </div>
+
+            <div class="grid gap-1">
+              <label for="socialMediaUsername" class="block mb-1"
+                >Username:</label
+              >
+              <input
+                type="text"
+                id="socialMediaUsername"
+                name="socialMediaUsername"
+                .value="${this.airdropForm.task.taskData.username || ""}"
+                @input="${(e) =>
+                  (this.airdropForm.task.taskData.username = e.target.value)}"
+                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 mb-3"
+              />
+            </div>
+
+            <div class="grid gap-1">
+              <label for="socialMediaLink" class="block mb-1">Link:</label>
+              <input
+                type="text"
+                id="socialMediaLink"
+                name="socialMediaLink"
+                .value="${this.airdropForm.task.taskData.link || ""}"
+                @input="${(e) =>
+                  (this.airdropForm.task.taskData.link = e.target.value)}"
+                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
+        `;
+      case 2: // Quiz
+        if (!this.airdropForm.task) {
+          this.airdropForm.task = { taskData: {} };
+        }
+        return html`
+          <!-- Inputs for Quiz task type -->
+          <label for="quizQuestion">Quiz Question:</label>
+          <input type="text" id="quizQuestion" name="quizQuestion" />
+          <!-- Add more inputs as needed for Quiz task -->
+        `;
+      case 3: // Token Swap
+        if (!this.airdropForm.task) {
+          this.airdropForm.task = { taskData: {} };
+        }
+        return html`
+          <!-- Inputs for Token Swap task type -->
+          <label for="tokenSwapInput">Token Swap Details:</label>
+          <input type="text" id="tokenSwapInput" name="tokenSwapInput" />
+          <!-- Add more inputs as needed for Token Swap task -->
+        `;
+      case 4: // Referral
+        if (!this.airdropForm.task) {
+          this.airdropForm.task = { taskData: {} };
+        }
+        return html`
+          <!-- Inputs for Referral task type -->
+          <label for="referralInput">Referral Code:</label>
+          <input type="text" id="referralInput" name="referralInput" />
+          <!-- Add more inputs as needed for Referral task -->
+        `;
+      case 5: // Content Creation
+        if (!this.airdropForm.task) {
+          this.airdropForm.task = { taskData: {} };
+        }
+        return html`
+          <!-- Inputs for Content Creation task type -->
+          <label for="contentCreationInput">Content Details:</label>
+          <input
+            type="text"
+            id="contentCreationInput"
+            name="contentCreationInput"
+          />
+          <!-- Add more inputs as needed for Content Creation task -->
+        `;
+      default:
+        return html``; // No additional inputs for unknown task type
+    }
+  }
+
+  handleNameChange(event) {
+    const titleValue = event.target.value;
+
+    // Update the 'name' field in the form
+    this.airdropForm.title = titleValue;
+
+    // Check if the titleValue exists before using toLowerCase()
+    if (titleValue) {
+      // Generate a slug from the name value (convert to lowercase and replace spaces with hyphens)
+      const slugValue = titleValue.toLowerCase().replace(/\s+/g, "-");
+
+      // Update the 'slug' input field value
+      const slugInput = this.shadowRoot.getElementById("slug");
+      slugInput.value = slugValue;
+    }
+  }
+
   handleFormSubmit(event) {
     event.preventDefault();
 
+    // Disable the submit button
+    const submitButton = this.shadowRoot.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+
+    // Show a notice to inform users that the airdrop is being submitted
+    const noticeElement = document.createElement("p");
+    noticeElement.textContent = "Submitting airdrop...";
+    this.shadowRoot.appendChild(noticeElement);
+
+    // Generate slug value from the 'name' field (if it's not already updated via handleNameChange)
+    if (!this.airdropForm.slug) {
+      const titleValue = this.airdropForm.title;
+      const slugValue = titleValue.toLowerCase().replace(/\s+/g, "-");
+      this.airdropForm.slug = slugValue;
+    }
+
     const airdropFormsCollection = collection(firestore_db, "airdropForms");
 
-    // Add form data to Firestore collection using 'addDoc'
-    addDoc(airdropFormsCollection, this.airdropForm)
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
+    // Use the slug as the document ID in Firestore using 'doc' method
+    const airdropDocRef = doc(airdropFormsCollection, this.airdropForm.slug);
+
+    // Set the data for the document using 'set' method
+    setDoc(airdropDocRef, this.airdropForm)
+      .then(() => {
+        console.log("Document written with ID: ", this.airdropForm.slug);
         this.clearForm();
+        window.location.reload(); // Reload the page after successful submission
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
       });
   }
 
-  // Helper method to clear the form after submission
   clearForm() {
-    this.airdropForm = {
-      /* Reset or assign initial values for form fields */
-    };
+    this.airdropForm = {};
     this.requestUpdate();
   }
 
   render() {
-    // Generate a new ID every time the form is rendered
     this.generateNewID();
 
     return html`
       <form @submit="${this.handleFormSubmit}">
-        <h2>Airdrop Submission Form</h2>
+        <div class="w-full text-start my-6">
+          <h2>Airdrop Submission Form</h2>
+        </div>
 
         <div class="grid gap-3">
           <div class="grid gap-1 w-52">
@@ -141,39 +288,23 @@ class AirdropSubmission extends LitElement {
 
           <div class="grid gap-1 w-60">
             <label for="name" class="block text-sm font-medium text-gray-700"
-              >Name/Title:</label
+              >Airdrop Title:</label
             >
             <input
               type="text"
               id="name"
               name="name"
-              .value="${this.airdropForm.name}"
-              @input="${(e) => (this.airdropForm.name = e.target.value)}"
+              .value="${this.airdropForm.title}"
+              @input="${this.handleNameChange}"
+              placeholder="Enter title"
               class="block w-full border-gray-300 rounded border  focus:border-b-blue-500 sm:text-sm"
-              required
               required
             />
           </div>
-
-          <div class="grid gap-1 w-72">
-            <label
-              for="description"
-              class="block text-sm font-medium text-gray-700"
-              >Description:</label
-            >
-            <textarea
-              id="description"
-              name="description"
-              .value="${this.airdropForm.description}"
-              @input="${(e) => (this.airdropForm.description = e.target.value)}"
-              class="block w-full border-gray-300 rounded border focus:border-b-blue-500 sm:text-sm resize-none"
-              rows="5"
-              required
-            ></textarea>
-          </div>
         </div>
 
-        <h4>Organizer</h4>
+        <div class="w-full text-start my-6"><h4>Organizer</h4></div>
+
         <div class="grid gap-3">
           <div class="grid gap-1 w-72">
             <label
@@ -191,6 +322,23 @@ class AirdropSubmission extends LitElement {
               class="block w-full border-gray-300 rounded border  focus:border-b-blue-500 sm:text-sm"
               required
             />
+          </div>
+
+          <div class="grid gap-1 w-72">
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700"
+              >About Organizer:</label
+            >
+            <textarea
+              id="description"
+              name="description"
+              .value="${this.airdropForm.description}"
+              @input="${(e) => (this.airdropForm.description = e.target.value)}"
+              class="block w-full border-gray-300 rounded border focus:border-b-blue-500 sm:text-sm resize-none"
+              rows="5"
+              required
+            ></textarea>
           </div>
 
           <div class="grid gap-1 w-72">
@@ -246,8 +394,35 @@ class AirdropSubmission extends LitElement {
           </div>
         </div>
 
-        <h4>Task</h4>
+        <div class="w-full text-start my-6"><h4>Task</h4></div>
+
         <div class="grid gap-3">
+          <div class="grid gap-1 w-72">
+            <label
+              for="taskType"
+              class="block text-sm font-medium text-gray-700"
+              >Select Task Type:</label
+            >
+            <select
+              id="taskType"
+              class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+              @change="${this.handleTaskTypeChange}"
+            >
+              <option value="" selected disabled>Select Task Type</option>
+              ${AirdropSubmission.airdropTaskTypes.map(
+                (taskType) => html`
+                  <option
+                    value="${taskType.id}"
+                    ?selected="${this.airdropForm.taskType.id === taskType.id}"
+                  >
+                    ${taskType.name}
+                  </option>
+                `
+              )}
+            </select>
+
+            ${this.renderTaskInputs()}
+          </div>
           <div class="grid gap-1 w-72">
             <label
               for="taskName"
@@ -285,87 +460,6 @@ class AirdropSubmission extends LitElement {
           </div>
         </div>
 
-        <h5>Select Task Type</h5>
-        <select
-          class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-          @change="${this.selectAirdrop}"
-        >
-          <option value="" class="text-gray-500 px-5">Select</option>
-          ${AirdropSubmission.airdropTaskTypes.map(
-            (type) =>
-              html`<option
-                value="${type.id}"
-                .value="${this.airdropForm.taskType}"
-                @input="${(e) => (this.airdropForm.taskType = e.target.value)}"
-                class="text-gray-900 hover:bg-gray-100"
-              >
-                ${type.name}
-              </option>`
-          )}
-        </select>
-
-        ${this.selectedAirdrop && Object.keys(this.selectedAirdrop).length !== 0
-          ? html`
-              ${this.selectedAirdrop.name === "Social Media"
-                ? html`
-                    <div class="mb-6">
-                      <h4 class="text-lg font-bold mb-2">Social Media Task</h4>
-
-                      <div class="grid gap-1">
-                        <label for="socialMediaPlatform" class="block mb-1"
-                          >Platform:</label
-                        >
-                        <input
-                          type="text"
-                          id="socialMediaPlatform"
-                          name="socialMediaPlatform"
-                          .value="${this.airdropForm.task.taskData.platform ||
-                          ""}"
-                          @input="${(e) =>
-                            (this.airdropForm.task.taskData.platform =
-                              e.target.value)}"
-                          class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 mb-3"
-                        />
-                      </div>
-
-                      <div class="grid gap-1">
-                        <label for="socialMediaUsername" class="block mb-1"
-                          >Username:</label
-                        >
-                        <input
-                          type="text"
-                          id="socialMediaUsername"
-                          name="socialMediaUsername"
-                          .value="${this.airdropForm.task.taskData.username ||
-                          ""}"
-                          @input="${(e) =>
-                            (this.airdropForm.task.taskData.username =
-                              e.target.value)}"
-                          class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500 mb-3"
-                        />
-                      </div>
-
-                      <div class="grid gap-1">
-                        <label for="socialMediaLink" class="block mb-1"
-                          >Link:</label
-                        >
-                        <input
-                          type="text"
-                          id="socialMediaLink"
-                          name="socialMediaLink"
-                          .value="${this.airdropForm.task.taskData.link || ""}"
-                          @input="${(e) =>
-                            (this.airdropForm.task.taskData.link =
-                              e.target.value)}"
-                          class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-                  `
-                : html` <!-- Add HTML for other task types --> `}
-            `
-          : html`Please select a Task Type`}
-
         <div class="flex gap-3 my-5">
           <div class="grid gap-1">
             <label
@@ -402,7 +496,8 @@ class AirdropSubmission extends LitElement {
           </div>
         </div>
 
-        <h4>Token & Reward</h4>
+        <div class="w-full text-start my-6"><h4>Token & Reward</h4></div>
+
         <div class="grid gap-3">
           <div class="grid gap-1 w-52">
             <label
@@ -480,6 +575,15 @@ class AirdropSubmission extends LitElement {
             />
           </div>
         </div>
+
+        <input
+          type="text"
+          id="slug"
+          name="slug"
+          .value="${this.airdropForm.slug}"
+          disabled
+          hidden
+        />
 
         <button
           type="submit"

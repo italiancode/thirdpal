@@ -15,7 +15,7 @@ const globalSemanticCSS = css`
       sans-serif;
     color: #2c3e50; /* Dark charcoal */
     letter-spacing: 0.03rem;
-    line-height: 1.5;
+    line-height: 1.7em;
   }
 
   /* Paragraph Styles */
@@ -27,7 +27,7 @@ const globalSemanticCSS = css`
   /* Link Styles */
   a {
     text-decoration: none; /* Remove default underlines */
-    color: #0077cc; /* Choose a link color that complements your design */
+    color: #1b6fb4; /* Choose a link color that complements your design */
     transition: color 0.2s; /* Add a smooth color transition on hover */
     cursor: pointer;
     text-align: center;
@@ -55,67 +55,6 @@ const globalSemanticCSS = css`
     border-left: 2px solid #0077cc; /* Add a left border for emphasis */
     padding: 10px; /* Add some padding for spacing */
     color: #34495e; /* Slightly lighter */
-  }
-
-  /* Responsive Header Styles for h1 - h6 */
-
-  /* Common header styles for all header tags */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
-      sans-serif; /* Replace with your preferred font */
-    margin: 0; /* Remove default margins */
-    line-height: 1.2; /* Adjust line height as needed */
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Responsive text sizes based on screen width */
-  /* You can adjust the font-size values as per your design preferences */
-  @media screen and (max-width: 600px) {
-    h1 {
-      font-size: 28px;
-    }
-    h2 {
-      font-size: 24px;
-    }
-    h3 {
-      font-size: 20px;
-    }
-    h4 {
-      font-size: 18px;
-    }
-    h5 {
-      font-size: 16px;
-    }
-    h6 {
-      font-size: 14px;
-    }
-  }
-
-  @media screen and (min-width: 601px) {
-    h1 {
-      font-size: 36px;
-    }
-    h2 {
-      font-size: 32px;
-    }
-    h3 {
-      font-size: 28px;
-    }
-    h4 {
-      font-size: 24px;
-    }
-    h5 {
-      font-size: 20px;
-    }
-    h6 {
-      font-size: 18px;
-    }
   }
 
   /* Modern text colors for headers */
@@ -190,7 +129,7 @@ const globalSemanticCSS = css`
   /* Input Focus Styles */
 
   input:focus {
-    border-color: #359bce;
+    border-color: #1b6fb4;
   }
 
   .form-item label {
@@ -204,7 +143,7 @@ const globalSemanticCSS = css`
     background: #fff;
     padding: 0 10px;
     margin-top: -0.3rem;
-    color: #999;
+    color: inherit;
     pointer-events: none;
     transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -216,7 +155,7 @@ const globalSemanticCSS = css`
   }
 
   .form-item input:focus + label {
-    color: #359bce;
+    color: #1b6fb4;
   }
 
   /* Checkbox Styles */
@@ -242,7 +181,7 @@ const globalSemanticCSS = css`
   /* Button Styles */
 
   .form-button {
-    background-color: #359bce;
+    background-color: #1b6fb4;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -257,7 +196,9 @@ const globalSemanticCSS = css`
 
   /* Navigation Item Styles */
   .nav-item {
+    color: #6f6f6f;
     padding: 7.5px;
+    font-size: 0.9em;
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;

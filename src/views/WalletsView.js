@@ -1,17 +1,17 @@
 import { LitElement, html, css } from "lit";
-import { getFirestoreUserData } from "../utils/firestoreUtils";
-import { TWStyles } from "../css/twlit";
-import globalSemanticCSS from "../css/global-semanticCSS";
-import "../components/AddWallet.js";
-import "../components/Wallets.js";
+import { getFirestoreUserData } from "../utils/firestoreUtils.js";
+import { TWStyles } from "../css/twlit.js";
+import globalSemanticCSS from "../css/global-semanticCSS.js";
 
-class WalletView extends LitElement {
+class WalletsView extends LitElement {
   static styles = [TWStyles, globalSemanticCSS, css``];
 
   static properties = {};
 
   constructor() {
     super();
+    import("../components/AddWallet.js");
+    import("../components/Wallets.js");
   }
 
   connectedCallback() {
@@ -48,4 +48,5 @@ class WalletView extends LitElement {
   }
 }
 
-customElements.define("wallet-view", WalletView);
+customElements.define("wallets-view", WalletsView);
+export default WalletsView;

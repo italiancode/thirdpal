@@ -2,11 +2,6 @@ import { LitElement, html, css } from "lit";
 import { getFirestoreUserData } from "../utils/firestoreUtils";
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
-import "../components/AddWallet.js";
-
-import "../components/Wallets.js";
-import "../components/AirdropsComponent.js";
-import "../components/AirdropSubmission.js";
 
 class DashboardView extends LitElement {
   static styles = [TWStyles, globalSemanticCSS, css``];
@@ -15,6 +10,7 @@ class DashboardView extends LitElement {
 
   constructor() {
     super();
+    import("../components/AirdropsComponent.js");
   }
 
   connectedCallback() {
@@ -50,3 +46,4 @@ class DashboardView extends LitElement {
 }
 
 customElements.define("dashboard-view", DashboardView);
+export default DashboardView;

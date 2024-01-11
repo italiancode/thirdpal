@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
-
-import "./views/AppCore";
+import "./core/router";
 import globalSemanticCSS from "./css/global-semanticCSS";
 import { TWStyles } from "./css/twlit";
-
+import { appMainPath, appName } from "./module/config/app-config";
+// import "./views/inc/HeaderView";
 /**
  * An example element.
  *
@@ -11,7 +11,42 @@ import { TWStyles } from "./css/twlit";
  * @csspart button - The button
  */
 export class AppElement extends LitElement {
-  static styles = [globalSemanticCSS, TWStyles, css``];
+  static styles = [
+    globalSemanticCSS,
+    TWStyles,
+    css`
+      :host {
+        display: grid;
+        grid-template-rows: auto 1fr auto; /* Header, Main Content, Footer */
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      header-view {
+        grid-row: 1; /* Place the header at the top */
+        background-color: #fff;
+        color: inherit;
+      }
+
+      main {
+        background-color: #fff;
+        color: inherit;
+        padding: 16px;
+        display: block; /* Add padding to the main content */
+        width: 100%;
+        height: 100%;
+        align-items: auto;
+      }
+
+      footer {
+        background-color: #fff;
+        color: inherit;
+        padding: 16px;
+        text-align: center;
+      }
+    `,
+  ];
   static get properties() {
     return {
       /**
@@ -28,16 +63,31 @@ export class AppElement extends LitElement {
 
   constructor() {
     super();
-    this.docsHint = "Click on the Vite and Lit logos to learn more";
-    this.count = 0;
+    // import("./views/AppCore");
+
+    this.header = () =>
+      import(/* webpackChunkName: "header-view" */ "./views/inc/HeaderView");
+
+    import("./components/RIF/ResponsiveImageFrame");
+    import("./core/app.core");
   }
 
   render() {
+    this.header();
     return html`
       <!--  -->
-      <app-core>
+      <header-view></header-view>
+
+      <main class="mt-16">
         <slot> </slot>
-      </app-core>
+      </main>
+
+      <footer class="grid gap-3">
+        <div class="flex justify-between">
+          <a href=${appMainPath}><h2>${appName}</h2></a>
+          <label> 2024</label>
+        </div>
+      </footer>
     `;
   }
 

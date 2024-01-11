@@ -16,53 +16,53 @@ async function routeAfterAuth(path) {
   window.location.href = path;
 }
 
-// Function for user registration
-async function register(email, password, sendEmailVerification) {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+// // Function for user registration
+// async function register(email, password, sendEmailVerification) {
+//   try {
+//     const userCredential = await createUserWithEmailAndPassword(
+//       auth,
+//       email,
+//       password
+//     );
 
-    if (sendEmailVerification) {
-      await sendEmailVerificationToUser(userCredential.user);
-    }
+//     if (sendEmailVerification) {
+//       await sendEmailVerificationToUser(userCredential.user);
+//     }
 
-    // console.log("Registration successful");
+//     // console.log("Registration successful");
 
-    return userCredential.user;
-  } catch (error) {
-    console.error("Registration failed:", error.message);
-  }
-}
+//     return userCredential.user;
+//   } catch (error) {
+//     console.error("Registration failed:", error.message);
+//   }
+// }
 
-// Function to send email verification
-async function sendEmailVerificationToUser(user) {
-  try {
-    await sendEmailVerification(user);
-    console.log("Verification email sent to " + user.email);
-  } catch (error) {
-    console.error("Failed to send verification email:", error.message);
-  }
-}
+// // Function to send email verification
+// async function sendEmailVerificationToUser(user) {
+//   try {
+//     await sendEmailVerification(user);
+//     // console.log("Verification email sent to " + user.email);
+//   } catch (error) {
+//     console.error("Failed to send verification email:", error.message);
+//   }
+// }
 
-// Function for user login
-async function login(email, password) {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    userId = userCredential.user.uid; // Store the user ID
-    console.log("Login successful");
-    routeAfterAuth(routePathAfterLogin);
-    return userCredential.user;
-  } catch (error) {
-    console.error("Login failed:", error.message);
-  }
-}
+// // Function for user login
+// async function login(email, password) {
+//   try {
+//     const userCredential = await signInWithEmailAndPassword(
+//       auth,
+//       email,
+//       password
+//     );
+//     userId = userCredential.user.uid; // Store the user ID
+//     // console.log("Login successful");
+//     routeAfterAuth(routePathAfterLogin);
+//     return userCredential.user;
+//   } catch (error) {
+//     console.error("Login failed:", error.message);
+//   }
+// }
 
 // Function to check if a user is authenticated
 async function isAuthenticated() {
@@ -72,14 +72,14 @@ async function isAuthenticated() {
         const authenticated = true;
         const userId = user.uid; // Store the user ID
 
-        console.log("Is authenticated:", authenticated);
+        // console.log("Is authenticated:", authenticated);
 
         resolve(authenticated);
       } else {
         const userId = null; // Reset
 
         const authenticated = false;
-        console.log("Is authenticated:", authenticated);
+        // console.log("Is authenticated:", authenticated);
         resolve(authenticated);
       }
     });
@@ -97,4 +97,4 @@ function forgetPassword() {
   return auth.signOut();
 }
 
-export { register, login, isAuthenticated, logout, forgetPassword };
+export { isAuthenticated, logout, forgetPassword };

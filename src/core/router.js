@@ -1,12 +1,89 @@
 import page from "page";
 import { html, render } from "lit-html";
-import { appAPI, appName, appURL } from "../module/config/app-config";
+import { appName, appURL } from "../module/config/app-config";
 import { MetaManager } from "./meta-manager";
 import { isAuthenticated } from "../utils/authUtils";
-import { page_config } from "./routes";
 
 import "../views/404/NotFoundView";
 import { getFirestoreUserData } from "../utils/firestoreUtils";
+
+// route page config
+const page_config = {
+  welcome: {
+    path: "/",
+    name: "welcome",
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-view" */ "../views/WelcomeView.js"
+      ),
+    element: html`<welcome-view></welcome-view>`,
+    meta: { title: "Welcome", description: "Welcome Page" },
+  },
+
+  dashboard: {
+    path: "/dashboard",
+    name: "dashboard",
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-view" */ "../views/DashboardView.js"
+      ),
+    element: html`<dashboard-view></dashboard-view>`,
+    meta: { title: "Dashboard", description: "Dashboard Page" },
+  },
+
+  reports: {
+    path: "/reports",
+    name: "reports",
+    component: () =>
+      import(/* webpackChunkName: "report-view" */ "../views/ReportView.js"),
+    element: html`<report-view></report-view>`,
+    meta: { title: "", description: "" },
+  },
+
+  wallets: {
+    path: "/wallets",
+    name: "wallets",
+    component: () =>
+      import(/* webpackChunkName: "wallets-view" */ "../views/WalletsView.js"),
+    element: html`<wallets-view></wallets-view>`,
+    meta: { title: "", description: "" },
+  },
+
+  airdrops: {
+    path: "/airdrops",
+    name: "airdrops",
+    component: () =>
+      import(
+        /* webpackChunkName: "airdrops-view" */ "../views/AirdropsView.js"
+      ),
+    element: html`<airdrops-view></airdrops-view>`,
+    meta: { title: "", description: "" },
+  },
+
+  airdrop: {
+    path: "/airdrop/:id",
+    name: "airdrop",
+    component: () =>
+      import(
+        /* webpackChunkName: "airdrop-details-view" */ "../views/AirdropDetailsView.js"
+      ),
+    element: html`<airdrop-details-view></airdrop-details-view>`,
+    meta: { title: "", description: "" },
+  },
+
+  // PAGES ONLY
+  airdropSubmission: {
+    path: "/adsub",
+    name: "airdrop submission",
+    component: () =>
+      import(
+        /* webpackChunkName: "adsub-view" */ "../views/AirDropSubmissionView.js"
+      ),
+    element: html`<adsub-view></adsub-view>`,
+    meta: { title: "", description: "" },
+    displayInAppElement: false,
+  },
+};
 
 class Router {
   constructor() {
@@ -57,8 +134,9 @@ class Router {
         (context, next) => {
           this.renderer.renderPage(
             context.pathname,
-            x_page.name,
-            x_page.component
+            x_page.component, // Use the imported component directly
+            x_page.element, // Use the imported component's element directly
+            x_page.name
           );
         }
       );
@@ -83,6 +161,8 @@ class Renderer {
     this.metaManager = new MetaManager();
     this.breadcrumbs = [];
     this.urlToPage = "";
+
+   
   }
 
   updateBreadcrumbs(path, name) {
@@ -97,10 +177,10 @@ class Renderer {
     }
   }
 
-  renderElement(path, component, name) {
+  renderElement(path, element, name) {
     document.title = `${appName} - ${name}`;
     this.metaManager.updateMetaDescription(name);
-    render(html`${component}`, this.appElement);
+    render(element, this.appElement);
   }
 
   render404() {
@@ -111,15 +191,20 @@ class Renderer {
     );
   }
 
-  async renderPage(path, name, component) {
+  async renderPage(path, component, element, name) {
     this.urlToPage = `${appURL}${path}`;
     this.updateBreadcrumbs(path, name);
-    // this.navigateToUrl(); // Commenting out to prevent full page reload on unauthenticated access
 
     const authenticated = await isAuthenticated();
 
     if (["/", "/airdrops", "/reports"].includes(path) || authenticated) {
-      this.renderElement(path, component, name);
+      try {
+        await component();
+        this.renderElement(path, element, name);
+      } catch (error) {
+        console.error(`Error loading component for path '${path}':`, error);
+        // Handle the error, display an error page, or perform appropriate action
+      }
     } else {
       let countdownElement = this.appElement.querySelector("#countdown");
 

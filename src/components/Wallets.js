@@ -243,15 +243,15 @@ class Wallet extends LitElement {
         : ""}
 
       <div class="wallet-overview mb-5 wallet">
-        <h2>Your Wallet Addresses:</h2>
+        <h2 class="mb-3">Your Wallet Addresses:</h2>
         <div
-          class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          class="grid gap-5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         >
           ${this.walletAddresses.length > 0
             ? html`
                 ${this.walletAddresses.map(
                   (wallet, index) => html`
-                    <div class="bg-gray-100 p-4 mb-4 rounded-lg w-full">
+                    <div class="bg-gray-100 p-4 rounded-lg w-full">
                       <div class="flex justify-between items-center">
                         <div
                           class="text-sm font-medium w-full grid justify-between"

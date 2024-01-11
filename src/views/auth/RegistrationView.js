@@ -1,14 +1,17 @@
 // src/views/RegistrationView.js
 import { html, css, LitElement } from "lit";
-import { register } from "../../utils/authUtils";
+
 import { auth } from "../../../utils/firebase";
 
 import { storeUserDataInFirestore } from "../../utils/firestoreUtils";
 import { routePathAfterRegitration } from "../../module/config/app-config";
 import globalSemanticCSS from "../../css/global-semanticCSS";
+import { TWStyles } from "../../css/twlit";
+import { sendEmailVerification } from "firebase/auth";
 
 class RegistrationView extends LitElement {
   static styles = [
+    TWStyles,
     globalSemanticCSS,
     css`
       /* Add your CSS styles here */
@@ -48,6 +51,37 @@ class RegistrationView extends LitElement {
       // Handle registration error
       console.error("Registration error:", error);
       // Display an error message to the user
+    }
+  }
+
+  // Function for user registration
+  async register(email, password, sendEmailVerification) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (sendEmailVerification) {
+        await sendEmailVerificationToUser(userCredential.user);
+      }
+
+      // console.log("Registration successful");
+
+      return userCredential.user;
+    } catch (error) {
+      console.error("Registration failed:", error.message);
+    }
+  }
+
+  // Function to send email verification
+  async sendEmailVerificationToUser(user) {
+    try {
+      await sendEmailVerification(user);
+      // console.log("Verification email sent to " + user.email);
+    } catch (error) {
+      console.error("Failed to send verification email:", error.message);
     }
   }
 
@@ -111,7 +145,9 @@ class RegistrationView extends LitElement {
               <label for="show-password">Show password</label>
             </div>
 
-            <button type="submit" class="form-button">Register</button>
+            <button type="submit" class="form-button rounded-md">
+              Register
+            </button>
           </div>
         </form>
       </div>
