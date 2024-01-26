@@ -102,6 +102,7 @@ class RegistrationView extends LitElement {
             </div> -->
 
             <div class="form-item">
+              <label for="email">Email</label>
               <input
                 type="email"
                 aria-label="email"
@@ -109,7 +110,6 @@ class RegistrationView extends LitElement {
                 placeholder=""
                 required
               />
-              <label for="email">Email</label>
             </div>
 
             <!-- Add the checkbox for email verification -->
@@ -125,6 +125,7 @@ class RegistrationView extends LitElement {
             </div>
 
             <div class="form-item">
+              <label for="password">Password</label>
               <input
                 type="password"
                 aria-label="password"
@@ -132,7 +133,6 @@ class RegistrationView extends LitElement {
                 placeholder=""
                 required
               />
-              <label for="password">Password</label>
             </div>
 
             <div class="check-container">

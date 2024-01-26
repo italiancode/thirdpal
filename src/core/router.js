@@ -1,11 +1,9 @@
 import page from "page";
 import { html, render } from "lit-html";
 import { appName, appURL } from "../module/config/app-config";
-import { MetaManager } from "./meta-manager";
-import { isAuthenticated } from "../utils/authUtils";
 
-import "../views/404/NotFoundView";
 import { getFirestoreUserData } from "../utils/firestoreUtils";
+import { isAuthenticated } from "../../utils/firebase.js";
 
 // route page config
 const page_config = {
@@ -20,15 +18,48 @@ const page_config = {
     meta: { title: "Welcome", description: "Welcome Page" },
   },
 
+  guides: {
+    path: "/guides",
+    name: "guides",
+    component: () => import("../views/GuidesView.js"),
+    element: html`<guides-view></guides-view>`,
+    meta: {
+      title: "Crypto Mastery: In-Depth Guides and Insights",
+      description:
+        "Unlock the secrets of the crypto world with our comprehensive guides and insightful analysis. Stay ahead in the fast-paced crypto landscape with step-by-step instructions and expert perspectives.",
+    },
+  },
+
+  guide: {
+    path: "/guide/:id",
+    name: "guide",
+    component: () => import("../views/PostFullView.js"),
+    element: html`<post-full-view></post-full-view>`,
+    meta: { title: "Guide Post", description: "Guide post" },
+  },
+
+  auth: {
+    path: "/auth",
+    name: "auth",
+    component: () => import("../views/AuthView.js"),
+    element: html`<auth-view></auth-view>`,
+    meta: { title: "Auth Page", description: "Auth page" },
+  },
+
   dashboard: {
     path: "/dashboard",
     name: "dashboard",
-    component: () =>
-      import(
-        /* webpackChunkName: "dashboard-view" */ "../views/DashboardView.js"
-      ),
+    component: () => import("../views/DashboardView.js"),
     element: html`<dashboard-view></dashboard-view>`,
     meta: { title: "Dashboard", description: "Dashboard Page" },
+  },
+
+  d: {
+    path: "/d/create",
+    name: "Create",
+    component: () => import("../views/CreatePostView.js"),
+    element: html`<create-post-view></create-post-view>`,
+    meta: { title: "Create", description: "Create Something" },
   },
 
   reports: {
@@ -85,84 +116,29 @@ const page_config = {
   },
 };
 
-class Router {
-  constructor() {
-    this.renderer = new Renderer();
-    this.listeners = [];
-    this.breadcrumbs = [];
-    this.initializeRoutes();
-    this.start();
+export function updateTitleAndMeta(title, description, appName) {
+  document.title = `${title} - ${appName}`;
+
+  // Remove existing meta description tag
+  const existingMetaDescription = document.querySelector(
+    'meta[name="description"]'
+  );
+  if (existingMetaDescription) {
+    existingMetaDescription.remove();
   }
 
-  onNavigate(callback) {
-    this.listeners.push(callback);
-  }
-
-  renderUnauthorized() {
-    this.renderElement(
-      "/unauthorized",
-      html`<unauthorized-view></unauthorized-view>`, // Replace with your unauthorized view/component
-      "Unauthorized Access"
-    );
-  }
-
-  async checkOrganizerAccess(context, next) {
-    const authenticated = await isAuthenticated();
-    const organizerRoutes = ["/adsub", "/data" /* Add more routes here */];
-    const isOrganizerRoute = organizerRoutes.includes(context.pathname);
-
-    if (authenticated && isOrganizerRoute) {
-      const user = await getFirestoreUserData();
-      if (!user || !user.isOrganizer) {
-        // For non-organizer users trying to access organizer-required routes
-        console.log("User is not authorized as an organizer for this route.");
-        this.renderer.renderUnauthorized(); // Render unauthorized view
-        return;
-      }
-    }
-
-    // Proceed to render the route for authenticated users or other routes
-    next();
-  }
-
-  initializeRoutes() {
-    for (const pageKey in page_config) {
-      const x_page = page_config[pageKey];
-      page(
-        x_page.path,
-        this.checkOrganizerAccess.bind(this),
-        (context, next) => {
-          this.renderer.renderPage(
-            context.pathname,
-            x_page.component, // Use the imported component directly
-            x_page.element, // Use the imported component's element directly
-            x_page.name
-          );
-        }
-      );
-    }
-
-    // Add a catch-all route for 404 errors
-    page("*", (context, next) => {
-      this.renderer.render404();
-    });
-  }
-
-  start() {
-    page.start(); // Start page.js router
-  }
+  // Create and append a new meta description tag
+  const newMetaDescription = document.createElement("meta");
+  newMetaDescription.name = "description";
+  newMetaDescription.content = description;
+  document.head.appendChild(newMetaDescription);
 }
-
-export { Router };
 
 class Renderer {
   constructor() {
-    this.appElement = document.getElementById("app");
-    this.metaManager = new MetaManager();
+    this.appElement = document.querySelector("app-manager");
     this.breadcrumbs = [];
     this.urlToPage = "";
-
-   
   }
 
   updateBreadcrumbs(path, name) {
@@ -171,36 +147,52 @@ class Renderer {
 
   navigateToUrl() {
     if (window.location.href !== this.urlToPage) {
-      // Commenting out the line below to prevent full page reload
-      // window.location.replace(this.urlToPage);
       this.breadcrumbs = [];
     }
   }
 
-  renderElement(path, element, name) {
-    document.title = `${appName} - ${name}`;
-    this.metaManager.updateMetaDescription(name);
+  renderElement(path, element, name, meta) {
+    updateTitleAndMeta(meta.title, meta.description, appName);
+
     render(element, this.appElement);
   }
 
-  render404() {
+  async render404() {
+    // Import the NotFoundView using dynamic import
+    const NotFoundView = () =>
+      import(
+        /* webpackChunkName: "not-found-view" */ "../views/404/NotFoundView.js"
+      );
+
+    // Wait for the import to complete
+    await NotFoundView();
+
+    // Now render the 404 view
     this.renderElement(
       "/404",
       html`<not-found-view></not-found-view>`,
+      "Page Not Found",
       "Page Not Found"
     );
   }
 
-  async renderPage(path, component, element, name) {
+  async renderPage(path, component, element, name, meta) {
     this.urlToPage = `${appURL}${path}`;
     this.updateBreadcrumbs(path, name);
 
+    // Scroll to the top when navigating to a new route
+    window.scrollTo(0, 0);
+
     const authenticated = await isAuthenticated();
 
-    if (["/", "/airdrops", "/reports"].includes(path) || authenticated) {
+    if (
+      ["/", "/guides", "/auth", "/airdrops", "/reports"].includes(path) ||
+      path.startsWith(["/guide/"]) ||
+      authenticated
+    ) {
       try {
         await component();
-        this.renderElement(path, element, name);
+        this.renderElement(path, element, name, meta);
       } catch (error) {
         console.error(`Error loading component for path '${path}':`, error);
         // Handle the error, display an error page, or perform appropriate action
@@ -239,4 +231,108 @@ class Renderer {
   }
 }
 
-export { Renderer };
+const renderer = new Renderer();
+
+class Router {
+  constructor() {
+    this.renderer = new Renderer();
+    this.listeners = [];
+    this.breadcrumbs = [];
+    this.authenticated = false;
+    this.initializeRoutes();
+    this.start();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.checkUserAuthAccess();
+    // ... rest of your logic
+  }
+
+  async checkUserAuthAccess() {
+    this.authenticated = await isAuthenticated();
+  }
+
+  onNavigate(callback) {
+    this.listeners.push(callback);
+  }
+
+  async renderUnauthorized() {
+    this.renderElement(
+      "/unauthorized",
+      html`<unauthorized-view></unauthorized-view>`, // Replace with your unauthorized view/component
+      "Unauthorized Access"
+    );
+  }
+
+  initializeRoutes() {
+    for (const pageKey in page_config) {
+      const x_page = page_config[pageKey];
+      page(
+        x_page.path,
+        this.checkOrganizerAccess.bind(this),
+        this.checkAdminAccess.bind(this),
+        (context, next) => {
+          this.renderer.renderPage(
+            context.pathname,
+            x_page.component, // Use the imported component directly
+            x_page.element, // Use the imported component's element directly
+            x_page.name,
+            x_page.meta // Pass the meta object
+          );
+        }
+      );
+    }
+
+    // Add a catch-all route for 404 errors
+    page("*", (context, next) => {
+      renderer.render404();
+    });
+  }
+
+  start() {
+    page.start(); // Start page.js router
+  }
+
+  async checkOrganizerAccess(context, next) {
+    const organizerRoutes = ["/adsub", "/?" /* Add more routes here */];
+    const isOrganizerRoute = organizerRoutes.includes(context.pathname);
+
+    this.authenticated = await isAuthenticated();
+
+    if (this.authenticated && isOrganizerRoute) {
+      const user = await getFirestoreUserData();
+      if (!user || !user.isOrganizer) {
+        console.log("User is not authorized as an organizer for this route.");
+        this.renderUnauthorized(); // Corrected: Add parentheses to execute the method
+        return;
+      }
+    }
+
+    // Proceed to render the route for authenticated users or other routes
+    next();
+  }
+
+  async checkAdminAccess(context, next) {
+    const adminRoutes = ["/d/create", "/?" /* Add more routes here */];
+    const isAdminRoute = adminRoutes.includes(context.pathname);
+
+    this.authenticated = await isAuthenticated();
+
+    if (this.authenticated && isAdminRoute) {
+      const user = await getFirestoreUserData();
+
+      if (!user && !user.isAdmin) {
+        console.log("User is not authorized as an admin for this route.");
+        this.renderUnauthorized(); //
+
+        return;
+      }
+    }
+    // Proceed to render the route for authenticated users or other routes
+    next();
+  }
+}
+
+// Initialize modules
+const router = new Router();

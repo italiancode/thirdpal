@@ -1,26 +1,19 @@
 import { css } from "lit";
 
 const globalSemanticCSS = css`
-  @font-face {
-    font-family: "Montserrat";
-    src: url("./fonts/Montserrat/Montserrat-VariableFont_wght.ttf")
-      format("truetype");
-    font-weight: normal;
-    font-style: normal;
+  /* Base Styles */
+  .light {
+    background-color: #fff;
+    color: #2c3e50; /* Dark charcoal */
   }
 
-  /* Base Styles */
-  * {
-    font-family: "Montserrat", "Segoe UI", "Open Sans", "Helvetica Neue",
-      sans-serif;
-    color: #2c3e50; /* Dark charcoal */
-    letter-spacing: 0.03rem;
-    line-height: 1.7em;
+  .dark {
+    background-color: #0d0d0d;
+    color: #96bcdb;
   }
 
   /* Paragraph Styles */
   p {
-    color: #2c3e50;
     margin-top: 15px;
   }
 
@@ -57,29 +50,13 @@ const globalSemanticCSS = css`
     color: #34495e; /* Slightly lighter */
   }
 
-  /* Modern text colors for headers */
-  h1 {
-    color: #2c3e50; /* Dark charcoal */
-  }
-
-  h2 {
-    color: #34495e; /* Slightly lighter */
-  }
-
-  h3 {
-    color: #4a6572; /* Even lighter */
-  }
-
-  h4 {
-    color: #6c7a89; /* Subtle color for h4 */
-  }
-
-  h5 {
-    color: #8295a7; /* Slightly lighter than h4 */
-  }
-
-  h6 {
-    color: #a5b7c2; /* Lightest color for h6 */
+  .app-card {
+    display: block;
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    background-color: #f6f6f71e;
+    transition: border-color 0.25s, background-color 0.25s;
   }
 
   /* Form Styles */
@@ -89,7 +66,7 @@ const globalSemanticCSS = css`
     max-width: 500px;
     margin: auto;
     margin-top: 0.75rem;
-    background: #fff;
+    /* background: #fff; */
   }
 
   .form-header,
@@ -97,7 +74,7 @@ const globalSemanticCSS = css`
     width: 100%;
     max-width: 500px;
     margin: 13px auto;
-    background: #fff;
+    /* background: #fff; */
     padding: 1rem;
   }
 
@@ -130,22 +107,6 @@ const globalSemanticCSS = css`
 
   input:focus {
     border-color: #1b6fb4;
-  }
-
-  .form-item label {
-    position: absolute;
-    cursor: text;
-    z-index: 2;
-    top: 1rem;
-    left: 1rem;
-    font-size: 12px;
-    font-weight: bold;
-    background: #fff;
-    padding: 0 10px;
-    margin-top: -0.3rem;
-    color: inherit;
-    pointer-events: none;
-    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .form-item input:focus + label,
@@ -194,9 +155,17 @@ const globalSemanticCSS = css`
     background-color: #0056b3;
   }
 
+  .nav-h1 {
+    padding: 7.5px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    opacity: 1;
+    transition: color 0.3s, background-color 0.3s;
+  }
+
   /* Navigation Item Styles */
   .nav-item {
-    color: #6f6f6f;
     padding: 7.5px;
     font-size: 0.9em;
     text-decoration: none;
@@ -209,10 +178,12 @@ const globalSemanticCSS = css`
 
   .nav-item:hover,
   .toggle-menu-icon:hover,
-  .nav-icon-link:hover .nav-icon {
+  .nav-icon-link:hover .nav-icon,
+  .nav-h1:hover {
     color: #2980b9;
     background-color: #b3b3b32a;
-    border-radius: 5px;
+    border-radius: 3px;
+    overflow: hidden;
   }
 
   .nav-item.active {

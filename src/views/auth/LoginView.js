@@ -3,6 +3,7 @@ import globalSemanticCSS from "../../css/global-semanticCSS";
 import { TWStyles } from "../../css/twlit";
 import { auth } from "../../../utils/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { routePathAfterLogin } from "../../module/config/app-config";
 
 class LoginView extends LitElement {
   static styles = [
@@ -26,7 +27,7 @@ class LoginView extends LitElement {
     const email = this.shadowRoot.querySelector("#login-email").value;
     const password = this.shadowRoot.querySelector("#login-password").value;
     try {
-      await login(email, password);
+      await this.login(email, password); // Update this line
     } catch (error) {
       console.error("Login failed:", error.message);
       // Show an error message to the user (e.g., display a message on the UI)
@@ -35,6 +36,8 @@ class LoginView extends LitElement {
 
   // Function for user login
   async login(email, password) {
+    let userId; // Declare userId here
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -43,7 +46,7 @@ class LoginView extends LitElement {
       );
       userId = userCredential.user.uid; // Store the user ID
       // console.log("Login successful");
-      routeAfterAuth(routePathAfterLogin);
+      window.location.href = routePathAfterLogin;
       return userCredential.user;
     } catch (error) {
       console.error("Login failed:", error.message);
@@ -62,6 +65,7 @@ class LoginView extends LitElement {
         <!-- Login form fields -->
         <div class="form">
           <div class="form-item">
+            <label for="email">Email</label>
             <input
               type="email"
               aria-label="email"
@@ -69,10 +73,10 @@ class LoginView extends LitElement {
               placeholder=""
               required
             />
-            <label for="email">Email</label>
           </div>
 
           <div class="form-item">
+            <label for="password">Password</label>
             <input
               type="password"
               aria-label="password"
@@ -80,7 +84,6 @@ class LoginView extends LitElement {
               placeholder=""
               required
             />
-            <label for="password">Password</label>
           </div>
 
           <div class="check-container">

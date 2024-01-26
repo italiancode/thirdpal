@@ -1,74 +1,161 @@
 import { html, css, LitElement } from "lit";
-import { isAuthenticated } from "../utils/authUtils";
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import { appMainPath } from "../module/config/app-config";
-
-import "./auth/LoginView";
-import "./auth/RegistrationView";
-import "../components/SocialLinks";
+import { auth, firestore_db } from "../../utils/firebase.js";
+import { collection, getDocs } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 class WelcomeView extends LitElement {
   static properties = {
-    currentView: { type: String },
     authenticated: { type: Boolean },
+    posts: { type: Array }, // Add posts property to store fetched data
     loading: { type: Boolean },
+    darkMode: { type: Boolean },
   };
 
   constructor() {
     super();
-    this.currentView = "login";
     this.authenticated = false;
+    this.posts = []; // Initialize posts array
+    this.loading = true; // Initial loading state
+    this.importView = () => import("./AuthView.js");
+
+    const storedMode = localStorage.getItem("theme");
+    this.darkMode = storedMode
+      ? storedMode === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
     this.checkUserAuthAccess();
+    // ... rest of your logic
   }
 
-  async checkUserAuthAccess() {
-    this.authenticated = await isAuthenticated();
-  }
+  async isAuthenticated() {
+    return new Promise((resolve) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const authenticated = true;
 
-  toggleView() {
-    this.currentView = this.currentView === "login" ? "registration" : "login";
+          // console.log("Is authenticated:", authenticated);
+
+          resolve(authenticated);
+        } else {
+          const authenticated = false;
+          // console.log("Is authenticated:", authenticated);
+          resolve(authenticated);
+        }
+      });
+    });
   }
 
   enrollButtonClick() {
     if (this.authenticated) {
       window.location.href = "/dashboard"; // Redirect to dashboard if authenticated
     } else {
-      const formContainer = this.shadowRoot.querySelector(".form-container");
-      formContainer.classList.toggle("fullscreen");
+      this.importView().then((module) => {
+        const AuthView = module.default;
+
+        // Ensure that the formContainer exists before trying to append a child
+        const formContainer =
+          this.shadowRoot.querySelector(".welcome-container");
+        if (formContainer) {
+          // Create an instance of AuthView
+          const authViewInstance = document.createElement("auth-view");
+          formContainer.appendChild(authViewInstance);
+        } else {
+          console.error("formContainer not found");
+        }
+      });
     }
   }
 
-  closeButtonClick() {
-    const formContainer = this.shadowRoot.querySelector(".form-container");
-    formContainer.classList.remove("fullscreen");
+  async checkUserAuthAccess() {
+    this.authenticated = await this.isAuthenticated();
+  }
+
+  async connectedCallback() {
+    super.connectedCallback();
+    await this.fetchPosts(); // Fetch posts when the component is connected
+    const themeManager = document.querySelector("app-manager");
+    if (themeManager) {
+      this.darkMode = themeManager.darkMode;
+      themeManager.addEventListener(
+        "theme-updated",
+        this.handleThemeUpdate.bind(this)
+      );
+    }
+  }
+
+  handleThemeUpdate(event) {
+    this.darkMode = event.detail;
+  }
+
+  async fetchPosts() {
+    try {
+      const querySnapshot = await getDocs(collection(firestore_db, "posts"));
+      // Filter out posts with published set to false
+      const publishedPosts = querySnapshot.docs
+        .map((doc) => {
+          const data = doc.data();
+          // Convert Firestore timestamp to a JavaScript Date object
+          return { ...data, createdAt: data.createdAt.toDate() };
+        })
+        .filter((post) => post.published === true);
+
+      // Sort the published posts by createdAt in descending order
+      this.posts = publishedPosts.sort((a, b) => {
+        const createdAtA = new Date(a.createdAt);
+        const createdAtB = new Date(b.createdAt);
+        return createdAtB - createdAtA;
+      });
+
+      this.loading = false; // Set loading state to false once posts are fetched
+      this.requestUpdate("posts", null); // Trigger an update to render the fetched and sorted data
+    } catch (error) {
+      this.loading = false; // Set loading state to false once posts are fetched
+      console.error("Error fetching posts: ", error);
+    }
+  }
+
+  truncateText(text, limit) {
+    const shortened = text.trim().split(/\s+/).slice(0, limit).join(" ");
+    return text.length > limit ? `${shortened}...` : shortened;
   }
 
   render() {
+    const maxPostsToShow = 3;
+    const showViewMoreButton = this.posts.length > maxPostsToShow;
     return html`
-      <div class="auth-container gap-5 mt-5">
-        <div class="banner-container grid ">
+      <div class="grid h-full">
+        <div
+          class="grid welcome-container mt-5 items-center justify-center border-0 border-b mb-5 "
+        >
           <div class="logo-slogan-container ">
             <div class="flex flex-col justify-start text-start">
               <div
                 id="app-sub-header"
                 class="app-sub-header w-full text-start mb-9"
               >
-                <h2 class="tracking-tighter leading-snug text-5xl font-medium">
+                <h2 class="tracking-tighter leading-snug text-4xl font-medium">
                   Empowering authentic crypto users
                 </h2>
               </div>
 
-              <div class="mb-12 block font-medium text-base leading-6">
+              <div class="mb-12 block font-medium text-base leading-6 w-11/12">
                 <span class=""
-                  ><h3 class="">
-                    <a href=${appMainPath}>TokenMama</a> ensures genuine
-                    airdrops: Unleash the power of authentic airdrops
-                  </h3></span
+                  ><p class="">
+                    <!-- <a href=${appMainPath}>TokenMama</a> ensures genuine
+                    airdrops:  -->
+                    Unleash the power of authentic crypto insights and guides
+                    for a seamless journey in the world of web3 blockchain!
+                  </p></span
                 >
               </div>
 
-              <div class="flex items-center gap-5">
+              <!-- <div class="flex items-center gap-5">
                 <span>
                   <button
                     class="enroll-btn w-56 nav-item items-center gap-1 rounded-md bg-white border-double border-4 border-gray-300 font-medium p-2 hover:border-solid "
@@ -77,145 +164,139 @@ class WelcomeView extends LitElement {
                     ${this.authenticated ? "Go to Dashboard" : "Enroll Today"}
                   </button>
                 </span>
-                <social-links></social-links>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
 
-        <div class="form-container ">
-          <div class="flex items-center justify-end w-full p-2">
-            <button
-              class="close-btn px-2 text-3xl border-solid border-4"
-              @click=${this.closeButtonClick}
+        <div id="guides" class="grid gap-3 mt-3">
+          <h2
+            class="tracking-tighter leading-snug text-2xl font-medium text-start mb-5"
+          >
+            Guides
+          </h2>
+
+          ${this.loading
+            ? html`
+                <div>
+                  <ul
+                    class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 list-none items-center"
+                  >
+                    <li class="post-card-list animate-pulse">
+                      <div
+                        class="app-card overflow-hidden w-full h-full text-start"
+                      >
+                        <div
+                          class="object-fill bg-slate-100 min-h-40 h-40 w-full"
+                        ></div>
+
+                        <div class="p-4">
+                          <h3
+                            class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
+                          ></h3>
+                          <div class="h-20 bg-slate-100">
+                            <p class="text-gray-600"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="post-card-list animate-pulse">
+                      <div
+                        class="app-card overflow-hidden w-full h-full text-start"
+                      >
+                        <div
+                          class="object-fill bg-slate-100 min-h-40 h-40 w-full"
+                        ></div>
+
+                        <div class="p-4">
+                          <h3
+                            class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
+                          ></h3>
+                          <div class="h-20 bg-slate-100">
+                            <p class="text-gray-600"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              `
+            : html`
+          <div>
+            <ul
+              class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 list-none items-center"
             >
-              X
-            </button>
+              ${this.posts.slice(0, maxPostsToShow).map(
+                (post) => html`
+                  <li
+                    class="post-card-list app-card overflow-hidden text-start ${this
+                      .darkMode
+                      ? "dark"
+                      : "light"} relative"
+                  >
+                    <!-- Link Overlay -->
+                    <a
+                      href="/guide/${post.slug}"
+                      class="block absolute inset-0 h-full"
+                    ></a>
+
+                    <!-- Image Frame -->
+                    <responsive-image-frame
+                      mainSrc="${post.thumbnail}"
+                      alt="Token Mama icon logo"
+                      fallbackLabel="this is our website logo"
+                      type="thumbnail"
+                      width="w-full"
+                      height="h-40"
+                      min_height="min-h-40"
+                      class="object-fill"
+                    ></responsive-image-frame>
+
+                    <!-- Content -->
+                    <div class="p-4">
+                      <h3 class="text-xl font-semibold capitalize mb-1">
+                        ${post.title}
+                      </h3>
+                      <div class="">
+                        <p class="">
+                          ${this.truncateText(post.description, 15)}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                `
+              )}
+            </ul>
           </div>
-          <div class="form-card">
-            <h2>${this.currentView === "login" ? "Log in" : "Register"}</h2>
-            ${this.currentView === "login"
-              ? html`<login-view></login-view>`
-              : html`<registration-view></registration-view>`}
-            <div class="switch-container">
-              <p @click=${this.toggleView}>
-                ${this.currentView === "login"
-                  ? "Don't have an account? "
-                  : "Already have an account? "}
-              </p>
-              <a @click=${this.toggleView} class="nav-item">
-                ${this.currentView === "login"
-                  ? "Register here"
-                  : "Log in here"}
-              </a>
-            </div>
           </div>
+              
+              `}
+          ${showViewMoreButton
+            ? html`
+                <div class="flex justify-center">
+                  <a
+                    class="nav-item w-1/3 p-2 mt-3 rounded-md border text-center"
+                    href="/guides"
+                  >
+                    View More
+                  </a>
+                </div>
+              `
+            : ""}
         </div>
       </div>
     `;
   }
 
+  //
+
   static styles = [
     TWStyles,
     globalSemanticCSS,
     css`
-      :host {
-        display: block; /* Add padding to the main content */
-        width: 100%;
-        height: 100%;
-        align-items: center;
-      }
-      /* Auth Container Styles */
-      .auth-container {
-        display: flex;
-        flex-direction: row; /* Flex direction for responsiveness */
-        align-items: center;
-        justify-content: start;
-        height: 80%;
-        padding: 0 auto;
-      }
-
-      /* Banner Container Styles */
-      .banner-container {
-        place-items: center;
-        text-align: center;
-        width: 100%;
-        max-width: 50%;
-        height: 100%;
-        background: transparent;
-      }
-
-      /* Form Container Styles */
-      .form-container {
-        display: none; /* Hide by default */
-        place-items: center;
-        width: 100%;
-        max-width: 50%;
-        height: 100%;
-      }
-
-      .form-container.fullscreen {
-        display: block; /* Show in fullscreen */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.9
-        ); /* Semi-transparent background */
-        z-index: 9999; /* Ensure it's on top of other elements */
-      }
-      /* Form Card Styles */
-      .form-card {
-        width: 100%;
-        max-width: 90%;
-        padding: 20px;
-        background: #fff;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        margin-top: 1rem;
-        margin-bottom: 3rem;
-      }
-
-      .form-card h2 {
-        font-size: 24px;
-        margin: 0 0 20px;
-      }
-
-      /* Switch Container Styles */
-      .switch-container {
-        text-align: center;
-        display: block;
-        justify-content: start;
-        gap: auto;
-        margin: auto;
-        margin-top: 0.75rem;
-      }
-
-      .switch-container p {
-        margin: 0;
-        font-size: 14px;
-        text-align: center;
-        padding: 0.5rem;
-        color: #999;
-      }
-
-      .switch-container a {
-        padding: 0.4rem;
-      }
-
-      .switch-container a:hover {
-        color: #0056b3;
-      }
-
-      /* Banner Container Image Styles */
-      .banner-container img {
-        max-width: 100%;
-        height: auto;
+      .welcome-container {
+        height: 55vh;
       }
 
       /* Logo Slogan Container Styles */
@@ -234,25 +315,17 @@ class WelcomeView extends LitElement {
 
       /* Media Query for Small Screens */
       @media (max-width: 935px) {
-        .auth-container {
+        .welcome-container {
           flex-direction: column;
         }
         .form-card {
           max-width: 90%;
         }
-        .banner-container {
-          margin-top: 1rem;
-        }
 
-        .banner-container,
         .form-container {
           max-width: 100%;
         }
       }
-
-      @media (min-width: 935px) {
-      }
-
       /* Meta Description Container Styles */
       .meta-desc-container {
         text-align: center;

@@ -1,5 +1,5 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+// tailwind.config.js
+module.exports = {
   content: [
     "./src/**/*.{html,js}",
     "./*.html",
@@ -10,5 +10,7 @@ export default {
     extend: {},
   },
   plugins: [require("tw-elements/dist/plugin.cjs")],
+
   darkMode: "class",
+  // ... other configurations
 };
