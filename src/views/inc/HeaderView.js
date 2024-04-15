@@ -71,7 +71,7 @@ class HeaderView extends LitElement {
 
         <div class="flex items-center gap-3">
           <toggle-theme></toggle-theme>
-          <button
+          <!-- <button
             @click=${this.toggleUtilsMenu}
             class=" flex justify-center items-center"
             aria-label="Toggle Menu"
@@ -90,7 +90,7 @@ class HeaderView extends LitElement {
               <circle cx="19.5" cy="12" r="2.5"></circle>
               <circle cx="4.5" cy="12" r="2.5"></circle>
             </svg>
-          </button>
+          </button> -->
         </div>
       </div>
 
