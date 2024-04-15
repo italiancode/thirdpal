@@ -60,27 +60,27 @@ class HeaderView extends LitElement {
 
   render() {
     return html`
-      <div class="flex items-center h-11">
+      <div class="flex items-center h-11 nav-utils">
         <!-- -->
         <div class="flex gap-3 items-center rounded overflow-hidden h-10">
           <!-- header icon -->
-          <a href="${appMainPath}" class="nav-h1 px-3 py-2 flex items-center tracking-normal leading-snug">
-            <h1 class="font-bold">ThirdPal</h1>
+          <a href="${appMainPath}" class="nav-h1 px-3 py-2 flex items-center">
+            <h1 class="font-bold tracking-normal leading-snug">ThirdPal</h1>
           </a>
         </div>
-      </div>
-      <div class="flex items-center gap-5">
-        <div class="nav-utils ">
+
+        <div class="flex items-center gap-3">
+          <toggle-theme></toggle-theme>
           <button
-            @click=${this.toggleMenu}
-            class="nav-item flex justify-center items-center"
+            @click=${this.toggleUtilsMenu}
+            class=" flex justify-center items-center"
             aria-label="Toggle Menu"
             role="button"
             tabindex="0"
           >
             <svg
               viewBox="0 0 24 24"
-              width="16"
+              width="24"
               height="16"
               fill="currentColor"
               class=""
@@ -91,228 +91,208 @@ class HeaderView extends LitElement {
               <circle cx="4.5" cy="12" r="2.5"></circle>
             </svg>
           </button>
-
-          <toggle-theme></toggle-theme>
-
-          <a
-            href="/faqs"
-            class="nav-icon-link nav-item flex items-center justify-center"
-          >
-            <span class="nav-icon rounded-full p-2 text-white font-bold text-lg"
-              >?</span
-            >
-          </a>
         </div>
+      </div>
 
-        <div class="flex items-center gap-2 h-11">
-          <nav class="app-links text-md font-semibold">
-            <ul class="link-container flex gap-2 justify-between">
-              ${!this.hideDynamicLink
-                ? html`
-                    <li id="dynamic-links" class="flex">
-                      <a
-                        href="/"
-                        class="nav-item ${window.location.pathname === "/"
-                          ? "active"
-                          : ""}"
-                        >Home</a
-                      >
-                    </li>
-                    <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/airdrops"
-                        class="nav-item ${window.location.pathname ===
-                    "/airdrops"
-                      ? "active"
-                      : ""}"
-                        >Airdrops</a
-                      >
-                    </li> -->
-                    <li id="dynamic-links" class="flex">
-                      <a
-                        href="/guides"
-                        class="nav-item ${window.location.pathname === "/guides"
-                          ? "active"
-                          : ""}"
-                        >Guides</a
-                      >
-                    </li>
-                    <!-- 
-                    <li id="dynamic-links" class="flex">
-                      <a
-                        href="/docs"
-                        class="nav-item ${window.location.pathname === "/docs"
-                      ? "active"
-                      : ""}"
-                        >Docs</a
-                      >
-                    </li> -->
-
-                    <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/reports"
-                        class="nav-item ${window.location.pathname ===
-                    "/reports"
-                      ? "active"
-                      : ""}"
-                        >Reports</a
-                      >
-                    </li> -->
-                    <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/dashboard"
-                        class="nav-item ${window.location.pathname ===
-                    "/dashboard"
-                      ? "active"
-                      : ""}"
-                        >Dashboard</a
-                      >
-                    </li> -->
-                    <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/wallets"
-                        class="nav-item ${window.location.pathname ===
-                    "/wallets"
-                      ? "active"
-                      : ""}"
-                        >Wallets</a
-                      >
-                    </li> -->
-                  `
-                : ""}
-            </ul>
-
-            <div id="dynamic-links" class="flex md:hidden lg:hidden">
-              <button
-                @click=${this.toggleMenu}
-                class="nav-icon-link nav-item flex items-center"
-                aria-label="Toggle Menu"
-                role="button"
-                tabindex="0"
-              >
-                <svg height="24" width="24" fill="currentcolor">
-                  <path
-                    d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            <div id="menu-modal" class="menu-modal">
-              <!--  -->
-              <div
-                @click=${this.toggleMenu}
-                class="w-full h-full close-modal"
-                aria-label="Close Menu"
-                tabindex="0"
-                role="button"
-              >
-                <div class="h-16"></div>
-              </div>
-              <!--  -->
-              <div
-                id="menu-container "
-                @click=${this.toggleMenu}
-                class="menu-container  ${this.darkMode ? "dark" : "light"}"
-              >
-                <div class="h-16"></div>
-                <div class="menu-item-container grid gap-3">
+      <nav class="app-links text-md font-semibold">
+        <ul class="link-container flex gap-2 justify-between">
+          ${!this.hideDynamicLink
+            ? html`
+                <li id="dynamic-links" class="flex">
                   <a
                     href="/"
-                    class="link-container nav-item p-2 text-start ${window
-                      .location.pathname === "/"
+                    class="nav-item ${window.location.pathname === "/"
                       ? "active"
                       : ""}"
                     >Home</a
                   >
-                  <!-- <a
-                      href="/airdrops"
-                      class="link-container nav-item p-2 text-start ${window
-                    .location.pathname === "/airdrops"
-                    ? "active"
-                    : ""}"
-                      >Airdrops</a
-                    > -->
-
+                </li>
+                <!-- <li id="dynamic-links" class="flex">
+                      <a
+                        href="/airdrops"
+                        class="nav-item ${window.location.pathname ===
+                "/airdrops"
+                  ? "active"
+                  : ""}"
+                        >Airdrops</a
+                      >
+                    </li> -->
+                <li id="dynamic-links" class="flex">
                   <a
                     href="/guides"
-                    class="link-container nav-item p-2 text-start ${window
-                      .location.pathname === "/guides"
+                    class="nav-item ${window.location.pathname === "/guides"
                       ? "active"
                       : ""}"
                     >Guides</a
                   >
+                </li>
+                <!-- 
+                    <li id="dynamic-links" class="flex">
+                      <a
+                        href="/docs"
+                        class="nav-item ${window.location.pathname === "/docs"
+                  ? "active"
+                  : ""}"
+                        >Docs</a
+                      >
+                    </li> -->
 
-                  <!-- <a
+                <!-- <li id="dynamic-links" class="flex">
+                      <a
+                        href="/reports"
+                        class="nav-item ${window.location.pathname ===
+                "/reports"
+                  ? "active"
+                  : ""}"
+                        >Reports</a
+                      >
+                    </li> -->
+                <!-- <li id="dynamic-links" class="flex">
+                      <a
+                        href="/dashboard"
+                        class="nav-item ${window.location.pathname ===
+                "/dashboard"
+                  ? "active"
+                  : ""}"
+                        >Dashboard</a
+                      >
+                    </li> -->
+                <!-- <li id="dynamic-links" class="flex">
+                      <a
+                        href="/wallets"
+                        class="nav-item ${window.location.pathname ===
+                "/wallets"
+                  ? "active"
+                  : ""}"
+                        >Wallets</a
+                      >
+                    </li> -->
+              `
+            : ""}
+        </ul>
+
+        <div id="menu-modal" class="menu-modal">
+          <!--  -->
+          <div
+            @click=${this.toggleMenu}
+            class="w-full h-full close-modal"
+            aria-label="Close Menu"
+            tabindex="0"
+            role="button"
+          >
+            <div class="h-16"></div>
+          </div>
+          <!--  -->
+          <div
+            id="menu-container "
+            @click=${this.toggleMenu}
+            class="menu-container  ${this.darkMode ? "dark" : "light"}"
+          >
+            <div class="h-16"></div>
+            <div class="menu-item-container grid gap-3">
+              <a
+                href="/"
+                class="link-container nav-item p-2 text-start ${window.location
+                  .pathname === "/"
+                  ? "active"
+                  : ""}"
+                >Home</a
+              >
+              <!-- <a
+                      href="/airdrops"
+                      class="link-container nav-item p-2 text-start ${window
+                .location.pathname === "/airdrops"
+                ? "active"
+                : ""}"
+                      >Airdrops</a
+                    > -->
+
+              <a
+                href="/guides"
+                class="link-container nav-item p-2 text-start ${window.location
+                  .pathname === "/guides"
+                  ? "active"
+                  : ""}"
+                >Guides</a
+              >
+
+              <!-- <a
                       href="/docs"
                       class="link-container nav-item p-2 text-start ${window
-                    .location.pathname === "/docs"
-                    ? "active"
-                    : ""}"
+                .location.pathname === "/docs"
+                ? "active"
+                : ""}"
                       >Docs</a
                     > -->
 
-                  <!-- <a
+              <!-- <a
                     href="/reports"
                     class="link-container nav-item p-2 text-start ${window
-                    .location.pathname === "/reports"
-                    ? "active"
-                    : ""}"
+                .location.pathname === "/reports"
+                ? "active"
+                : ""}"
                     >Reports</a
                   > -->
-                </div>
+            </div>
 
-                <!-- <div class="menu-item-container grid gap-3">
+            <!-- <div class="menu-item-container grid gap-3">
                     <a
                       href="/dashboard"
                       class="link-container nav-item p-2 text-start ${window
-                  .location.pathname === "/dashboard"
-                  ? "active"
-                  : ""}"
+              .location.pathname === "/dashboard"
+              ? "active"
+              : ""}"
                       >Dashboard</a
                     >
 
                     <a
                       href="/wallets"
                       class="link-container nav-item p-2 text-start ${window
-                  .location.pathname === "/wallets"
-                  ? "active"
-                  : ""}"
+              .location.pathname === "/wallets"
+              ? "active"
+              : ""}"
                       >Wallets</a
                     >
                   </div> -->
 
-                <!-- <div class="menu-item-container grid gap-3">
+            <!-- <div class="menu-item-container grid gap-3">
                     <div
                       class="nav-item flex-container justify-center items-end"
                     >
                       ${this.authenticated === true
-                  ? html`
-                      <a
-                        id="logoutBtn"
-                        class=""
-                        @click=${this.logOut}
-                        part="button"
-                      >
-                        ${logoutButtonText}
-                      </a>
-                    `
-                  : html`
-                      <a
-                        id="loginBtn"
-                        class=""
-                        @click=${this.logIn}
-                        part="button"
-                      >
-                        ${loginButtonText}
-                      </a>
-                    `}
+              ? html`
+                  <a
+                    id="logoutBtn"
+                    class=""
+                    @click=${this.logOut}
+                    part="button"
+                  >
+                    ${logoutButtonText}
+                  </a>
+                `
+              : html`
+                  <a id="loginBtn" class="" @click=${this.logIn} part="button">
+                    ${loginButtonText}
+                  </a>
+                `}
                     </div>
                   </div> -->
-              </div>
-            </div>
-          </nav>
+          </div>
         </div>
+      </nav>
+
+      <div id="dynamic-links" class="flex md:hidden lg:hidden">
+        <button
+          @click=${this.toggleMenu}
+          class="nav-icon-link nav-item flex items-center"
+          aria-label="Toggle Menu"
+          role="button"
+          tabindex="0"
+        >
+          <svg height="24" width="24" fill="currentcolor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+          </svg>
+        </button>
       </div>
 
       <div
@@ -459,7 +439,7 @@ class HeaderView extends LitElement {
       .nav-utils {
         display: grid;
         grid-template-columns: repeat(
-          3,
+          2,
           1fr
         ); /* Adjust the number of columns as needed */
         gap: 8px; /* Adjust the gap between circles as needed */

@@ -1,0 +1,3 @@
+Zero-knowledge proofs (ZKPs) are cryptographic protocols that enable one party, called the prover, to prove to another party, called the verifier, that a statement is true without revealing any additional information beyond the validity of the statement itself. In other words, zero-knowledge proofs allow a party to demonstrate knowledge of a fact without revealing the details of that knowledge.
+
+remixd -s C:\Users\chasefi\Desktop\TokenMama\tokenmama-frontend

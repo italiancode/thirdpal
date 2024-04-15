@@ -23,9 +23,8 @@ export class RichText extends LitElement {
     rich-toolbar {
       grid-area: toolbar;
       width: 100%;
-      background-color: #55667738;
       border: 1px solid #96bcdb;
-      border-bottom: none;
+
     }
 
     .rich-viewer {

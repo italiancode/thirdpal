@@ -71,7 +71,7 @@ class GuidesView extends LitElement {
   render() {
     return html`
       <div class="grid h-full">
-        <div id="guides" class="grid gap-3 mt-3">
+        <div id="guides" class="grid gap-3 mt-3 p-5">
           <h2
             class="tracking-tighter leading-snug text-2xl font-medium text-start mb-5"
           >
@@ -83,6 +83,25 @@ class GuidesView extends LitElement {
                   <ul
                     class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 list-none items-center"
                   >
+                    <li class="post-card-list animate-pulse">
+                      <div
+                        class="app-card overflow-hidden w-full h-full text-start"
+                      >
+                        <div
+                          class="object-fill bg-slate-100 min-h-40 h-40 w-full"
+                        ></div>
+
+                        <div class="p-4">
+                          <h3
+                            class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
+                          ></h3>
+                          <div class="h-20 bg-slate-100">
+                            <p class="text-gray-600"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+
                     <li class="post-card-list animate-pulse">
                       <div
                         class="app-card overflow-hidden w-full h-full text-start"
@@ -178,7 +197,31 @@ class GuidesView extends LitElement {
     `;
   }
 
-  static styles = [TWStyles, globalSemanticCSS, css``];
+  static styles = [
+    TWStyles,
+    globalSemanticCSS,
+    css`
+      .app-card {
+        display: block;
+        border-radius: 12px;
+        border: 1px solid #4d4d4d49;
+        width: 100%;
+        height: auto;
+        background-color: #f6f6f71d;
+        transition: border-color 0.25s, background-color 0.25s;
+      }
+
+      .app-card:hover {
+        background-color: #b3b3b313;
+        overflow: hidden;
+      }
+
+      .app-card:hover h3 {
+        color: #2980b9;
+        background-color: transparent;
+      }
+    `,
+  ];
 }
 
 customElements.define("guides-view", GuidesView);

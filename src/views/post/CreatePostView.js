@@ -1,25 +1,31 @@
 import { html, css, LitElement } from "lit";
-import { TWStyles } from "../css/twlit";
-import globalSemanticCSS from "../css/global-semanticCSS";
-import { firestore_db } from "../../utils/firebase.js";
+import { TWStyles } from "../../css/twlit";
+import globalSemanticCSS from "../../css/global-semanticCSS.js";
+import { firestore_db } from "../../../utils/firebase.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { appName } from "../module/config/app-config.js";
-import { updateTitleAndMeta } from "../core/router.js";
+import { appName } from "../../module/config/app-config.js";
+import { updateTitleAndMeta } from "../../core/router.js";
 
-import "../rich-text-editor.ts";
-import { slugify } from "../utils/slugify.js";
+import "../../rich-text-editor.ts";
+import { slugify } from "../../utils/slugify.js";
 
 class CreatePostView extends LitElement {
   static properties = {
     post: { type: Object },
     loading: { type: Boolean },
     error: { type: String },
+    description: { type: String },
+    thumbnailUrl: { type: String },
+    published: { type: Boolean }, // New property for published toggle
   };
 
   constructor() {
     super();
-    this.post = { title: "", content: "" }; // Initialize with title and content
-    this.error = null; // Initial error state
+    this.post = { title: "", content: "" };
+    this.error = null;
+    this.description = "";
+    this.thumbnailUrl = "";
+    this.published = false; // Initialize published toggle
   }
 
   async connectedCallback() {
@@ -33,29 +39,27 @@ class CreatePostView extends LitElement {
 
   async saveToFirestore(title, content) {
     try {
-      const slug = slugify(title); // Generate a slug from the title
+      const slug = slugify(title);
 
-      // Check if the document with the same slug exists
       const existingDoc = await getDoc(doc(firestore_db, "posts", slug));
 
       if (existingDoc.exists()) {
         console.warn(
           "Post with this title already exists. Choose a different title."
         );
-        return; // Do not proceed with saving
+        return;
       }
 
-      // If the document does not exist, proceed with saving
       const postRef = doc(firestore_db, "posts", slug);
 
-      // Set the document with the title, content, and other fields as needed
       await setDoc(postRef, {
+        slug: slug,
         title,
         content,
-        description: "",
+        description: this.description,
         createdAt: new Date(),
-        published: false,
-        thumbnail: "",
+        published: this.published, // Include the published property
+        thumbnail: this.thumbnailUrl,
       });
 
       console.log("Content saved to Firestore with Slug:", slug);
@@ -66,7 +70,7 @@ class CreatePostView extends LitElement {
 
   render() {
     return html`
-      <div class="grid h-full">
+      <div class="grid h-full p-5">
         <div id="post-full" class="grid gap-3 mt-10">
           <h2>Create New Something</h2>
 
@@ -79,6 +83,24 @@ class CreatePostView extends LitElement {
             @input=${(e) => (this.post.title = e.target.value)}
           />
 
+          <!-- Input for Description -->
+          <label for="post-description">Description:</label>
+          <input
+            id="post-description"
+            type="text"
+            .value=${this.description}
+            @input=${(e) => (this.description = e.target.value)}
+          />
+
+          <!-- Input for Thumbnail URL -->
+          <label for="post-thumbnail">Thumbnail URL:</label>
+          <input
+            id="post-thumbnail"
+            type="text"
+            .value=${this.thumbnailUrl}
+            @input=${(e) => (this.thumbnailUrl = e.target.value)}
+          />
+
           <!-- Rich Text Editor -->
           <rich-text>
             <template>
@@ -86,6 +108,18 @@ class CreatePostView extends LitElement {
               <!-- ... (your rich text content) ... -->
             </template>
           </rich-text>
+
+          <!-- Toggle switch for Published -->
+          <div class="flex items-center mt-4">
+            <label for="published" class="mr-2">Published:</label>
+            <input
+              id="published"
+              type="checkbox"
+              class="form-checkbox h-5 w-5 text-blue-500"
+              .checked=${this.published}
+              @change=${(e) => (this.published = e.target.checked)}
+            />
+          </div>
 
           <!-- Add a Save button -->
           <button @click=${this.handleSaveClick}>Save</button>
@@ -118,3 +152,7 @@ class CreatePostView extends LitElement {
 customElements.define("create-post-view", CreatePostView);
 
 export default CreatePostView;
+
+
+
+

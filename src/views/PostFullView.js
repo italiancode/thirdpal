@@ -59,7 +59,7 @@ class PostFullView extends LitElement {
 
   render() {
     return html`
-      <div class="grid h-full">
+      <div class="grid h-full p-5">
         <div id="post-full" class="grid gap-3 mt-10">
           ${this.loading
             ? html` <div class="animate-pulse">

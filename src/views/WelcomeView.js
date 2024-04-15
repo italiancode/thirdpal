@@ -130,10 +130,8 @@ class WelcomeView extends LitElement {
     const showViewMoreButton = this.posts.length > maxPostsToShow;
     return html`
       <div class="grid h-full">
-        <div
-          class="grid welcome-container mt-5 items-center justify-center border-0 border-b mb-5 "
-        >
-          <div class="logo-slogan-container ">
+        <div class="grid welcome-container py-5 items-center justify-center p-5">
+          
             <div class="flex flex-col justify-start text-start">
               <div
                 id="app-sub-header"
@@ -166,10 +164,10 @@ class WelcomeView extends LitElement {
                 </span>
               </div> -->
             </div>
-          </div>
+          
         </div>
 
-        <div id="guides" class="grid gap-3 mt-3">
+        <div id="guides" class="grid gap-3 mt-3 p-5">
           <h2
             class="tracking-tighter leading-snug text-2xl font-medium text-start mb-5"
           >
@@ -299,20 +297,6 @@ class WelcomeView extends LitElement {
         height: 55vh;
       }
 
-      /* Logo Slogan Container Styles */
-      .logo-slogan-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        margin-bottom: 2rem;
-      }
-
-      .logo-slogan-container img {
-        max-width: 100%;
-        height: auto;
-      }
-
       /* Media Query for Small Screens */
       @media (max-width: 935px) {
         .welcome-container {
@@ -336,6 +320,26 @@ class WelcomeView extends LitElement {
         font-size: 16px;
         margin-top: 15px;
         line-height: 1.5;
+      }
+
+      .app-card {
+        display: block;
+        border-radius: 12px;
+        border: 1px solid #4d4d4d49;
+        width: 100%;
+        height: auto;
+        background-color: #f6f6f71d;
+        transition: border-color 0.25s, background-color 0.25s;
+      }
+
+      .app-card:hover {
+        background-color: #b3b3b313;
+        overflow: hidden;
+      }
+
+      .app-card:hover h3 {
+        color: #2980b9;
+        background-color: transparent;
       }
     `,
   ];

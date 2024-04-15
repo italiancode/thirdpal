@@ -54,12 +54,28 @@ const page_config = {
     meta: { title: "Dashboard", description: "Dashboard Page" },
   },
 
-  d: {
+  d_posts: {
+    path: "/d/posts",
+    name: "All Post",
+    component: () => import("../views/post/AllPostsView.js"),
+    element: html`<all-posts-view></all-posts-view>`,
+    meta: { title: "All Post", description: "All Post" },
+  },
+
+  d_create: {
     path: "/d/create",
     name: "Create",
-    component: () => import("../views/CreatePostView.js"),
+    component: () => import("../views/post/CreatePostView.js"),
     element: html`<create-post-view></create-post-view>`,
     meta: { title: "Create", description: "Create Something" },
+  },
+
+  d_edit: {
+    path: "/d/edit/:id",
+    name: "Edit",
+    component: () => import("../views/post/EditPostView.js"),
+    element: html`<edit-post-view></edit-post-view>`,
+    meta: { title: "Edit", description: "Edit Something" },
   },
 
   reports: {
@@ -314,7 +330,7 @@ class Router {
   }
 
   async checkAdminAccess(context, next) {
-    const adminRoutes = ["/d/create", "/?" /* Add more routes here */];
+    const adminRoutes = ["/d/create", "/d/post" /* Add more routes here */];
     const isAdminRoute = adminRoutes.includes(context.pathname);
 
     this.authenticated = await isAuthenticated();

@@ -1267,6 +1267,10 @@ input[type="range"]:active::-webkit-slider-thumb {
   margin-right: 2rem;
 }
 
+.mr-9 {
+  margin-right: 2.25rem;
+}
+
 .mr-\\[6px\\] {
   margin-right: 6px;
 }
@@ -1337,10 +1341,6 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mr-9 {
-  margin-right: 2.25rem;
 }
 
 .box-border {
@@ -2491,6 +2491,10 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .gap-1 {
   gap: 0.25rem;
+}
+
+.gap-11 {
+  gap: 2.75rem;
 }
 
 .gap-2 {

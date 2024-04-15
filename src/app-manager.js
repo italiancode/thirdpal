@@ -36,7 +36,7 @@ class AppManager extends LitElement {
       main {
         grid-row: 2;
 
-        padding: 16px 20px;
+        padding: 16px auto;
         display: block;
         position: "";
         width: 100%;
@@ -134,7 +134,7 @@ class AppManager extends LitElement {
 
       <footer class="grid gap-3 ${this.darkMode ? "dark" : "light"}">
         <div class="flex justify-between items-center">
-          <a href=${appMainPath}><h2>${appName}</h2></a>
+          <a href=${appMainPath}>${appName}</a>
 
           <div class="flex gap-5 justify-start items-center">
             <label> 2024</label>

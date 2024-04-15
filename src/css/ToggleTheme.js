@@ -59,7 +59,7 @@ class ToggleTheme extends LitElement {
   render() {
     return html`
       <button
-        class="toggle-button nav-item rounded-full px-2"
+        class="rounded-full w-8 h-8"
         @click=${this.toggleTheme}
         aria-label="Toggle Mode"
         role="button"
@@ -69,7 +69,7 @@ class ToggleTheme extends LitElement {
           ? html`
               <!-- Dark mode icon -->
               <svg
-                class="w-6 h-6 md:w-8 md:h-8"
+                class="w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

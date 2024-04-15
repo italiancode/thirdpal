@@ -43,7 +43,7 @@ export class RichToolbar extends LitElement {
   @property({ type: Object, hasChanged: () => true }) node!: Element;
   @state() richTextContent: string = ""; // Added property to store content
 
-   render() {
+  render() {
     const tags = this.getTags();
     return html`<header>
       <rich-action icon="clear" command="removeFormat"></rich-action>
@@ -168,88 +168,78 @@ export class RichToolbar extends LitElement {
       <rich-action icon="content_cut" command="cut"></rich-action>
       <rich-action icon="content_copy" command="copy"></rich-action>
       <rich-action icon="content_paste" command="paste"></rich-action>
-      <rich-action
+      <!-- <rich-action
         icon="file_upload"
         @action=${async () => {
-          if ("showOpenFilePicker" in window) {
-            // File system api
-            // @ts-ignore
-            const [fileHandle] = await window.showOpenFilePicker();
-            this.fileHandle = fileHandle;
-            if (fileHandle) {
-              const file = await fileHandle.getFile();
-              const contents = await file.text();
-              this.dispatchEvent(
-                new CustomEvent("set-content", {
-                  detail: contents,
-                  bubbles: true,
-                  composed: true,
-                })
-              );
-            }
-          } else {
-            // Fallback to input
-            const input = document.createElement("input");
-            input.type = "file";
-            input.click();
-            input.onchange = async () => {
-              const file = input.files![0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                  const data = reader.result as string;
-                  this.dispatchEvent(
-                    new CustomEvent("set-content", {
-                      detail: data,
-                      bubbles: true,
-                      composed: true,
-                    })
-                  );
-                };
-                reader.readAsText(file);
-              }
-            };
+        if ("showOpenFilePicker" in window) {
+          // File system api
+          // @ts-ignore
+          const [fileHandle] = await window.showOpenFilePicker();
+          this.fileHandle = fileHandle;
+          if (fileHandle) {
+            const file = await fileHandle.getFile();
+            const contents = await file.text();
+            this.dispatchEvent(
+              new CustomEvent("set-content", {
+                detail: contents,
+                bubbles: true,
+                composed: true,
+              })
+            );
           }
-        }}
-      ></rich-action>
-      <rich-action
+        } else {
+          // Fallback to input
+          const input = document.createElement("input");
+          input.type = "file";
+          input.click();
+          input.onchange = async () => {
+            const file = input.files![0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const data = reader.result as string;
+                this.dispatchEvent(
+                  new CustomEvent("set-content", {
+                    detail: data,
+                    bubbles: true,
+                    composed: true,
+                  })
+                );
+              };
+              reader.readAsText(file);
+            }
+          };
+        }
+      }}
+      ></rich-action> -->
+      <!-- <rich-action
         icon="file_download"
         @action=${async () => {
-          const contents = this.node.innerHTML;
-          if (this.fileHandle) {
-            const writable = await this.fileHandle.createWritable();
-            await writable.write(
-              [
-                `<!DOCTYPE html>`,
-                `<html lang="en">`,
-                `  <head> </head>`,
-                `  <body>${contents}</body>`,
-                `</html>`,
-              ].join("\n")
-            );
-            await writable.close();
-          } else {
-            // Download file
-            const url = window.URL.createObjectURL(
-              new Blob([contents], { type: "text/html" })
-            );
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = "index.html";
-            link.click();
-          }
-        }}
-      ></rich-action>
-
-      <rich-action
-        icon="save"
-        name="save-content"
-        @action=${async () => {
-          const contents = this.node.innerHTML;
-          console.log(contents);
-          this.richTextContent = contents; // Store the content in the property
-        }}
-      ></rich-action>
+        const contents = this.node.innerHTML;
+        if (this.fileHandle) {
+          const writable = await this.fileHandle.createWritable();
+          await writable.write(
+            [
+              `<!DOCTYPE html>`,
+              `<html lang="en">`,
+              `  <head> </head>`,
+              `  <body>${contents}</body>`,
+              `</html>`,
+            ].join("\n")
+          );
+          await writable.close();
+        } else {
+          // Download file
+          const url = window.URL.createObjectURL(
+            new Blob([contents], { type: "text/html" })
+          );
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "index.html";
+          link.click();
+        }
+      }}
+      ></rich-action> -->
     </header>`;
   }
 

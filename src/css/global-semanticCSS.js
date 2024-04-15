@@ -8,7 +8,7 @@ const globalSemanticCSS = css`
   }
 
   .dark {
-    background-color: #0d0d0d;
+    background-color: #101010;
     color: #96bcdb;
   }
 
@@ -48,15 +48,6 @@ const globalSemanticCSS = css`
     border-left: 2px solid #0077cc; /* Add a left border for emphasis */
     padding: 10px; /* Add some padding for spacing */
     color: #34495e; /* Slightly lighter */
-  }
-
-  .app-card {
-    display: block;
-    border-radius: 12px;
-    width: 100%;
-    height: auto;
-    background-color: #f6f6f71e;
-    transition: border-color 0.25s, background-color 0.25s;
   }
 
   /* Form Styles */
@@ -181,14 +172,13 @@ const globalSemanticCSS = css`
   .nav-icon-link:hover .nav-icon,
   .nav-h1:hover {
     color: #2980b9;
-    background-color: #b3b3b32a;
+    background-color: transparent;
     border-radius: 3px;
     overflow: hidden;
   }
 
   .nav-item.active {
     color: #2980b9;
-    background-color: #b3b3b32a;
     border-radius: 5px;
   }
 
