@@ -1,13 +1,11 @@
 import { html, css, LitElement } from "lit";
-
 import { TWStyles } from "../css/twlit";
 import globalSemanticCSS from "../css/global-semanticCSS";
 import { appMainPath } from "../module/config/app-config";
 
 import "./auth/LoginView";
 import "./auth/RegistrationView";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { router } from "../core/router";
 
 class AuthView extends LitElement {
   static properties = {
@@ -19,31 +17,9 @@ class AuthView extends LitElement {
   constructor() {
     super();
     this.currentView = "login";
-    this.authenticated = false;
-    this.checkUserAuthAccess();
-  }
-
-  async isAuthenticated() {
-    return new Promise((resolve) => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const authenticated = true;
-
-          // console.log("Is authenticated:", authenticated);
-
-          resolve(authenticated);
-        } else {
-          const authenticated = false;
-          // console.log("Is authenticated:", authenticated);
-          resolve(authenticated);
-        }
-      });
+    this.authenticated = router.checkUserAuthAccess().then((authenticated) => {
+      this.authenticated = authenticated;
     });
-  }
-
-
-  async checkUserAuthAccess() {
-    this.authenticated = await this.isAuthenticated();
   }
 
   toggleView() {
@@ -51,21 +27,14 @@ class AuthView extends LitElement {
   }
 
   closeButtonClick() {
-    if (this.authenticated) {
-      window.location.href = "/dashboard"; // Redirect to dashboard if authenticated
-    } else {
-      const formContainer = this.shadowRoot.querySelector(".form-container");
-      const authView = this.shadowRoot.querySelector("auth-view");
+    const formContainer = this.shadowRoot.querySelector(".form-container");
+    const authView = this.closest("auth-view");
 
-      // Toggle the class on the form container
+    if (formContainer) {
       formContainer.classList.toggle("hidden");
 
-      // If the form container is becoming hidden, remove the auth-view element
-      if (formContainer.classList.contains("hidden")) {
+      if (formContainer.classList.contains("hidden") && authView) {
         authView.remove();
-      } else {
-        // If the form container is not hidden, append the auth-view element back
-        formContainer.appendChild(authView);
       }
     }
   }
@@ -76,10 +45,22 @@ class AuthView extends LitElement {
         <div class="form-container p-6">
           <div class="flex items-center justify-end w-full p-2">
             <button
-              class="close-btn px-2 text-3xl border-solid border-4 rounded-full"
+              class="close-btn px-2 text-3xl"
               @click=${this.closeButtonClick}
             >
-              X
+              <svg
+                class="h-8 w-8 text-red-500"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
             </button>
           </div>
           <div class="form-card">
@@ -109,37 +90,30 @@ class AuthView extends LitElement {
     TWStyles,
     globalSemanticCSS,
     css`
-      /* Auth Container Styles */
       .auth-container {
         display: flex;
-        flex-direction: row; /* Flex direction for responsiveness */
+        flex-direction: row;
         align-items: center;
         justify-content: center;
         height: 70%;
         padding: 0 auto;
       }
 
-      /* Form Container Styles */
       .form-container.hidden {
-        display: none; 
+        display: none;
       }
 
       .form-container {
-        display: block; 
+        display: block;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.9
-        ); /* Semi-transparent background */
-        z-index: 9999; /* Ensure it's on top of other elements */
+        background-color: rgba(255, 255, 255, 0.9);
+        z-index: 9999;
       }
-      /* Form Card Styles */
+
       .form-card {
         width: 100%;
         max-width: 90%;
@@ -156,7 +130,6 @@ class AuthView extends LitElement {
         margin: 0 0 20px;
       }
 
-      /* Switch Container Styles */
       .switch-container {
         text-align: center;
         display: block;
@@ -182,7 +155,6 @@ class AuthView extends LitElement {
         color: #0056b3;
       }
 
-      /* Media Query for Small Screens */
       @media (max-width: 935px) {
         .auth-container {
           flex-direction: column;
@@ -199,7 +171,6 @@ class AuthView extends LitElement {
       @media (min-width: 935px) {
       }
 
-      /* Meta Description Container Styles */
       .meta-desc-container {
         text-align: center;
         margin-top: auto;

@@ -2,7 +2,8 @@
 // color: #359ece;
 // text-color: #2c3e50; /* Dark charcoal */
 import appLogo from "/tm.webp";
-export default appLogo;
+import appIcon from "/icons/keepiss-icon.png"
+export default appIcon;
 
 export const appMainColor = "#359bce";
 
@@ -14,6 +15,7 @@ export const appName = import.meta.env.VITE_APP_NAME;
 export const appURL = `${protocol}${import.meta.env.VITE_APP_URL}`;
 export const appAPI = `${protocol}${window.location.hostname}:3000`;
 export const database = "firebase";
+
 export const singleContentBG = "#fff";
 
 export const appMainPath = "/";

@@ -130,41 +130,33 @@ class WelcomeView extends LitElement {
     const showViewMoreButton = this.posts.length > maxPostsToShow;
     return html`
       <div class="grid h-full">
-        <div class="grid welcome-container py-5 items-center justify-center p-5">
-          
-            <div class="flex flex-col justify-start text-start">
-              <div
-                id="app-sub-header"
-                class="app-sub-header w-full text-start mb-9"
-              >
-                <h2 class="tracking-tighter leading-snug text-4xl font-medium">
-                  Empowering authentic crypto users
-                </h2>
-              </div>
-
-              <div class="mb-12 block font-medium text-base leading-6 w-11/12">
-                <span class=""
-                  ><p class="">
-                    <!-- <a href=${appMainPath}>TokenMama</a> ensures genuine
-                    airdrops:  -->
-                    Unleash the power of authentic crypto insights and guides
-                    for a seamless journey in the world of web3 blockchain!
-                  </p></span
-                >
-              </div>
-
-              <!-- <div class="flex items-center gap-5">
-                <span>
-                  <button
-                    class="enroll-btn w-56 nav-item items-center gap-1 rounded-md bg-white border-double border-4 border-gray-300 font-medium p-2 hover:border-solid "
-                    @click=${this.enrollButtonClick}
-                  >
-                    ${this.authenticated ? "Go to Dashboard" : "Enroll Today"}
-                  </button>
-                </span>
-              </div> -->
+        <div
+          class="grid welcome-container py-5 items-center justify-center p-5"
+        >
+          <div class="flex flex-col justify-start text-start w-full max-w-2xl">
+            <div
+              id="app-sub-header"
+              class="app-sub-header w-full text-start grid gap-3 mb-5"
+            >
+              <h1 class="tracking-tighter leading-snug text-2xl font-medium">
+                Keep Your Crypto Safe
+              </h1>
+              <h2 class="tracking-tighter leading-snug text-4xl font-medium">
+                Daily Security Tips to Protect Your Investments
+              </h2>
             </div>
-          
+
+            <div class="flex items-center gap-5">
+              <span>
+                <button
+                  class="enroll-btn w-56 nav-item flex items-center gap-1 rounded-md bg-neon-yellow-keepiss text-black border-double border-4 border-gray-300 font-medium p-2 hover:border-solid"
+                  @click=${this.enrollButtonClick}
+                >
+                  ${this.authenticated ? "Go to Dashboard" : "Enroll Today"}
+                </button>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div id="guides" class="grid gap-3 mt-3 p-5">

@@ -3,6 +3,25 @@ import { doc, getDoc } from "firebase/firestore";
 import { firestore_db } from "../../utils/firebase";
 import { auth } from "../../utils/firebase";
 import { getFirestoreUserData } from "./firestoreUtils";
+import { onAuthStateChanged } from "firebase/auth";
+
+export async function isAuthenticated() {
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const authenticated = true;
+
+        // console.log("Is authenticated:", authenticated);
+
+        resolve(authenticated);
+      } else {
+        const authenticated = false;
+        // console.log("Is authenticated:", authenticated);
+        resolve(authenticated);
+      }
+    });
+  });
+}
 
 // Function to fetch user data from Firestore based on UID
 export async function fetchUserData(uid) {

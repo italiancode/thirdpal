@@ -3,7 +3,7 @@ import { html, render } from "lit-html";
 import { appName, appURL } from "../module/config/app-config";
 
 import { getFirestoreUserData } from "../utils/firestoreUtils";
-import { isAuthenticated } from "../../utils/firebase.js";
+import { isAuthenticated } from "../utils/userUtils.js";
 
 // route page config
 const page_config = {
@@ -15,7 +15,11 @@ const page_config = {
         /* webpackChunkName: "dashboard-view" */ "../views/WelcomeView.js"
       ),
     element: html`<welcome-view></welcome-view>`,
-    meta: { title: "Welcome", description: "Welcome Page" },
+    meta: {
+      title: "How To Keep Crypto Safe",
+      description:
+        "Join the KEEPISS community for daily tips on how to keep your crypto assets safe and secure. Learn about the latest security threats and best practices for protecting your investments.",
+    },
   },
 
   guides: {
@@ -259,14 +263,10 @@ class Router {
     this.start();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.checkUserAuthAccess();
-    // ... rest of your logic
-  }
-
   async checkUserAuthAccess() {
     this.authenticated = await isAuthenticated();
+    // console.log("User is authenticated:", this.authenticated); // Log the result
+    return this.authenticated; // Return the authenticated status
   }
 
   onNavigate(callback) {
@@ -274,9 +274,9 @@ class Router {
   }
 
   async renderUnauthorized() {
-    this.renderElement(
+    this.renderer.renderElement(
       "/unauthorized",
-      html`<unauthorized-view></unauthorized-view>`, // Replace with your unauthorized view/component
+      html`<unauthorized-view></unauthorized-view>`,
       "Unauthorized Access"
     );
   }
@@ -291,41 +291,39 @@ class Router {
         (context, next) => {
           this.renderer.renderPage(
             context.pathname,
-            x_page.component, // Use the imported component directly
-            x_page.element, // Use the imported component's element directly
+            x_page.component,
+            x_page.element,
             x_page.name,
-            x_page.meta // Pass the meta object
+            x_page.meta
           );
         }
       );
     }
 
-    // Add a catch-all route for 404 errors
     page("*", (context, next) => {
-      renderer.render404();
+      this.renderer.render404();
     });
   }
 
   start() {
-    page.start(); // Start page.js router
+    page.start();
   }
 
   async checkOrganizerAccess(context, next) {
     const organizerRoutes = ["/adsub", "/?" /* Add more routes here */];
     const isOrganizerRoute = organizerRoutes.includes(context.pathname);
 
-    this.authenticated = await isAuthenticated();
+    const authenticated = await this.checkUserAuthAccess();
 
-    if (this.authenticated && isOrganizerRoute) {
+    if (authenticated && isOrganizerRoute) {
       const user = await getFirestoreUserData();
       if (!user || !user.isOrganizer) {
         console.log("User is not authorized as an organizer for this route.");
-        this.renderUnauthorized(); // Corrected: Add parentheses to execute the method
+        this.renderUnauthorized();
         return;
       }
     }
 
-    // Proceed to render the route for authenticated users or other routes
     next();
   }
 
@@ -333,22 +331,25 @@ class Router {
     const adminRoutes = ["/d/create", "/d/post" /* Add more routes here */];
     const isAdminRoute = adminRoutes.includes(context.pathname);
 
-    this.authenticated = await isAuthenticated();
+    const authenticated = await this.checkUserAuthAccess();
 
-    if (this.authenticated && isAdminRoute) {
+    if (authenticated && isAdminRoute) {
       const user = await getFirestoreUserData();
 
-      if (!user && !user.isAdmin) {
+      if (!user || !user.isAdmin) {
         console.log("User is not authorized as an admin for this route.");
-        this.renderUnauthorized(); //
-
+        this.renderUnauthorized();
         return;
       }
     }
-    // Proceed to render the route for authenticated users or other routes
     next();
   }
 }
 
-// Initialize modules
-const router = new Router();
+// Initialize and export the router
+export const router = new Router();
+
+// Call the checkUserAuthAccess method and log the result
+// router.checkUserAuthAccess().then((authenticated) => {
+//   console.log("User authentication status:", authenticated);
+// });

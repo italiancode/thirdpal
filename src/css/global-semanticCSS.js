@@ -12,22 +12,36 @@ const globalSemanticCSS = css`
     color: #96bcdb;
   }
 
+  .bg-neon-yellow-keepiss{
+    background-color: #d9ff00;
+  }
+
+  .bg-gradient-keepiss{
+    background: linear-gradient(
+      90deg,
+      rgba(217, 255, 0) 0%,
+      rgba(217, 255, 0) 50%,
+      rgba(50, 205, 50) 100%
+    );
+  }
+
   /* Paragraph Styles */
   p {
     margin-top: 15px;
   }
 
-  /* Link Styles */
   a {
     text-decoration: none; /* Remove default underlines */
-    color: #1b6fb4; /* Choose a link color that complements your design */
-    transition: color 0.2s; /* Add a smooth color transition on hover */
+    color: #003366; /* Link color to match the text color */
+    transition: color 0.2s, text-shadow 0.2s; /* Add a smooth color and text-shadow transition on hover */
     cursor: pointer;
     text-align: center;
+  }
 
-    &:hover {
-      color: #005599; /* Slightly darker color on hover */
-    }
+  a:hover {
+    color: #000000; /* Slightly darker color on hover */
+    text-shadow: 0 0 5px #d9ff00, 0 0 10px #d9ff00, 0 0 15px #d9ff00,
+      0 0 20px #d9ff00; /* Neon yellow text shadow on hover */
   }
 
   /* Other Common Element Styles (e.g., lists, blockquotes, etc.) */
@@ -159,6 +173,7 @@ const globalSemanticCSS = css`
   .nav-item {
     padding: 7.5px;
     font-size: 0.9em;
+    border-radius: 5px;
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
@@ -167,19 +182,30 @@ const globalSemanticCSS = css`
     transition: color 0.3s, background-color 0.3s;
   }
 
+  .nav-item,
+  .toggle-menu-icon,
+  .nav-icon-link .nav-icon,
+  .nav-h1 {
+    transition: background 0.3s, color 0.3s;
+  }
+
   .nav-item:hover,
   .toggle-menu-icon:hover,
   .nav-icon-link:hover .nav-icon,
   .nav-h1:hover {
-    color: #2980b9;
-    background-color: transparent;
-    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      rgba(217, 255, 0) 0%,
+      rgba(217, 255, 0) 50%,
+      rgba(50, 205, 50) 100%
+    );
+    color: #003366; /* Good text color that contrasts with the background */
     overflow: hidden;
   }
 
   .nav-item.active {
-    color: #2980b9;
-    border-radius: 5px;
+    color: #003366;
+    background-color: #d9ff00;
   }
 
   .toast-message {

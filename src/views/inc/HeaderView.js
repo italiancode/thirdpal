@@ -1,7 +1,8 @@
 import { LitElement, html, css } from "lit";
-import appLogo, {
+import appIcon, {
   appLoginRoute,
   appMainPath,
+  appName,
   loginButtonText,
   logoutButtonText,
 } from "../../module/config/app-config";
@@ -9,6 +10,7 @@ import globalSemanticCSS from "../../css/global-semanticCSS";
 import { TWStyles } from "../../css/twlit";
 
 import "../../css/ToggleTheme";
+import { router } from "../../core/router";
 
 class HeaderView extends LitElement {
   static properties = {
@@ -23,7 +25,9 @@ class HeaderView extends LitElement {
     super();
     this.currentPath = "";
     this.hideDynamicLink = window.innerWidth <= 768;
-    this.authenticated = false;
+    this.authenticated = router.checkUserAuthAccess().then((authenticated) => {
+      this.authenticated = authenticated;
+    });
   }
 
   connectedCallback() {
@@ -63,9 +67,16 @@ class HeaderView extends LitElement {
       <div class="flex items-center h-11 nav-utils">
         <!-- -->
         <div class="flex gap-3 items-center rounded overflow-hidden h-10">
-          <!-- header icon -->
-          <a href="${appMainPath}" class="nav-h1 px-3 py-2 flex items-center">
-            <h1 class="font-bold tracking-normal leading-snug">ThirdPal</h1>
+          <!-- header logo -->
+          <a href="${appMainPath}" class="px-3 py-2 flex items-center">
+            <img
+              src="${appIcon}"
+              class="w-10 h-10 mr-3 rounded"
+              alt="KEEPISS Logo"
+            />
+            <h1 class="text-xl font-bold tracking-normal leading-snug">
+              KEEPISS
+            </h1>
           </a>
         </div>
 
@@ -255,28 +266,31 @@ class HeaderView extends LitElement {
                     >
                   </div> -->
 
-            <!-- <div class="menu-item-container grid gap-3">
-                    <div
-                      class="nav-item flex-container justify-center items-end"
-                    >
-                      ${this.authenticated === true
-              ? html`
-                  <a
-                    id="logoutBtn"
-                    class=""
-                    @click=${this.logOut}
-                    part="button"
-                  >
-                    ${logoutButtonText}
-                  </a>
-                `
-              : html`
-                  <a id="loginBtn" class="" @click=${this.logIn} part="button">
-                    ${loginButtonText}
-                  </a>
-                `}
-                    </div>
-                  </div> -->
+            <div class="menu-item-container grid gap-3">
+              <div class="nav-item flex-container justify-center items-end">
+                ${this.authenticated === true
+                  ? html`
+                      <a
+                        id="logoutBtn"
+                        class=""
+                        @click=${this.logOut}
+                        part="button"
+                      >
+                        ${logoutButtonText}
+                      </a>
+                    `
+                  : html`
+                      <a
+                        id="loginBtn"
+                        class=""
+                        @click=${this.logIn}
+                        part="button"
+                      >
+                        ${loginButtonText}
+                      </a>
+                    `}
+              </div>
+            </div>
           </div>
         </div>
       </nav>

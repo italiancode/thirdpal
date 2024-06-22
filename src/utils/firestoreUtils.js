@@ -9,26 +9,8 @@ import {
 } from "firebase/firestore";
 import { auth, firestore_db } from "../../utils/firebase";
 
-import { handleUserLoginAndFetchData } from "./userUtils";
+import { handleUserLoginAndFetchData, isAuthenticated } from "./userUtils";
 import { onAuthStateChanged } from "firebase/auth";
-
-async function isAuthenticated() {
-  return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const authenticated = true;
-
-        // console.log("Is authenticated:", authenticated);
-
-        resolve(authenticated);
-      } else {
-        const authenticated = false;
-        // console.log("Is authenticated:", authenticated);
-        resolve(authenticated);
-      }
-    });
-  });
-}
 
 export async function storeUserDataInFirestore(user) {
   try {
