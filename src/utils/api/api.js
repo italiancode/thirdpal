@@ -5,7 +5,11 @@ import axios from "axios";
 import { log } from "../logger";
 
 const chainstackApiKey = import.meta.env.VITE_CHAINSTACK_API_KEY;
+
 const CS_URL = `https://solana-mainnet.core.chainstack.com/${chainstackApiKey}`;
+
+// Setup Solana connection
+const connection = new Connection(CS_URL);
 
 // Helper function to add timeout to fetch requests
 export async function fetchWithTimeout(url, options, timeout = 10000) {
@@ -154,14 +158,14 @@ export async function fetchTokenAccounts(address) {
   }
 }
 
-const SOL_ID = "So11111111111111111111111111111111111111112";
-
 export async function fetchRaydiumLiquidity(tokenId) {
   try {
     const connection = new Connection(CS_URL);
 
     // Fetch the Raydium liquidity pools
     const pools = await fetchRaydiumPools();
+
+    const SOL_ID = "So11111111111111111111111111111111111111112";
 
     const SOL_PAIR_ID = tokenId + "-" + SOL_ID;
 

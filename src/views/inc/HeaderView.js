@@ -12,6 +12,7 @@ import { TWStyles } from "../../css/twlit";
 import "../../css/ToggleTheme";
 import { router } from "../../core/router";
 import assets from "../../module/assets";
+import { themeManager } from "../../utils/ThemeManager";
 
 class HeaderView extends LitElement {
   static properties = {
@@ -29,6 +30,9 @@ class HeaderView extends LitElement {
     this.authenticated = router.checkUserAuthAccess().then((authenticated) => {
       this.authenticated = authenticated;
     });
+
+    this.darkMode = themeManager.getDarkMode();
+    themeManager.addListener((darkMode) => (this.darkMode = darkMode));
   }
 
   connectedCallback() {
@@ -46,6 +50,7 @@ class HeaderView extends LitElement {
 
   handleThemeUpdate(event) {
     this.darkMode = event.detail;
+    themeManager.setDarkMode(this.darkMode); // Update the global theme manager
   }
 
   toggleMenu() {

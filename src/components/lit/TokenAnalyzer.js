@@ -115,6 +115,23 @@ class TokenAnalyzer extends LitElement {
     this.bigdata = null;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    const themeManager = document.querySelector("app-manager");
+    if (themeManager) {
+      this.darkMode = themeManager.darkMode;
+      themeManager.addEventListener(
+        "theme-updated",
+        this.handleThemeUpdate.bind(this)
+      );
+    }
+  }
+
+  handleThemeUpdate(event) {
+    this.darkMode = event.detail;
+    this.requestUpdate();
+  }
+
   renderData() {
     const dataToDisplay = this.bigdata || this.loadingData;
 
@@ -134,12 +151,13 @@ class TokenAnalyzer extends LitElement {
     return html`
       <div class="">
         <h2 class="text-2xl font-medium mb-5">Token Analyzer</h2>
-        <div class="input-container">
+        <div class="input-container gap-3">
           <input
             type="text"
             placeholder="Enter Token Address"
             .value="${this.address}"
             @input="${(e) => (this.address = e.target.value)}"
+            class="${this.darkMode ? "dark" : "light"}"
           />
           <button ?disabled="${this.loading}" @click="${this.fetchData}">
             ${this.loading ? "Loading..." : "Analyze Token"}
@@ -164,7 +182,6 @@ class TokenAnalyzer extends LitElement {
       .input-container {
         display: flex;
         flex-direction: column;
-        gap: 10px;
         margin-bottom: 20px;
       }
 

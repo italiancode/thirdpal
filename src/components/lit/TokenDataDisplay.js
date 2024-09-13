@@ -1,6 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { TWStyles } from "../../css/twlit";
 import globalSemanticCSS from "../../css/global-semanticCSS";
+import { renderHeader } from "./TokenDataDisplay/renderHeader";
+import Spinner from "../Spinner";
 
 class TokenDataDisplay extends LitElement {
   static properties = {
@@ -27,6 +29,104 @@ class TokenDataDisplay extends LitElement {
     this.showOverlay = true;
   }
 
+  getTokenData(
+    onChain,
+    offChain,
+    accountInfo,
+    jupiterData,
+    tokenSupplyData,
+    liquidityPoolData,
+    tokenAccountsData
+  ) {
+    const rawTokenPrice = jupiterData?.price || 0;
+
+    const getDecimals = accountInfo?.data?.parsed?.info?.decimals || 0;
+
+    const tokenSupply =
+      tokenSupplyData === "fetching"
+        ? html`<my-spinner></my-spinner>`
+        : this.formatSupply(
+            tokenSupplyData?.supply,
+            accountInfo?.data?.parsed?.info?.decimals
+          ) || 0; // Default to 0 if no supply data
+
+    // Market cap calculation
+    let marketCap;
+    if (jupiterData === "fetching" || tokenSupplyData === "fetching") {
+      marketCap = html`<my-spinner></my-spinner>`;
+    } else {
+      const numericTokenSupply =
+        typeof tokenSupply === "string"
+          ? parseFloat(tokenSupply.replace(/,/g, ""))
+          : tokenSupply;
+      marketCap = rawTokenPrice * numericTokenSupply;
+    }
+
+    return {
+      tokenIcon: offChain?.image || "https://via.placeholder.com/80",
+      tokenName: onChain?.data?.name || "N/A",
+      tokenSymbol: onChain?.data?.symbol || "N/A",
+      tokenDescription: offChain?.description || "No bio available",
+
+      tokenTags: offChain?.tags || [],
+      tokenStandard: this.getTokenStandard(onChain?.tokenStandard),
+      numberOfTransactions: accountInfo?.transactions || "N/A",
+      tokenDecimals: accountInfo?.data?.parsed?.info?.decimals || "N/A",
+
+      tokenSupply:
+        tokenSupplyData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : this.formatSupply(
+              tokenSupplyData?.supply,
+              accountInfo?.data?.parsed?.info?.decimals
+            ) || "N/A",
+
+      tokenLiquidityUSD:
+        liquidityPoolData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : `$${this.formatNumber(liquidityPoolData.liquidityLockedInUSD)}` ||
+            "N/A",
+
+      numberOfAccounts:
+        tokenAccountsData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : tokenAccountsData?.accounts?.length || "N/A",
+
+      topHolders: tokenAccountsData?.topHolders || [],
+
+      tokenPrice:
+        jupiterData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : rawTokenPrice.toFixed(getDecimals) || "N/A",
+
+      priceChange24h: jupiterData?.priceChange24h || null,
+      volume24h: jupiterData?.volume24h || null,
+
+      marketCap: marketCap || "N/A", // Assign calculated market cap or html`<my-spinner></my-spinner>`
+
+      creatorName:
+        offChain === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : offChain?.creator?.name || "N/A",
+
+      creatorSite:
+        offChain === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : offChain?.creator?.site || "N/A",
+    };
+  }
+
+  getTokenStandard(standard) {
+    switch (standard) {
+      case "Fungible":
+        return "SPL Token";
+      case "ProgrammableNonFungible":
+        return "Programmable NFT";
+      default:
+        return standard || "N/A";
+    }
+  }
+
   render() {
     if (!this.bigdata || !this.showOverlay) return null;
 
@@ -39,6 +139,7 @@ class TokenDataDisplay extends LitElement {
       liquidityPoolData,
       tokenAccountsData,
     } = this.bigdata;
+
     const tokenData = this.getTokenData(
       onChain,
       offChain,
@@ -57,152 +158,30 @@ class TokenDataDisplay extends LitElement {
           : "light"}"
       >
         <section
-          class="relative bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-full max-w-lg sm:max-w-2xl h-full overflow-y-auto"
+          class="relative w-full max-w-lg sm:max-w-2xl h-full overflow-y-auto"
         >
-          ${this.renderCloseButton()} ${this.renderHeader(tokenData)}
-          ${this.renderTabs()}
+          <button
+            @click="${this.closeOverlay}"
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+          ${renderHeader(tokenData)} ${this.renderTabs()}
           <div class="p-4 sm:p-6">${this.renderTabContent(tokenData)}</div>
         </section>
-      </div>
-    `;
-  }
-
-  renderCloseButton() {
-    return html`
-      <button
-        @click="${this.closeOverlay}"
-        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
-        </svg>
-      </button>
-    `;
-  }
-
-  renderHeader(tokenData) {
-    const {
-      tokenIcon,
-      tokenName,
-      tokenSymbol,
-      tokenDescription,
-      tokenStandard,
-      tokenTags,
-      numberOfAccounts,
-      numberOfTransactions,
-      tokenPrice,
-      priceChange24h,
-    } = tokenData;
-
-    return html`
-      <header class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
-        <div
-          class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4"
-        >
-          <div class="flex items-center mb-4 sm:mb-0">
-            <img
-              src="${tokenIcon}"
-              alt="${tokenName}"
-              class="w-16 h-16 sm:w-20 sm:h-20 rounded-full mr-4"
-            />
-            <div>
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                ${tokenName}
-              </h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400 m-0">
-                $${tokenSymbol}
-              </p>
-            </div>
-          </div>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          ${tokenDescription}
-        </p>
-        <div class="flex justify-between">
-          <div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              ${this.renderTags(tokenStandard, tokenTags)}
-            </div>
-            <div class="flex flex-wrap gap-4 sm:gap-8">
-              ${this.renderStats(numberOfAccounts, numberOfTransactions)}
-            </div>
-          </div>
-          <div class="flex flex-col items-start sm:items-end">
-            ${this.renderPriceInfo(tokenPrice, priceChange24h)}
-          </div>
-        </div>
-      </header>
-    `;
-  }
-
-  renderPriceInfo(price, priceChange) {
-    if (price === null || price === undefined) {
-      return html`<div class="text-lg sm:text-2xl font-bold">Price: N/A</div>`;
-    }
-
-    const priceChangeClass =
-      priceChange >= 0
-        ? "bg-green-100 text-green-800"
-        : "bg-red-100 text-red-800";
-    const priceChangeSymbol = priceChange >= 0 ? "+" : "";
-
-    return html`
-      <div class="text-lg sm:text-2xl font-bold">$${price.toFixed(6)}</div>
-      ${priceChange !== null && priceChange !== undefined
-        ? html`
-            <div
-              class="text-xs sm:text-sm px-2 py-1 rounded ${priceChangeClass}"
-            >
-              ${priceChangeSymbol}${priceChange.toFixed(2)}%
-            </div>
-          `
-        : html`<div class="text-xs sm:text-sm text-gray-500">
-            24h Change: N/A
-          </div>`}
-    `;
-  }
-
-  renderTags(tokenStandard, tokenTags) {
-    return html`
-      <span
-        class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded dark:bg-blue-900 dark:text-blue-300"
-      >
-        ${tokenStandard}
-      </span>
-      ${tokenTags.map(
-        (tag) => html`
-          <span
-            class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded dark:bg-green-900 dark:text-green-300"
-          >
-            ${tag}
-          </span>
-        `
-      )}
-    `;
-  }
-
-  renderStats(numberOfAccounts, numberOfTransactions) {
-    return html`
-      <div class="flex items-center space-x-1">
-        <span class="text-sm sm:text-base font-bold">${numberOfAccounts}</span>
-        <span class="text-xs sm:text-sm text-gray-500">Accounts</span>
-      </div>
-      <div class="flex items-center space-x-1">
-        <span class="text-sm sm:text-base font-bold"
-          >${numberOfTransactions}</span
-        >
-        <span class="text-xs sm:text-sm text-gray-500">Txs 24h</span>
       </div>
     `;
   }
@@ -241,11 +220,12 @@ class TokenDataDisplay extends LitElement {
   }
 
   renderOverviewTab({
-    creatorName,
-    creatorSite,
+    tokenLiquidityUSD,
+    marketCap,
     tokenSupply,
     tokenDecimals,
-    tokenLiquidityUSD,
+    creatorName,
+    creatorSite,
   }) {
     return html`
       <div class="space-y-6">
@@ -253,13 +233,24 @@ class TokenDataDisplay extends LitElement {
           <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
             Token Details
           </h3>
-          <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Liquidity
               </dt>
               <dd class="mt-1 text-sm text-gray-900 dark:text-white">
                 ${tokenLiquidityUSD}
+              </dd>
+            </div>
+
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Market Cap
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                ${marketCap !== null && marketCap !== undefined
+                  ? `$${marketCap.toLocaleString()}`
+                  : "N/A"}
               </dd>
             </div>
             <div class="sm:col-span-1">
@@ -331,7 +322,7 @@ class TokenDataDisplay extends LitElement {
               </dt>
               <dd class="mt-1 text-sm text-gray-900 dark:text-white">
                 ${tokenPrice !== null && tokenPrice !== undefined
-                  ? `$${tokenPrice.toFixed(6)}`
+                  ? `$${tokenPrice}`
                   : "N/A"}
               </dd>
             </div>
@@ -399,75 +390,6 @@ class TokenDataDisplay extends LitElement {
     `;
   }
 
-  getTokenData(
-    onChain,
-    offChain,
-    accountInfo,
-    jupiterData,
-    tokenSupplyData,
-    liquidityPoolData,
-    tokenAccountsData
-  ) {
-    return {
-      tokenIcon: offChain?.image || "https://via.placeholder.com/80",
-      tokenName: onChain?.data?.name || "N/A", // Safely check if onChain and data exist
-      tokenSymbol: onChain?.data?.symbol || "N/A",
-      tokenDescription: offChain?.description || "No bio available",
-
-      tokenTags: offChain?.tags || [],
-      tokenStandard: this.getTokenStandard(onChain?.tokenStandard),
-      numberOfTransactions: accountInfo?.transactions || "N/A",
-      tokenDecimals: accountInfo?.data?.parsed?.info?.decimals || "N/A",
-
-      tokenSupply:
-        tokenSupplyData === "fetching"
-          ? "Fetching..."
-          : this.formatSupply(
-              tokenSupplyData?.supply,
-              accountInfo?.data?.parsed?.info?.decimals
-            ) || "N/A",
-
-      tokenLiquidityUSD:
-        liquidityPoolData === "fetching"
-          ? "Fetching..."
-          : liquidityPoolData?.liquidityLockedInUSD || "N/A",
-
-      //
-      numberOfAccounts:
-        tokenAccountsData === "fetching"
-          ? "Fetching..."
-          : tokenAccountsData?.accounts?.length || "N/A",
-
-      //
-      topHolders: tokenAccountsData?.topHolders || [],
-      tokenPrice: jupiterData?.price || null,
-      priceChange24h: jupiterData?.priceChange24h || null,
-      volume24h: jupiterData?.volume24h || null,
-      marketCap: jupiterData?.liquidity || null,
-
-      creatorName:
-        offChain === "fetching"
-          ? "Fetching..."
-          : offChain?.creator?.name || "N/A",
-
-      creatorSite:
-        offChain === "fetching"
-          ? "Fetching..."
-          : offChain?.creator?.site || "N/A",
-    };
-  }
-
-  getTokenStandard(standard) {
-    switch (standard) {
-      case "Fungible":
-        return "SPL Token";
-      case "ProgrammableNonFungible":
-        return "Programmable NFT";
-      default:
-        return standard || "N/A";
-    }
-  }
-
   switchTab(tab) {
     this.activeTab = tab;
     this.requestUpdate();
@@ -484,6 +406,23 @@ class TokenDataDisplay extends LitElement {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+  }
+
+  // Utility function for formatting numbers
+  formatNumber(value) {
+    if (typeof value !== "number") return value; // Check if the value is a number
+
+    const absValue = Math.abs(value);
+
+    if (absValue >= 1_000_000_000) {
+      return (value / 1_000_000_000).toFixed(2) + "B";
+    } else if (absValue >= 1_000_000) {
+      return (value / 1_000_000).toFixed(2) + "M";
+    } else if (absValue >= 1_000) {
+      return (value / 1_000).toFixed(2) + "K";
+    }
+
+    return value.toFixed(2); // Otherwise return the value as is
   }
 
   formatAddress(address) {

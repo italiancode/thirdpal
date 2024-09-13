@@ -8,7 +8,7 @@ const globalSemanticCSS = css`
   }
 
   .dark {
-    background-color: #101010;
+    background-color: #131c23;
     color: #ffffff;
   }
 
