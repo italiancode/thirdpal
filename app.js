@@ -1,3 +1,9 @@
+// Import Buffer from 'buffer' to polyfill it for the browser
+import { Buffer } from "buffer";
+
+// Ensure Buffer is globally available
+window.Buffer = Buffer || window.Buffer;
+
 // On page load or when changing themes
 if (
   localStorage.theme === "dark" ||

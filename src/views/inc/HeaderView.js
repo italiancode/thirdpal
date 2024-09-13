@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit";
-import appIcon, {
+import {
   appLoginRoute,
   appMainPath,
   appName,
@@ -11,6 +11,7 @@ import { TWStyles } from "../../css/twlit";
 
 import "../../css/ToggleTheme";
 import { router } from "../../core/router";
+import assets from "../../module/assets";
 
 class HeaderView extends LitElement {
   static properties = {
@@ -70,38 +71,18 @@ class HeaderView extends LitElement {
           <!-- header logo -->
           <a href="${appMainPath}" class="px-3 py-2 flex items-center">
             <img
-              src="${appIcon}"
+              src="${assets.appIcon}"
               class="w-10 h-10 mr-3 rounded"
               alt="KEEPISS Logo"
             />
             <h1 class="text-xl font-bold tracking-normal leading-snug">
-              KEEPISS
+              ${assets.appName}
             </h1>
           </a>
         </div>
 
         <div class="flex items-center gap-3">
           <toggle-theme></toggle-theme>
-          <!-- <button
-            @click=${this.toggleUtilsMenu}
-            class=" flex justify-center items-center"
-            aria-label="Toggle Menu"
-            role="button"
-            tabindex="0"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="24"
-              height="16"
-              fill="currentColor"
-              class=""
-              style="--color: var(--primary-icon)"
-            >
-              <circle cx="12" cy="12" r="2.5"></circle>
-              <circle cx="19.5" cy="12" r="2.5"></circle>
-              <circle cx="4.5" cy="12" r="2.5"></circle>
-            </svg>
-          </button> -->
         </div>
       </div>
 
@@ -118,16 +99,7 @@ class HeaderView extends LitElement {
                     >Home</a
                   >
                 </li>
-                <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/airdrops"
-                        class="nav-item ${window.location.pathname ===
-                "/airdrops"
-                  ? "active"
-                  : ""}"
-                        >Airdrops</a
-                      >
-                    </li> -->
+
                 <li id="dynamic-links" class="flex">
                   <a
                     href="/guides"
@@ -137,47 +109,6 @@ class HeaderView extends LitElement {
                     >Guides</a
                   >
                 </li>
-                <!-- 
-                    <li id="dynamic-links" class="flex">
-                      <a
-                        href="/docs"
-                        class="nav-item ${window.location.pathname === "/docs"
-                  ? "active"
-                  : ""}"
-                        >Docs</a
-                      >
-                    </li> -->
-
-                <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/reports"
-                        class="nav-item ${window.location.pathname ===
-                "/reports"
-                  ? "active"
-                  : ""}"
-                        >Reports</a
-                      >
-                    </li> -->
-                <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/dashboard"
-                        class="nav-item ${window.location.pathname ===
-                "/dashboard"
-                  ? "active"
-                  : ""}"
-                        >Dashboard</a
-                      >
-                    </li> -->
-                <!-- <li id="dynamic-links" class="flex">
-                      <a
-                        href="/wallets"
-                        class="nav-item ${window.location.pathname ===
-                "/wallets"
-                  ? "active"
-                  : ""}"
-                        >Wallets</a
-                      >
-                    </li> -->
               `
             : ""}
         </ul>
@@ -209,14 +140,6 @@ class HeaderView extends LitElement {
                   : ""}"
                 >Home</a
               >
-              <!-- <a
-                      href="/airdrops"
-                      class="link-container nav-item p-2 text-start ${window
-                .location.pathname === "/airdrops"
-                ? "active"
-                : ""}"
-                      >Airdrops</a
-                    > -->
 
               <a
                 href="/guides"
@@ -226,45 +149,7 @@ class HeaderView extends LitElement {
                   : ""}"
                 >Guides</a
               >
-
-              <!-- <a
-                      href="/docs"
-                      class="link-container nav-item p-2 text-start ${window
-                .location.pathname === "/docs"
-                ? "active"
-                : ""}"
-                      >Docs</a
-                    > -->
-
-              <!-- <a
-                    href="/reports"
-                    class="link-container nav-item p-2 text-start ${window
-                .location.pathname === "/reports"
-                ? "active"
-                : ""}"
-                    >Reports</a
-                  > -->
             </div>
-
-            <!-- <div class="menu-item-container grid gap-3">
-                    <a
-                      href="/dashboard"
-                      class="link-container nav-item p-2 text-start ${window
-              .location.pathname === "/dashboard"
-              ? "active"
-              : ""}"
-                      >Dashboard</a
-                    >
-
-                    <a
-                      href="/wallets"
-                      class="link-container nav-item p-2 text-start ${window
-              .location.pathname === "/wallets"
-              ? "active"
-              : ""}"
-                      >Wallets</a
-                    >
-                  </div> -->
 
             <div class="menu-item-container grid gap-3">
               <div class="nav-item flex-container justify-center items-end">

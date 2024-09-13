@@ -3,7 +3,6 @@ import { defineConfig } from "vite";
 import { Buffer } from "buffer";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 
-// Define your Vite configuration
 export default defineConfig({
   plugins: [
     react(),
@@ -17,6 +16,7 @@ export default defineConfig({
     alias: {
       "@views": "./src/views",
       buffer: "buffer",
+      crypto: "crypto-browserify", // Polyfill for the crypto module
     },
   },
 
@@ -32,6 +32,6 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ["buffer"],
+    include: ["buffer", "crypto-browserify"], // Add crypto-browserify to optimizeDeps
   },
 });

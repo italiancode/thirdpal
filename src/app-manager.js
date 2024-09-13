@@ -24,7 +24,7 @@ class AppManager extends LitElement {
       header {
         grid-row: 1;
         position: relative;
-       
+
         white-space: nowrap;
         z-index: 999;
       }
@@ -117,7 +117,7 @@ class AppManager extends LitElement {
   }
 
   render() {
-    return html` <div class="h-full min-h-full ">
+    return html` <div class="h-full min-h-full">
       <header class="">
         <header-view
           class="header flex justify-between items-center h-16 w-full p-3 fixed header-shadow ${this

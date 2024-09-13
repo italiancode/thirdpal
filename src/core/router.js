@@ -5,6 +5,10 @@ import { appName, appURL } from "../module/config/app-config";
 import { getFirestoreUserData } from "../utils/firestoreUtils";
 import { isAuthenticated } from "../utils/userUtils.js";
 
+import { Buffer } from "buffer";
+
+window.Buffer = Buffer;
+
 // route page config
 const page_config = {
   welcome: {
@@ -16,9 +20,9 @@ const page_config = {
       ),
     element: html`<welcome-view></welcome-view>`,
     meta: {
-      title: "How To Keep Crypto Safe",
+      title: "Your Friendly Companion in Web3 Exploration",
       description:
-        "Join the KEEPISS community for daily tips on how to keep your crypto assets safe and secure. Learn about the latest security threats and best practices for protecting your investments.",
+        "ThirdPal is a Web3 Analytics Tool designed to simplify the way users interact with blockchain data. By providing easy access to token metadata, smart contract analysis, and wallet insights, ThirdPal acts as a reliable companion for both developers and crypto enthusiasts in navigating the complex world of decentralized technologies.",
     },
   },
 

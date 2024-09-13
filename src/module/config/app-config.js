@@ -1,8 +1,8 @@
 // path: ./module/config/app-config.js
 // color: #359ece;
 // text-color: #2c3e50; /* Dark charcoal */
-import appLogo from "/tm.webp";
-import appIcon from "/icons/keepiss-icon.png"
+import appLogo from "/icons/thirdpal-white-bg-logo.png";
+import appIcon from "/icons/thirdpal-white-bg-logo.png";
 export default appIcon;
 
 export const appMainColor = "#359bce";
@@ -29,3 +29,7 @@ export const loginButtonText = "Sign In";
 export const logoutButtonText = "Sign Out";
 export const instagramLink = "https://www.instagram.com/tokenmama.finance";
 export const xLink = "https://twitter.com/tokenmamahq";
+
+export const CONFIG = {
+  DEBUG: import.meta.env.VITE_APP_DEBUG === "true",
+};

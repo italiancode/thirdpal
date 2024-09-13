@@ -145,7 +145,10 @@ class RegistrationView extends LitElement {
               <label for="show-password">Show password</label>
             </div>
 
-            <button type="submit" class="form-button rounded-md">
+            <button
+              type="submit"
+              class="bg-neon-yellow-keepiss text-black font-bold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-300"
+            >
               Register
             </button>
           </div>

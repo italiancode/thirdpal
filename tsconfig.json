@@ -18,6 +18,6 @@
     "forceConsistentCasingInFileNames": true
   },
 
-  "include": ["src/**/*.ts", "src/components/RPE/rich-action.js"],
+  "include": ["src/**/*.ts", "src/components/RPE/rich-action.js", "src/controllers/ThemeController.js"],
   "exclude": []
 }

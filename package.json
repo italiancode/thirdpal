@@ -1,12 +1,12 @@
 {
-  "name": "keepiss",
+  "name": "thirpal",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"tailwindcss -i ./src/css/input.scss -o ./src/css/tailwind.css --watch\" \"twlit --output ./src/css/twlit.js --input ./src/css/tailwind.css\"",
     "clear-cache": "vite build --clearCache",
-    "build": "cross-env VITE_APP_URL=tokenmama-94630.web.app vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "update-build-version": "node ./utils/buildVersion.cjs",
     "postbuild": "copy _redirects dist && npm run update-build-version",
@@ -15,19 +15,30 @@
     "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@google-cloud/firestore": "^7.1.0",
     "@lit-labs/motion": "^1.0.6",
-    "@vaadin/router": "^1.7.5",
-    "@web3modal/ethereum": "^2.7.1",
-    "@web3modal/html": "^2.7.1",
-    "firebase": "^10.4.0",
-    "firebase-admin": "^11.11.0",
     "@material/mwc-icon": "^0.25.3",
     "@material/mwc-icon-button": "^0.21.0",
+    "@raydium-io/raydium-sdk": "^1.3.1-beta.58",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.3",
+    "@vaadin/router": "^1.7.5",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/html": "^2.7.1",
+    "axios": "^1.7.7",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "firebase": "^10.4.0",
+    "firebase-admin": "^11.11.0",
     "lit": "^2.7.2",
     "page": "^1.11.6",
+    "process": "^0.11.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tailwindcss": "^3.3.5",
     "tw-elements": "^1.1.0",
     "twlit": "^0.0.1-alpha.37"
@@ -35,13 +46,26 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.1",
     "concurrently": "^8.2.2",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.69.5",
-    "typescript": "^4.1.3",
-    "vite": "^5.0.10"
+    "typescript": "^5.5.2",
+    "vite": "^5.0.10",
+    "vite-plugin-node-polyfills": "^0.22.0"
   },
-  "description": "A project for Keepiss",
+  "description": "A project for ThirdPal",
   "main": "app.js",
   "author": "Agbaka Daniel Ugonna",
-  "license": "ISC"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/italiancode/thirdpal.git"
+  },
+  "keywords": [
+    "Web3"
+  ],
+  "bugs": {
+    "url": "https://github.com/italiancode/thirdpal/issues"
+  },
+  "homepage": "https://github.com/italiancode/thirdpal#readme"
 }

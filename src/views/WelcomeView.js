@@ -5,6 +5,7 @@ import { appMainPath } from "../module/config/app-config";
 import { auth, firestore_db } from "../../utils/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import AnalyzerElement from "../components/AnalyzerElement.js";
 
 class WelcomeView extends LitElement {
   static properties = {
@@ -130,33 +131,13 @@ class WelcomeView extends LitElement {
     const showViewMoreButton = this.posts.length > maxPostsToShow;
     return html`
       <div class="grid h-full">
-        <div
-          class="grid welcome-container py-5 items-center justify-center p-5"
-        >
-          <div class="flex flex-col justify-start text-start w-full max-w-2xl">
-            <div
-              id="app-sub-header"
-              class="app-sub-header w-full text-start grid gap-3 mb-5"
-            >
-              <h1 class="tracking-tighter leading-snug text-2xl font-medium">
-                Keep Your Crypto Safe
-              </h1>
-              <h2 class="tracking-tighter leading-snug text-4xl font-medium">
-                Daily Security Tips to Protect Your Investments
-              </h2>
-            </div>
-
-            <div class="flex items-center gap-5">
-              <span>
-                <button
-                  class="enroll-btn w-56 nav-item flex items-center gap-1 rounded-md bg-neon-yellow-keepiss text-black border-double border-4 border-gray-300 font-medium p-2 hover:border-solid"
-                  @click=${this.enrollButtonClick}
-                >
-                  ${this.authenticated ? "Go to Dashboard" : "Enroll Today"}
-                </button>
-              </span>
-            </div>
-          </div>
+        <div id="analyzer" class="grid gap-3 mt-3 p-5">
+          <h2
+            class="tracking-tighter leading-snug text-2xl font-medium text-start mb-5"
+          >
+            Web3 Analytic Tools
+          </h2>
+          <analyzer-element></analyzer-element>
         </div>
 
         <div id="guides" class="grid gap-3 mt-3 p-5">
@@ -179,7 +160,7 @@ class WelcomeView extends LitElement {
                         <div
                           class="object-fill bg-slate-100 min-h-40 h-40 w-full"
                         ></div>
-
+  
                         <div class="p-4">
                           <h3
                             class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
@@ -188,79 +169,76 @@ class WelcomeView extends LitElement {
                             <p class="text-gray-600"></p>
                           </div>
                         </div>
-                      </div>
-                    </li>
-
-                    <li class="post-card-list animate-pulse">
-                      <div
-                        class="app-card overflow-hidden w-full h-full text-start"
-                      >
+                      </li>
+  
+                      <li class="post-card-list animate-pulse">
                         <div
-                          class="object-fill bg-slate-100 min-h-40 h-40 w-full"
-                        ></div>
-
-                        <div class="p-4">
-                          <h3
-                            class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
-                          ></h3>
-                          <div class="h-20 bg-slate-100">
-                            <p class="text-gray-600"></p>
+                          class="app-card overflow-hidden w-full h-full text-start"
+                        >
+                          <div
+                            class="object-fill bg-slate-100 min-h-40 h-40 w-full"
+                          ></div>
+  
+                          <div class="p-4">
+                            <h3
+                              class="text-xl font-semibold capitalize mb-1 h-6 w-full bg-slate-100"
+                            ></h3>
+                            <div class="h-20 bg-slate-100">
+                              <p class="text-gray-600"></p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
+                      </li>
+                    </ul>
+                  </div>
+                `
+            : html`
+                <div>
+                  <ul
+                    class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 list-none items-center"
+                  >
+                    ${this.posts.slice(0, maxPostsToShow).map(
+                      (post) => html`
+                        <li
+                          class="post-card-list app-card overflow-hidden text-start ${this
+                            .darkMode
+                            ? "dark"
+                            : "light"} relative"
+                        >
+                          <!-- Link Overlay -->
+                          <a
+                            href="/guide/${post.slug}"
+                            class="block absolute inset-0 h-full"
+                          ></a>
+
+                          <!-- Image Frame -->
+                          <responsive-image-frame
+                            mainSrc="${post.thumbnail}"
+                            alt="Token Mama icon logo"
+                            fallbackLabel="this is our website logo"
+                            type="thumbnail"
+                            width="w-full"
+                            height="h-40"
+                            min_height="min-h-40"
+                            class="object-fill"
+                          ></responsive-image-frame>
+
+                          <!-- Content -->
+                          <div class="p-4">
+                            <h3 class="text-xl font-semibold capitalize mb-1">
+                              ${post.title}
+                            </h3>
+                            <div class="">
+                              <p class="">
+                                ${this.truncateText(post.description, 15)}
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                      `
+                    )}
                   </ul>
                 </div>
-              `
-            : html`
-          <div>
-            <ul
-              class="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 list-none items-center"
-            >
-              ${this.posts.slice(0, maxPostsToShow).map(
-                (post) => html`
-                  <li
-                    class="post-card-list app-card overflow-hidden text-start ${this
-                      .darkMode
-                      ? "dark"
-                      : "light"} relative"
-                  >
-                    <!-- Link Overlay -->
-                    <a
-                      href="/guide/${post.slug}"
-                      class="block absolute inset-0 h-full"
-                    ></a>
-
-                    <!-- Image Frame -->
-                    <responsive-image-frame
-                      mainSrc="${post.thumbnail}"
-                      alt="Token Mama icon logo"
-                      fallbackLabel="this is our website logo"
-                      type="thumbnail"
-                      width="w-full"
-                      height="h-40"
-                      min_height="min-h-40"
-                      class="object-fill"
-                    ></responsive-image-frame>
-
-                    <!-- Content -->
-                    <div class="p-4">
-                      <h3 class="text-xl font-semibold capitalize mb-1">
-                        ${post.title}
-                      </h3>
-                      <div class="">
-                        <p class="">
-                          ${this.truncateText(post.description, 15)}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                `
-              )}
-            </ul>
-          </div>
-          </div>
-              
               `}
           ${showViewMoreButton
             ? html`

@@ -64,7 +64,9 @@ class AuthView extends LitElement {
             </button>
           </div>
           <div class="form-card">
-            <h2>${this.currentView === "login" ? "Log in" : "Register"}</h2>
+            <h2 class="dark-blue-text-keepiss">
+              ${this.currentView === "login" ? "Log in" : "Register"}
+            </h2>
             ${this.currentView === "login"
               ? html`<login-view></login-view>`
               : html`<registration-view></registration-view>`}
@@ -74,11 +76,13 @@ class AuthView extends LitElement {
                   ? "Don't have an account? "
                   : "Already have an account? "}
               </p>
-              <a @click=${this.toggleView} class="nav-item">
-                ${this.currentView === "login"
-                  ? "Register here"
-                  : "Log in here"}
-              </a>
+              <div class="w-full flex justify-center items-center">
+                <a @click=${this.toggleView} class="nav-item bg-neon-yellow-keepiss w-2/6">
+                  ${this.currentView === "login"
+                    ? "Register here"
+                    : "Log in here"}
+                </a>
+              </div>
             </div>
           </div>
         </div>

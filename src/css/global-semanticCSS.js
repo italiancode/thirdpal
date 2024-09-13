@@ -9,14 +9,29 @@ const globalSemanticCSS = css`
 
   .dark {
     background-color: #101010;
-    color: #96bcdb;
+    color: #ffffff;
   }
 
-  .bg-neon-yellow-keepiss{
-    background-color: #d9ff00;
+  .dark-blue-text-keepiss {
+    color: #003366;
   }
 
-  .bg-gradient-keepiss{
+  .bg-neon-yellow-keepiss {
+    background-color: #85ffb6;
+  }
+
+  .bg-neon-yellow-keepiss:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(217, 255, 0) 0%,
+      rgba(217, 255, 0) 50%,
+      rgba(50, 205, 50) 100%
+    );
+    color: #003366; /* Good text color that contrasts with the background */
+    overflow: hidden;
+  }
+
+  .bg-gradient-keepiss {
     background: linear-gradient(
       90deg,
       rgba(217, 255, 0) 0%,
@@ -39,9 +54,8 @@ const globalSemanticCSS = css`
   }
 
   a:hover {
-    color: #000000; /* Slightly darker color on hover */
-    text-shadow: 0 0 5px #d9ff00, 0 0 10px #d9ff00, 0 0 15px #d9ff00,
-      0 0 20px #d9ff00; /* Neon yellow text shadow on hover */
+    text-shadow: 0 0 0.05px #85ffb6, 0 0 0.1px #85ffb6, 0 0 0.15px #85ffb6,
+      0 0 0.2px #85ffb6; /* Neon yellow text shadow on hover */
   }
 
   /* Other Common Element Styles (e.g., lists, blockquotes, etc.) */
@@ -86,6 +100,7 @@ const globalSemanticCSS = css`
   .form-item {
     position: relative;
     margin-bottom: 3%;
+    color: #000000;
   }
 
   input {
@@ -193,19 +208,40 @@ const globalSemanticCSS = css`
   .toggle-menu-icon:hover,
   .nav-icon-link:hover .nav-icon,
   .nav-h1:hover {
-    background: linear-gradient(
-      90deg,
-      rgba(217, 255, 0) 0%,
-      rgba(217, 255, 0) 50%,
-      rgba(50, 205, 50) 100%
-    );
+    background: linear-gradient(90deg, #85ffb6 0%, #85ffb6 50%, #85ffb6 100%);
     color: #003366; /* Good text color that contrasts with the background */
     overflow: hidden;
+    transition: color 0.3s ease; /* Smooth transition */
+    position: relative; /* Required for the underline effect */
+  }
+
+  .nav-item:hover::after,
+  .toggle-menu-icon:hover::after,
+  .nav-icon-link:hover .nav-icon::after,
+  .nav-h1:hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background-color: #fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-item:hover::after,
+  .toggle-menu-icon:hover::after,
+  .nav-icon-link:hover .nav-icon::after,
+  .nav-h1:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
   .nav-item.active {
     color: #003366;
-    background-color: #d9ff00;
+    background-color: #85ffb6;
   }
 
   .toast-message {
