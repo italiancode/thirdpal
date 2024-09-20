@@ -1,7 +1,7 @@
 import { html, css, LitElement } from "lit";
-import { TWStyles } from "../css/twlit";
-import globalSemanticCSS from "../css/global-semanticCSS";
-import { appMainPath } from "../module/config/app-config";
+import { TWStyles } from "../css/twlit.js";
+import globalSemanticCSS from "../css/global-semanticCSS.js";
+import { appMainPath } from "../module/config/app-config.js";
 import { auth, firestore_db } from "../../utils/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -317,4 +317,4 @@ class WelcomeView extends LitElement {
 
 customElements.define("welcome-view", WelcomeView);
 
-export default WelcomeView;
+// export default WelcomeView;

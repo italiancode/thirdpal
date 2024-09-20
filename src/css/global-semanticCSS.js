@@ -12,6 +12,15 @@ const globalSemanticCSS = css`
     color: #ffffff;
   }
 
+  .section-light {
+    background-color: rgb(19 28 35 / 0.05);
+  }
+
+  .section-dark {
+    background-color: rgb(19 28 35 / 0.75);
+    color: #ffffff;
+  }
+
   .dark-blue-text-keepiss {
     color: #003366;
   }

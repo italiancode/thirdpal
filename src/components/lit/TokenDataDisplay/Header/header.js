@@ -1,7 +1,8 @@
 import { html } from "lit";
-import { renderTags } from "./Header/renderTags";
-import renderStats from "./Header/renderStats";
-import renderHeaderPriceInfo from "./Header/renderPriceInfo_Header";
+import { renderTags } from "./renderTags";
+import renderStats from "./stats";
+import renderHeaderPriceInfo from "./priceInfo_Header";
+
 
 export function renderHeader(tokenData) {
   const {
@@ -12,7 +13,8 @@ export function renderHeader(tokenData) {
     tokenStandard,
     tokenTags,
     numberOfAccounts,
-    numberOfTransactions,
+    numberOfHolders,
+    tokenTx24H,
     tokenPrice,
     priceChange24h,
   } = tokenData;
@@ -47,7 +49,7 @@ export function renderHeader(tokenData) {
             ${renderTags(tokenStandard, tokenTags)}
           </div>
           <div class="flex flex-wrap gap-4 sm:gap-8">
-            ${renderStats(numberOfAccounts, numberOfTransactions)}
+            ${renderStats(numberOfAccounts, numberOfHolders, tokenTx24H)}
           </div>
         </div>
         <div class="flex flex-col items-start sm:items-end">

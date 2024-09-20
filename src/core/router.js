@@ -15,14 +15,23 @@ const page_config = {
     path: "/",
     name: "welcome",
     component: () =>
-      import(
-        /* webpackChunkName: "dashboard-view" */ "../views/WelcomeView.js"
-      ),
-    element: html`<welcome-view></welcome-view>`,
+      import(/* webpackChunkName: "dashboard-view" */ "../views/IndexView.js"),
+    element: html`<index-view></index-view>`,
     meta: {
-      title: "Your Friendly Companion in Web3 Exploration",
+      title: "Your Companion in Web3 Exploration",
       description:
         "ThirdPal is a Web3 Analytics Tool designed to simplify the way users interact with blockchain data. By providing easy access to token metadata, smart contract analysis, and wallet insights, ThirdPal acts as a reliable companion for both developers and crypto enthusiasts in navigating the complex world of decentralized technologies.",
+    },
+  },
+
+  token_analyzer: {
+    path: "/token-analyzer",
+    name: "token-analyzer",
+    component: () => import("../views/TokenAnalyzerView.js"),
+    element: html`<token-analyzer-view></token-analyzer-view>`,
+    meta: {
+      title: "",
+      description: "",
     },
   },
 
@@ -210,7 +219,14 @@ class Renderer {
     const authenticated = await isAuthenticated();
 
     if (
-      ["/", "/guides", "/auth", "/airdrops", "/reports"].includes(path) ||
+      [
+        "/",
+        "/guides",
+        "/auth",
+        "/airdrops",
+        "/reports",
+        "/token-analyzer",
+      ].includes(path) ||
       path.startsWith(["/guide/"]) ||
       authenticated
     ) {

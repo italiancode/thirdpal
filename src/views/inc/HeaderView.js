@@ -78,11 +78,13 @@ class HeaderView extends LitElement {
             <img
               src="${assets.appIcon}"
               class="w-10 h-10 mr-3 rounded"
-              alt="KEEPISS Logo"
+              alt="${assets.appName} Logo"
             />
-            <h1 class="text-xl font-bold tracking-normal leading-snug">
+            <span
+              class="text-xl font-bold tracking-normal leading-snug items-center"
+            >
               ${assets.appName}
-            </h1>
+            </span>
           </a>
         </div>
 
@@ -107,13 +109,53 @@ class HeaderView extends LitElement {
 
                 <li id="dynamic-links" class="flex">
                   <a
-                    href="/guides"
-                    class="nav-item ${window.location.pathname === "/guides"
+                    href="#features"
+                    class="nav-item ${window.location.pathname === "#features"
                       ? "active"
                       : ""}"
-                    >Guides</a
+                    >Features</a
                   >
                 </li>
+
+                <li id="dynamic-links" class="flex">
+                  <a
+                    href="#why-thirdpal"
+                    class="nav-item ${window.location.pathname ===
+                    "#why-thirdpal"
+                      ? "active"
+                      : ""}"
+                    >Why ThirdPal</a
+                  >
+                </li>
+
+                <li id="dynamic-links" class="flex">
+                  <a
+                    href="#roadmap"
+                    class="nav-item ${window.location.pathname === "#roadmap"
+                      ? "active"
+                      : ""}"
+                    >Roadmap</a
+                  >
+                </li>
+                <li id="dynamic-links" class="flex">
+                  <a
+                    href="#tech-stack"
+                    class="nav-item ${window.location.pathname === "#tech-stack"
+                      ? "active"
+                      : ""}"
+                    >Tech Stack</a
+                  >
+                </li>
+
+                <!-- <li id="dynamic-links" class="flex">
+                  <a
+                    href="/guides"
+                    class="nav-item ${window.location.pathname === "/guides"
+                  ? "active"
+                  : ""}"
+                    >Guides</a
+                  >
+                </li> -->
               `
             : ""}
         </ul>
@@ -147,13 +189,49 @@ class HeaderView extends LitElement {
               >
 
               <a
-                href="/guides"
+                href="#features"
                 class="link-container nav-item p-2 text-start ${window.location
-                  .pathname === "/guides"
+                  .pathname === "#features"
                   ? "active"
                   : ""}"
-                >Guides</a
+                >Features</a
               >
+
+              <a
+                href="#why-thirdpal"
+                class="link-container nav-item p-2 text-start ${window.location
+                  .pathname === "#why-thirdpal"
+                  ? "active"
+                  : ""}"
+                >Why ThirdPal</a
+              >
+
+              <a
+                href="#roadmap"
+                class="link-container nav-item p-2 text-start ${window.location
+                  .pathname === "#roadmap"
+                  ? "active"
+                  : ""}"
+                >Roadmap</a
+              >
+
+              <a
+                href="#tech-stack"
+                class="link-container nav-item p-2 text-start ${window.location
+                  .pathname === "#tech-stack"
+                  ? "active"
+                  : ""}"
+                >Tech Stack</a
+              >
+
+              <!-- <a
+                href="/guides"
+                class="link-container nav-item p-2 text-start ${window.location
+                .pathname === "/guides"
+                ? "active"
+                : ""}"
+                >Guides</a
+              > -->
             </div>
 
             <div class="menu-item-container grid gap-3">

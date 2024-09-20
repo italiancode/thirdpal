@@ -9,8 +9,35 @@ class ToggleTheme extends LitElement {
     globalSemanticCSS,
     css`
       :host {
+        display: inline-block;
+      }
+      button {
         display: flex;
-        justify-items: center;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 9999px;
+        background-color: var(--color-background-secondary);
+        color: var(--color-text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      button:hover {
+        background-color: var(--color-background-tertiary);
+      }
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+      @media (min-width: 768px) {
+        button {
+          width: 3rem;
+          height: 3rem;
+        }
+        svg {
+          width: 1.75rem;
+          height: 1.75rem;
+        }
       }
     `,
   ];
@@ -59,17 +86,13 @@ class ToggleTheme extends LitElement {
   render() {
     return html`
       <button
-        class="rounded-full w-8 h-8"
         @click=${this.toggleTheme}
-        aria-label="Toggle Mode"
+        aria-label="Toggle Theme"
         role="button"
-        tabindex="0"
       >
         ${this.darkMode
           ? html`
-              <!-- Dark mode icon -->
               <svg
-                class="w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -84,9 +107,7 @@ class ToggleTheme extends LitElement {
               </svg>
             `
           : html`
-              <!-- Light mode icon -->
               <svg
-                class="w-6 h-6 md:w-8 md:h-8"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

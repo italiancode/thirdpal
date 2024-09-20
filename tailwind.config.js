@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#85ffb6",
+        primary: "#7be7c4",
         secondary: "#7ded93",
         "button-bg": "#1a202c", // This is your button background color
         "button-text": "#ffffff", // This is your button text color

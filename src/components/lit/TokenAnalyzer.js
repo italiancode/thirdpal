@@ -6,10 +6,11 @@ import {
   fetchMetaData,
   fetchJupiterData,
   fetchTokenSupply,
-  fetchTokenAccounts,
   fetchRaydiumLiquidity,
+  fetchTokenTransactions,
 } from "../../utils/api/api";
 import { log } from "../../utils/logger";
+import { fetchTokenAccounts } from "../../utils/api/accountsData";
 
 class TokenAnalyzer extends LitElement {
   static properties = {
@@ -28,84 +29,85 @@ class TokenAnalyzer extends LitElement {
     this.loadingData = null;
     this.error = null;
     this.loading = false;
+    this.darkMode = false;
   }
 
   async fetchData() {
     this.loading = true;
     this.error = null;
 
-    this.bigdata = {
+    this.loadingData = {
       onChain: "fetching",
       offChain: "fetching",
       accountInfo: "fetching",
       jupiterData: "fetching",
       tokenSupplyData: "fetching",
       liquidityPoolData: "fetching",
+      tokenTxData: "fetching",
       tokenAccountsData: "fetching",
     };
 
     try {
       const data = await fetchMetaData(this.address.trim());
-
       log(data);
-
-      this.bigdata = {
-        ...this.bigdata,
+      this.loadingData = {
+        ...this.loadingData,
         onChain: data.onChain || "N/A",
         offChain: data.offChain || "N/A",
         accountInfo: data.accountInfo || "N/A",
       };
-
       this.requestUpdate();
 
       const jupiterData = await fetchJupiterData(this.address.trim());
-
       log(jupiterData);
-
-      this.bigdata = {
-        ...this.bigdata,
+      this.loadingData = {
+        ...this.loadingData,
         jupiterData: jupiterData || "N/A",
       };
-
       this.requestUpdate();
 
       const tokenSupply = await fetchTokenSupply(this.address.trim());
-
       log(tokenSupply);
-
-      this.bigdata = {
-        ...this.bigdata,
+      this.loadingData = {
+        ...this.loadingData,
         tokenSupplyData: tokenSupply || "N/A",
       };
-
       this.requestUpdate();
 
       const liquidityPool = await fetchRaydiumLiquidity(this.address.trim());
-
       log(liquidityPool);
-
-      this.bigdata = {
-        ...this.bigdata,
+      this.loadingData = {
+        ...this.loadingData,
         liquidityPoolData: liquidityPool || "N/A",
       };
+      this.requestUpdate();
 
+      const tokenTransactions = await fetchTokenTransactions(
+        this.address.trim()
+      );
+      this.loadingData = {
+        ...this.loadingData,
+        tokenTxData: tokenTransactions || "N/A",
+      };
       this.requestUpdate();
 
       const tokenAccounts = await fetchTokenAccounts(this.address.trim());
 
       log(tokenAccounts);
 
-      this.bigdata = {
-        ...this.bigdata,
+      this.loadingData = {
+        ...this.loadingData,
         tokenAccountsData: tokenAccounts || "N/A",
       };
 
-      this.requestUpdate();
+      this.bigdata = { ...this.loadingData };
+      this.loadingData = null;
       this.error = null;
     } catch (error) {
       console.error("Fetch Error:", error);
       this.error = `Failed to fetch metadata: ${error.message}. Please check the token address.`;
       this.bigdata = null;
+      this.loadingData = null;
     } finally {
       this.loading = false;
     }
@@ -127,9 +129,19 @@ class TokenAnalyzer extends LitElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    const themeManager = document.querySelector("app-manager");
+    if (themeManager) {
+      themeManager.removeEventListener(
+        "theme-updated",
+        this.handleThemeUpdate.bind(this)
+      );
+    }
+  }
+
   handleThemeUpdate(event) {
     this.darkMode = event.detail;
-    this.requestUpdate();
   }
 
   renderData() {
@@ -142,30 +154,73 @@ class TokenAnalyzer extends LitElement {
         .bigdata="${dataToDisplay}"
         .darkMode="${this.darkMode}"
         @close-overlay="${this.closeOverlay}"
-      >
-      </token-data-display>
+      ></token-data-display>
     `;
   }
 
   render() {
     return html`
-      <div class="">
+      <div class="${this.darkMode ? "dark" : "light"}">
         <h2 class="text-2xl font-medium mb-5">Token Analyzer</h2>
-        <div class="input-container gap-3">
+        <div class="relative max-w-[700px]">
           <input
             type="text"
             placeholder="Enter Token Address"
             .value="${this.address}"
             @input="${(e) => (this.address = e.target.value)}"
-            class="${this.darkMode ? "dark" : "light"}"
+            class="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#85ffb6] focus:border-transparent pr-24 text-lg ${this
+              .darkMode
+              ? "section-dark"
+              : "section-light"}"
           />
-          <button ?disabled="${this.loading}" @click="${this.fetchData}">
-            ${this.loading ? "Loading..." : "Analyze Token"}
+          <button
+            ?disabled="${this.loading}"
+            @click="${this.fetchData}"
+            class="absolute right-1 top-1 bottom-1 px-4 rounded-full transition-colors duration-300 ease-in-out"
+          >
+            ${this.loading
+              ? html`<svg
+                  class="animate-spin h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>`
+              : html`<span class="hidden sm:inline">Analyze</span>
+                  <svg
+                    class="h-5 w-5 sm:hidden"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>`}
           </button>
         </div>
 
-        ${this.error ? html`<p class="error">${this.error}</p>` : ""}
-        ${this.loading ? html`<p class="loader">${this.loading}</p>` : ""}
+        ${this.error
+          ? html`<p class="error mt-4 text-red-500">${this.error}</p>`
+          : ""}
+        ${this.loading ? html`<p class="loader mt-4">Loading...</p>` : ""}
         ${this.renderData()}
       </div>
     `;
@@ -175,56 +230,19 @@ class TokenAnalyzer extends LitElement {
     TWStyles,
     globalSemanticCSS,
     css`
-      * {
-        box-sizing: border-box;
-      }
-
-      .input-container {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-      }
-
-      input {
-        flex: 1;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 6px;
-        outline: none;
-        color: black;
-        background-color: white;
-      }
-
       button {
-        padding: 12px;
-        font-size: 16px;
-        background-color: #85ffb6;
-        border: none;
-        color: black;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+        background-color: #6bcc92; /* Softer shade */
+        color: white; /* Keep text white for contrast */
+        transition: background-color 0.3s ease, transform 0.2s ease;
       }
 
       button:hover {
-        background-color: #6bff8a;
+        background-color: #58a779; /* Darker shade for hover */
       }
 
       button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
-
-      .error {
-        color: #ff6b6b;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-
-      .loader {
-        text-align: center;
-        color: #85ffb6;
+        background-color: #d1d5db; /* Light gray for disabled state */
+        cursor: not-allowed; /* Indicate that the button is disabled */
       }
     `,
   ];

@@ -3,6 +3,9 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { LIQUIDITY_STATE_LAYOUT_V4 } from "@raydium-io/raydium-sdk";
 import axios from "axios";
 import { log } from "../logger";
+import { fetchHistoricalTransactions } from "./fetchHistoricalTransactions";
+// fetchHistoricalTransactions(testTokenAddress);
+import { fetchHistoricalPriceData } from "./fetchHistoricalPriceData";
 
 const chainstackApiKey = import.meta.env.VITE_CHAINSTACK_API_KEY;
 
@@ -108,56 +111,6 @@ export async function fetchTokenSupply(address) {
   }
 }
 
-export async function fetchTokenAccounts(address) {
-  try {
-    const connection = new Connection(CS_URL);
-    const publicKey = new PublicKey(address.trim());
-
-    const token_Accounts = await connection.getProgramAccounts(
-      TOKEN_PROGRAM_ID,
-      {
-        filters: [
-          { dataSize: 165 },
-          {
-            memcmp: {
-              offset: 0,
-              bytes: publicKey.toBase58(),
-            },
-          },
-        ],
-      }
-    );
-
-    // Extract public keys and amounts from token accounts
-    const tokenAccounts = token_Accounts
-      .map(({ pubkey, account }) => {
-        const data = account.data;
-        if (data.length < 72) {
-          console.warn(
-            "Invalid token account data length for account:",
-            pubkey.toBase58()
-          );
-          return null;
-        }
-        const amountBuffer = data.slice(64, 72);
-        const amount = Buffer.from(amountBuffer).readBigUInt64LE();
-
-        return {
-          publicKey: pubkey.toBase58(),
-          amount: Number(amount) / 1e9, // Convert lamports to SOL
-        };
-      })
-      .filter(Boolean); // This filters out any null values from invalid accounts
-
-    return {
-      accounts: tokenAccounts || [],
-    };
-  } catch (error) {
-    console.error("Error fetching token analytics:", error);
-    return { accounts: [] }; // Return an empty array to prevent crashes
-  }
-}
-
 export async function fetchRaydiumLiquidity(tokenId) {
   try {
     const connection = new Connection(CS_URL);
@@ -216,3 +169,44 @@ async function fetchRaydiumPools() {
     return [];
   }
 }
+
+export async function fetchTokenTransactions(tokenAddress) {
+  try {
+    const pubKey = new PublicKey(tokenAddress);
+
+    // Fetch the list of transaction signatures for the token address
+    const transactionList = await connection.getSignaturesForAddress(
+      pubKey,
+      { limit: 1000 }, // Increase limit to fetch more transactions
+      "finalized"
+    );
+
+    log("Transaction List:", transactionList);
+
+    // Get the current time and the time 24 hours ago
+    const currentTime = Date.now();
+    const oneDayAgo = currentTime - 24 * 60 * 60 * 1000;
+
+    // Filter transactions based on timestamp
+    const recentTransactions = transactionList.filter((tx) => {
+      const txTime = tx.blockTime * 1000; // Convert to milliseconds
+      return txTime >= oneDayAgo;
+    });
+
+    log(
+      `Number of transactions in the last 24 hours: ${recentTransactions.length}`
+    );
+
+    return {
+      transactions24H: recentTransactions.length,
+    };
+  } catch (error) {
+    console.error("Error fetching token transactions:", error);
+    throw error;
+  }
+}
+
+// Test the function with a sample token address
+const testTokenAddress = "KDbBUkJhpiP3mBSxmsp6yQmDSh7aLTG1jiHJS7gyxDX"; // Replace with an actual token address
+
+// fetchHistoricalTransactions(testTokenAddress);

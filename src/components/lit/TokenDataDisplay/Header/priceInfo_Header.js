@@ -8,7 +8,7 @@ export default function renderHeaderPriceInfo(price, priceChange) {
   const priceChangeSymbol = priceChange >= 0 ? "+" : "";
 
   return html`
-    <div class="text-lg sm:text-2xl font-bold">$${price}</div>
+    <div class="text-lg sm:text-2xl font-bold">${price}</div>
     ${priceChange !== null &&
     priceChange !== undefined &&
     typeof priceChange === "number"

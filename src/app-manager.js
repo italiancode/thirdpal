@@ -40,8 +40,8 @@ class AppManager extends LitElement {
         display: block;
         position: "";
         width: 100%;
-        height: auto;
-        min-height: 100%;
+
+        min-height: 82vh;
         overflow-y: auto;
 
         /* Hide the scrollbar */
@@ -132,14 +132,21 @@ class AppManager extends LitElement {
         <slot> </slot>
       </main>
 
-      <footer class="grid gap-3 ${this.darkMode ? "dark" : "light"}">
-        <div class="flex justify-between items-center">
-          <a href=${appMainPath}>${appName}</a>
-
-          <div class="flex gap-5 justify-start items-center">
-            <label> 2024</label>
-          </div>
-        </div>
+      <footer
+        class="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-[#85ffb6] ${this
+          .darkMode
+          ? "dark"
+          : "light"}"
+      >
+        <p class="text-xs">© 2023 ThirdPal. All rights reserved.</p>
+        <nav class="sm:ml-auto flex gap-4 sm:gap-6">
+          <a class="text-xs hover:text-[#85ffb6] transition-colors " href="#"
+            >Terms of Service</a
+          >
+          <a class="text-xs hover:text-[#85ffb6] transition-colors " href="#"
+            >Privacy</a
+          >
+        </nav>
       </footer>
     </div>`;
   }
