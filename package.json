@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "update-build-version": "node ./utils/buildVersion.cjs",
-    "postbuild": "copy _redirects dist && npm run update-build-version",
+    "postbuild": "copy _redirects dist",
     "lighthouse": "concurrently \"vite preview\" \"lighthouse http://localhost:4173 --budget-path=./budget.json --view\"",
     "light-build": "node utils/clean-lighthouse-report.js && cross-env VITE_APP_URL=http://localhost:4173 vite build && concurrently \"npm run lighthouse\"",
     "deploy": "npm run build && firebase deploy --only hosting"

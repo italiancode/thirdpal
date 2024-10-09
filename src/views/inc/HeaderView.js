@@ -109,10 +109,21 @@ class HeaderView extends LitElement {
 
                 <li id="dynamic-links" class="flex">
                   <a
-                    href="#features"
-                    class="nav-item ${window.location.pathname === "#features"
+                    href="/token-analyzer"
+                    class="nav-item ${window.location.pathname ===
+                    "/token-analyzer"
                       ? "active"
                       : ""}"
+                    >Token Analyzer</a
+                  >
+                </li>
+
+                <!-- <li id="dynamic-links" class="flex">
+                  <a
+                    href="#features"
+                    class="nav-item ${window.location.pathname === "#features"
+                  ? "active"
+                  : ""}"
                     >Features</a
                   >
                 </li>
@@ -121,9 +132,9 @@ class HeaderView extends LitElement {
                   <a
                     href="#why-thirdpal"
                     class="nav-item ${window.location.pathname ===
-                    "#why-thirdpal"
-                      ? "active"
-                      : ""}"
+                "#why-thirdpal"
+                  ? "active"
+                  : ""}"
                     >Why ThirdPal</a
                   >
                 </li>
@@ -132,8 +143,8 @@ class HeaderView extends LitElement {
                   <a
                     href="#roadmap"
                     class="nav-item ${window.location.pathname === "#roadmap"
-                      ? "active"
-                      : ""}"
+                  ? "active"
+                  : ""}"
                     >Roadmap</a
                   >
                 </li>
@@ -141,11 +152,11 @@ class HeaderView extends LitElement {
                   <a
                     href="#tech-stack"
                     class="nav-item ${window.location.pathname === "#tech-stack"
-                      ? "active"
-                      : ""}"
+                  ? "active"
+                  : ""}"
                     >Tech Stack</a
                   >
-                </li>
+                </li> -->
 
                 <!-- <li id="dynamic-links" class="flex">
                   <a
@@ -189,40 +200,49 @@ class HeaderView extends LitElement {
               >
 
               <a
-                href="#features"
+                href="/token-analyzer"
                 class="link-container nav-item p-2 text-start ${window.location
-                  .pathname === "#features"
+                  .pathname === "/token-analyzer"
                   ? "active"
                   : ""}"
+                >Token Analyzer</a
+              >
+
+              <!-- <a
+                href="#features"
+                class="link-container nav-item p-2 text-start ${window.location
+                .pathname === "#features"
+                ? "active"
+                : ""}"
                 >Features</a
               >
 
               <a
                 href="#why-thirdpal"
                 class="link-container nav-item p-2 text-start ${window.location
-                  .pathname === "#why-thirdpal"
-                  ? "active"
-                  : ""}"
+                .pathname === "#why-thirdpal"
+                ? "active"
+                : ""}"
                 >Why ThirdPal</a
               >
 
               <a
                 href="#roadmap"
                 class="link-container nav-item p-2 text-start ${window.location
-                  .pathname === "#roadmap"
-                  ? "active"
-                  : ""}"
+                .pathname === "#roadmap"
+                ? "active"
+                : ""}"
                 >Roadmap</a
               >
 
               <a
                 href="#tech-stack"
                 class="link-container nav-item p-2 text-start ${window.location
-                  .pathname === "#tech-stack"
-                  ? "active"
-                  : ""}"
+                .pathname === "#tech-stack"
+                ? "active"
+                : ""}"
                 >Tech Stack</a
-              >
+              > -->
 
               <!-- <a
                 href="/guides"

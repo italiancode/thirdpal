@@ -11,6 +11,7 @@ import {
 } from "../../utils/api/api";
 import { log } from "../../utils/logger";
 import { fetchTokenAccounts } from "../../utils/api/accountsData";
+import { fetchTransactions } from "../../utils/api/fetchTxs";
 
 class TokenAnalyzer extends LitElement {
   static properties = {
@@ -35,7 +36,9 @@ class TokenAnalyzer extends LitElement {
   async fetchData() {
     this.loading = true;
     this.error = null;
+    this.metadataReady = false; // Add a flag for metadata readiness
 
+    // Initialize loading state for each part of data
     this.loadingData = {
       onChain: "fetching",
       offChain: "fetching",
@@ -43,21 +46,27 @@ class TokenAnalyzer extends LitElement {
       jupiterData: "fetching",
       tokenSupplyData: "fetching",
       liquidityPoolData: "fetching",
-      tokenTxData: "fetching",
+      tokenTxsData: "fetching",
       tokenAccountsData: "fetching",
     };
 
     try {
+      // Fetch MetaData (The crucial first part)
       const data = await fetchMetaData(this.address.trim());
       log(data);
+
       this.loadingData = {
         ...this.loadingData,
         onChain: data.onChain || "N/A",
         offChain: data.offChain || "N/A",
         accountInfo: data.accountInfo || "N/A",
       };
+
+      // Mark metadata as ready so it can be rendered
+      this.metadataReady = true;
       this.requestUpdate();
 
+      // Fetch additional data asynchronously after metadata is ready
       const jupiterData = await fetchJupiterData(this.address.trim());
       log(jupiterData);
       this.loadingData = {
@@ -82,19 +91,16 @@ class TokenAnalyzer extends LitElement {
       };
       this.requestUpdate();
 
-      const tokenTransactions = await fetchTokenTransactions(
-        this.address.trim()
-      );
+      const tokenTransactions = await fetchTransactions(this.address.trim());
+      log(tokenTransactions);
       this.loadingData = {
         ...this.loadingData,
-        tokenTxData: tokenTransactions || "N/A",
+        tokenTxsData: tokenTransactions || "N/A",
       };
       this.requestUpdate();
 
       const tokenAccounts = await fetchTokenAccounts(this.address.trim());
-
       log(tokenAccounts);
-
       this.loadingData = {
         ...this.loadingData,
         tokenAccountsData: tokenAccounts || "N/A",
@@ -145,6 +151,11 @@ class TokenAnalyzer extends LitElement {
   }
 
   renderData() {
+    // Check if metadata is ready to be displayed
+    if (!this.metadataReady) {
+      return null; // Don't render anything if metadata is not ready
+    }
+
     const dataToDisplay = this.bigdata || this.loadingData;
 
     if (!dataToDisplay) return null;
@@ -220,7 +231,9 @@ class TokenAnalyzer extends LitElement {
         ${this.error
           ? html`<p class="error mt-4 text-red-500">${this.error}</p>`
           : ""}
-        ${this.loading ? html`<p class="loader mt-4">Loading...</p>` : ""}
+        ${this.loading && !this.metadataReady
+          ? html`<p class="loader mt-4">Loading... Please wait.</p>`
+          : ""}
         ${this.renderData()}
       </div>
     `;

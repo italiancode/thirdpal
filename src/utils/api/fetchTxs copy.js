@@ -1,30 +1,38 @@
 // src/api/fetchHistoricalTransactions.js
 import { Connection, PublicKey } from "@solana/web3.js";
-
-const SOLANA_URL = `https://solana-mainnet.core.chainstack.com/${
-  import.meta.env.VITE_CHAINSTACK_API_KEY
-}`;
+import { connection } from "./RPC/connection";
+import { error, log } from "../logger";
 
 const HELIUS_API_KEY = "a77ffb03-f3b8-4d0a-ab94-5364bdbefc02";
 const HELIUS_URL = `https://api.helius.xyz/v0/transactions/?api-key=${HELIUS_API_KEY}`;
 
-const connection = new Connection(SOLANA_URL);
-
 // Helper function to introduce a delay (in ms)
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function fetchHistoricalTransactions(tokenAddress) {
+export async function fetchTransactions(tokenAddress) {
   try {
     const pubKey = new PublicKey(tokenAddress);
 
     // Fetch signatures with a reduced limit to avoid rate limiting
     const signatures = await connection.getSignaturesForAddress(pubKey, {
-      limit: 100,
+      limit: 1000,
     });
 
     if (!Array.isArray(signatures)) {
       throw new Error("Unexpected signatures format");
     }
+
+    // Get the current time and the time 24 hours ago
+    const currentTime = Date.now();
+    const oneDayAgo = currentTime - 24 * 60 * 60 * 1000;
+
+    // Filter transactions based on timestamp
+    const recentTransactions = signatures.filter((tx) => {
+      const txTime = tx.blockTime * 1000; // Convert to milliseconds
+      return txTime >= oneDayAgo;
+    });
+
+    const transactions24H = recentTransactions;
 
     // Extract just the transaction signatures
     const transactionSignatures = signatures.map((sig) => sig.signature);
@@ -33,23 +41,39 @@ export async function fetchHistoricalTransactions(tokenAddress) {
     const parsedTransactions = await parseTransaction(transactionSignatures);
 
     // Detect all unique transaction types
-    const transactionTypes = [...new Set(parsedTransactions.map(tx => tx.type))];
-    
+    const transactionTypes = [
+      ...new Set(parsedTransactions.map((tx) => tx.type)),
+    ];
+
     // Create an object to hold transactions by type
     const transactionsByType = {};
 
     // Populate transactionsByType with transactions of each type
-    transactionTypes.forEach(type => {
-      transactionsByType[type] = parsedTransactions.filter(tx => tx.type === type);
+    transactionTypes.forEach((type) => {
+      transactionsByType[type] = parsedTransactions.filter(
+        (tx) => tx.type === type
+      );
     });
 
-    // Log all transaction types and their transactions
-    transactionTypes.forEach(type => {
-      console.log(`${type} Transactions: `, transactionsByType[type]);
+    // Extract more useful transaction information
+    const transactionsAll = parsedTransactions.map((tx) => {
+      return {
+        type: tx.type,
+        signer: tx.feePayer,
+        signature: tx.signature,
+        fee: tx.fee, // Transaction fee
+        timestamp: tx.timestamp,
+      };
     });
 
-    // Return all transactions by type
-    return transactionsByType;
+    log(transactions24H, transactionsByType, transactionsAll);
+
+    // Return all transactions, including useful analysis data
+    return {
+      transactions24H,
+      transactionsByType,
+      transactionsAll, // Additional data for transaction analysis
+    };
   } catch (error) {
     console.error("Error fetching transactions:", error);
     return {};
@@ -74,11 +98,11 @@ const parseTransaction = async (transactionSignatures) => {
     }
 
     const data = await response.json();
-    console.log("Parsed transactions: ", data);
 
+    // We assume Helius API returns detailed transaction information here
     return data;
   } catch (error) {
-    console.error("Error parsing transactions:", error);
+    error("Error parsing transactions:", error);
     return [];
   }
 };

@@ -7,6 +7,7 @@ class TokenHoldersTab extends LitElement {
   static properties = {
     tokenHolders: { type: Array },
     tokenSupply: { type: String },
+    displayCount: { type: Number },
     isLoading: { type: Boolean },
     error: { type: String },
   };
@@ -90,7 +91,8 @@ class TokenHoldersTab extends LitElement {
   }
 
   handleDisplayCountChange(event) {
-    this.displayCount = Number(event.target.value);
+    const newValue = Number(event.target.value);
+    this.displayCount = newValue;
     this.requestUpdate();
   }
 
@@ -108,22 +110,55 @@ class TokenHoldersTab extends LitElement {
     return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "N/A";
   }
 
-  render() {
-    if (this.isLoading) {
-      return html`
-        <div class="flex justify-center">
+  renderProgressCircle(totalPercentage, circumference, offset) {
+    return html`
+      <div id="circular-progress">
+        <svg width="100" height="100">
+          <circle id="circular-progress-bg" cx="50" cy="50" r="45"></circle>
+          <circle
+            id="circular-progress-progress"
+            cx="50"
+            cy="50"
+            r="45"
+            stroke-dasharray="${circumference}"
+            stroke-dashoffset="${offset}"
+          ></circle>
+        </svg>
+        <div id="percentage-text">${totalPercentage}%</div>
+      </div>
+    `;
+  }
+
+  renderTokenHolderItem(holder, index, percentage) {
+    return html`
+      <li class="holder-item bg-white rounded-lg p-4 shadow-sm">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-900">
+            ${index + 1}. ${this.formatAddress(holder.holder)}
+          </span>
+          <span class="text-sm text-gray-600">
+            ${holder.totalAmount.toLocaleString()} (${percentage.toFixed(2)}%)
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
           <div
-            class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"
+            class="bg-primary h-2 rounded-full"
+            style=${styleMap({ width: `${percentage}%` })}
           ></div>
         </div>
-      `;
+      </li>
+    `;
+  }
+
+  render() {
+    if (this.isLoading) {
+      return html`<div>Loading...</div>`;
     }
 
     if (this.error) {
       return html`
         <div role="alert" class="text-red-500">
-          <strong>Error: </strong>
-          <span>${this.error}</span>
+          <strong>Error: </strong><span>${this.error}</span>
         </div>
       `;
     }
@@ -149,7 +184,6 @@ class TokenHoldersTab extends LitElement {
           <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Token Holders
           </h3>
-
           <select
             @change=${this.handleDisplayCountChange}
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-32"
@@ -170,21 +204,7 @@ class TokenHoldersTab extends LitElement {
         <div
           class="flex flex-row justify-between items-center p-4 mb-8 border-primary border rounded-lg"
         >
-          <div id="circular-progress">
-            <svg width="100" height="100">
-              <circle id="circular-progress-bg" cx="50" cy="50" r="45"></circle>
-              <circle
-                id="circular-progress-progress"
-                cx="50"
-                cy="50"
-                r="45"
-                stroke-dasharray="${circumference}"
-                stroke-dashoffset="${offset}"
-              ></circle>
-            </svg>
-            <div id="percentage-text">${totalPercentage}%</div>
-          </div>
-
+          ${this.renderProgressCircle(totalPercentage, circumference, offset)}
           <div class="text-right mt-2">
             <p class="text-lg font-medium text-gray-900">
               Total Supply Held by Top ${this.displayCount} Holders
@@ -201,25 +221,7 @@ class TokenHoldersTab extends LitElement {
               this.validTokenSupply > 0
                 ? (holder.totalAmount / this.validTokenSupply) * 100
                 : 0;
-            return html`
-              <li class="holder-item bg-white rounded-lg p-4 shadow-sm">
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-sm font-medium text-gray-900">
-                    ${index + 1}. ${this.formatAddress(holder.holder)}
-                  </span>
-                  <span class="text-sm text-gray-600">
-                    ${holder.totalAmount.toLocaleString()}
-                    (${percentage.toFixed(2)}%)
-                  </span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    class="bg-primary h-2 rounded-full"
-                    style=${styleMap({ width: `${percentage}%` })}
-                  ></div>
-                </div>
-              </li>
-            `;
+            return this.renderTokenHolderItem(holder, index, percentage);
           })}
         </ul>
       </div>

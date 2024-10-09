@@ -3,9 +3,9 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { LIQUIDITY_STATE_LAYOUT_V4 } from "@raydium-io/raydium-sdk";
 import axios from "axios";
 import { log } from "../logger";
-import { fetchHistoricalTransactions } from "./fetchHistoricalTransactions";
-// fetchHistoricalTransactions(testTokenAddress);
+
 import { fetchHistoricalPriceData } from "./fetchHistoricalPriceData";
+import { fetchTransactions } from "./fetchTxs";
 
 const chainstackApiKey = import.meta.env.VITE_CHAINSTACK_API_KEY;
 
@@ -207,6 +207,6 @@ export async function fetchTokenTransactions(tokenAddress) {
 }
 
 // Test the function with a sample token address
-const testTokenAddress = "KDbBUkJhpiP3mBSxmsp6yQmDSh7aLTG1jiHJS7gyxDX"; // Replace with an actual token address
+const testTokenAddress = "Faf89929Ni9fbg4gmVZTca7eW6NFg877Jqn6MizT3Gvw"; // Replace with an actual token address
 
-// fetchHistoricalTransactions(testTokenAddress);
+// fetchTransactions(testTokenAddress);

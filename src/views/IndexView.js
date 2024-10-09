@@ -52,8 +52,8 @@ class IndexView extends LitElement {
                   <h1
                     class="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl"
                   >
-                    <span class="block xl:inline">Your</span>
-                    <span class="block xl:inline">Web3 Companion</span>
+                    <span class="block xl:inline">Smart Blockchain </span>
+                    <span class="block xl:inline">Analysis Tool</span>
                     <span class="block text-primary xl:inline">on Solana.</span>
                   </h1>
                   <p
@@ -87,14 +87,131 @@ class IndexView extends LitElement {
         >
           <div class=" px-4 md:px-6 mx-auto">
             <h2
-              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8"
+              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center text-primary mb-8"
             >
               Features
             </h2>
             <div class="grid gap-6 lg:grid-cols-2 lg:gap-12">
               ${this.renderFeatureCard(
                 "Token Analyzer",
-                "Deep analytical insights into Solana tokens, providing a holistic view of a token's market behavior and technical indicators."
+                html`
+                  <p>
+                    Gain deep analytical insights into Solana tokens, offering a
+                    comprehensive overview of key token metrics and blockchain
+                    interactions.
+                  </p>
+                  <ul class="mt-4 space-y-2">
+                    <li class="flex items-center">
+                      <svg
+                        class="w-4 h-4 mr-2 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      Detailed Token Metadata
+                    </li>
+
+                    <li class="flex items-center">
+                      <svg
+                        class="w-4 h-4 mr-2 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      Token Authority Details
+                    </li>
+
+                    <li class="flex items-center">
+                      <svg
+                        class="w-4 h-4 mr-2 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      Real-time Market Data and Price Information
+                    </li>
+
+                    <li class="flex items-center">
+                      <svg
+                        class="w-4 h-4 mr-2 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      Token Holder Distribution Insights
+                    </li>
+
+                    <li class="flex items-center">
+                      <svg
+                        class="w-4 h-4 mr-2 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      Recent Transaction History and Activity
+                    </li>
+                  </ul>
+                  <div class="mt-6">
+                    <a
+                      href="/token-analyzer"
+                      class="inline-flex items-center px-4 py-2 text-base font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 ease-in-out"
+                    >
+                      Explore the Token Analyzer
+                      <svg
+                        class="w-5 h-5 ml-2 -mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                `
               )}
               ${this.renderFeatureCard(
                 "Wallet Insights",
@@ -149,7 +266,7 @@ class IndexView extends LitElement {
         >
           <div class=" px-4 md:px-6 mx-auto">
             <h2
-              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12"
+              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-primary"
             >
               Roadmap
             </h2>
@@ -167,7 +284,11 @@ class IndexView extends LitElement {
                   "Wallet Insights: Launch wallet activity tracking and reputation scoring.",
                   "Address Reputation Checker: Implement a basic version of address reputation scoring and drainer detection.",
                 ],
-                "rocket"
+                "rocket",
+                [
+                  "Phase 1: Core Features", // Phase is ready
+                  "Token Analyzer Launch: Release the initial Token Analyzer, which includes performance insights, ownership distribution, and transaction history.", // Feature is ready
+                ]
               )}
               ${this.renderRoadmapItem(
                 "Phase 2: Security and Simulations",
@@ -254,7 +375,7 @@ class IndexView extends LitElement {
         >
           <div class=" px-4 md:px-6 mx-auto">
             <h2
-              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8"
+              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center text-primary mb-8"
             >
               Who It's For
             </h2>
@@ -300,12 +421,17 @@ class IndexView extends LitElement {
     `;
   }
 
-  renderRoadmapItem(phase, date, items, icon) {
+  renderRoadmapItem(phase, date, items, icon, readyFeatures = []) {
+    const isPhaseReady = readyFeatures.includes(phase);
+
     return html`
       <div class="relative mb-16 md:mb-24">
         <div class="flex flex-col md:flex-row items-center">
           <div
-            class="flex items-center justify-center w-16 h-16 rounded-full bg-gray-200 text-gray-500 mb-4 md:mb-0 md:mr-8 z-10"
+            class="flex items-center justify-center w-16 h-16 rounded-full 
+            ${isPhaseReady
+              ? "bg-green-200 text-green-500"
+              : "bg-gray-200 text-gray-500"} mb-4 md:mb-0 md:mr-8 z-10"
           >
             ${this.renderIcon(icon)}
           </div>
@@ -321,7 +447,9 @@ class IndexView extends LitElement {
                 (item) => html`
                   <li class="flex items-start">
                     <svg
-                      class="w-5 h-5 text-gray-400 mr-2 mt-1 flex-shrink-0"
+                      class="w-5 h-5 ${readyFeatures.includes(item)
+                        ? "text-green-400"
+                        : "text-gray-400"} mr-2 mt-1 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -348,7 +476,7 @@ class IndexView extends LitElement {
   renderIcon(icon) {
     const icons = {
       rocket: html`<svg
-        class="w-8 h-8"
+        class="w-8 h-8 bg-green-200 text-green-500"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"

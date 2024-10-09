@@ -8,6 +8,7 @@ import { renderHeader } from "./TokenDataDisplay/Header/header";
 import renderHoldersTab from "./TokenDataDisplay/Tabs/HoldersTab";
 import renderOverviewTab from "./TokenDataDisplay/Tabs/overviewTab";
 import TokenHoldersTab from "./TokenDataDisplay/Tabs/HoldersTab";
+import TokenTxsTab from "./TokenDataDisplay/Tabs/transactionsTab";
 
 class TokenDataDisplay extends LitElement {
   static properties = {
@@ -41,7 +42,7 @@ class TokenDataDisplay extends LitElement {
     jupiterData,
     tokenSupplyData,
     liquidityPoolData,
-    tokenTxData,
+    tokenTxsData,
     tokenAccountsData
   ) {
     const rawTokenPrice = jupiterData?.price || 0;
@@ -79,6 +80,16 @@ class TokenDataDisplay extends LitElement {
       numberOfTransactions: accountInfo?.transactions || "N/A",
       tokenDecimals: accountInfo?.data?.parsed?.info?.decimals || "N/A",
 
+      freezeAuthority:
+        accountInfo?.data?.parsed?.info?.freezeAuthority?.length > 0
+          ? accountInfo.data.parsed.info.freezeAuthority
+          : "None",
+
+      mintAuthority:
+        accountInfo?.data?.parsed?.info?.mintAuthority?.length > 0
+          ? accountInfo.data.parsed.info.mintAuthority
+          : "None",
+
       tokenSupply:
         tokenSupplyData === "fetching"
           ? html`<my-spinner></my-spinner>`
@@ -86,11 +97,6 @@ class TokenDataDisplay extends LitElement {
               tokenSupplyData?.supply,
               accountInfo?.data?.parsed?.info?.decimals
             ) || "N/A",
-
-      tokenTx24H:
-        tokenTxData === "fetching"
-          ? html`<my-spinner></my-spinner>`
-          : tokenTxData?.transactions24H || "N/A",
 
       tokenLiquidityUSD:
         liquidityPoolData === "fetching"
@@ -129,6 +135,20 @@ class TokenDataDisplay extends LitElement {
         offChain === "fetching"
           ? html`<my-spinner></my-spinner>`
           : offChain?.creator?.site || "N/A",
+
+      tokenTxsData:
+        tokenTxsData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : tokenTxsData || "N/A",
+
+      tokenTx24H:
+        tokenTxsData === "fetching"
+          ? html`<my-spinner></my-spinner>`
+          : tokenTxsData?.transactions24H.length
+          ? tokenTxsData.transactions24H.length >= 1000
+            ? "999+"
+            : tokenTxsData.transactions24H.length
+          : "N/A",
     };
   }
 
@@ -153,7 +173,7 @@ class TokenDataDisplay extends LitElement {
       jupiterData,
       tokenSupplyData,
       liquidityPoolData,
-      tokenTxData,
+      tokenTxsData,
       tokenAccountsData,
     } = this.bigdata;
 
@@ -164,7 +184,7 @@ class TokenDataDisplay extends LitElement {
       jupiterData,
       tokenSupplyData,
       liquidityPoolData,
-      tokenTxData,
+      tokenTxsData,
       tokenAccountsData
     );
 
@@ -205,7 +225,7 @@ class TokenDataDisplay extends LitElement {
   }
 
   renderTabs() {
-    const tabs = ["overview", "holders"];
+    const tabs = ["overview", "transactions", "holders"];
     return html`
       <div class="flex border-b border-gray-200 dark:border-gray-700">
         ${tabs.map(
@@ -225,13 +245,15 @@ class TokenDataDisplay extends LitElement {
   }
 
   renderTabContent(tokenData) {
-    const { tokenHolders, tokenSupply } = tokenData; // Extract tokenHolders and tokenSupply
+    const { tokenHolders, tokenSupply, tokenTxsData } = tokenData;
 
     switch (this.activeTab) {
       case "overview":
         return renderOverviewTab(tokenData);
-      case "analytics":
-        return this.renderAnalyticsTab(tokenData);
+      case "transactions":
+        return html` <token-txs-tab
+          .tokenTxsData=${tokenTxsData}
+        ></token-txs-tab>`;
       case "holders":
         return html` <token-holders-tab
           .tokenHolders=${tokenHolders}

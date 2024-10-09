@@ -18,7 +18,6 @@ class TokenHoldersTab extends LitElement {
       :host {
         display: block;
         width: 100%;
-        font-family: "Inter", sans-serif;
       }
 
       #circular-progress {
@@ -42,7 +41,7 @@ class TokenHoldersTab extends LitElement {
       }
 
       #circular-progress-progress {
-        stroke: #6bcc92;
+        stroke: #7be7c4;
         transition: stroke-dashoffset 0.5s ease;
       }
 
@@ -112,9 +111,9 @@ class TokenHoldersTab extends LitElement {
   render() {
     if (this.isLoading) {
       return html`
-        <div class="flex justify-center items-center h-64">
+        <div class="flex justify-center">
           <div
-            class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"
+            class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"
           ></div>
         </div>
       `;
@@ -122,8 +121,8 @@ class TokenHoldersTab extends LitElement {
 
     if (this.error) {
       return html`
-        <div role="alert" class="text-red-500 p-4 bg-red-50 rounded-lg">
-          <strong class="font-medium">Error: </strong>
+        <div role="alert" class="text-red-500">
+          <strong>Error: </strong>
           <span>${this.error}</span>
         </div>
       `;
@@ -140,20 +139,20 @@ class TokenHoldersTab extends LitElement {
     const totalPercentage =
       this.getTotalPercentageOfDisplayedHolders(sortedHolders).toFixed(2);
 
-    const circumference = 2 * Math.PI * 76;
+    const circumference = 2 * Math.PI * 45;
     const offset =
       circumference - (parseFloat(totalPercentage) / 100) * circumference;
 
     return html`
-      <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center w-full mb-8">
-          <h2 class="text-xl font-medium text-gray-900 dark:text-white">
+      <div class="max-w-3xl mx-auto">
+        <div class="flex justify-between items-center w-full mb-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Token Holders
-          </h2>
+          </h3>
 
           <select
             @change=${this.handleDisplayCountChange}
-            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2.5 w-32"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-32"
             aria-label="Select number of holders to display"
           >
             <option value="10" ?selected=${this.displayCount === 10}>
@@ -168,30 +167,25 @@ class TokenHoldersTab extends LitElement {
           </select>
         </div>
 
-        <div class="mb-8 p-4 px-6 ">
-          <div class="flex flex-col items-center">
-            <div id="circular-progress">
-              <svg width="100" height="100">
-                <circle
-                  id="circular-progress-bg"
-                  cx="50"
-                  cy="50"
-                  r="45"
-                ></circle>
-                <circle
-                  id="circular-progress-progress"
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  stroke-dasharray="${circumference}"
-                  stroke-dashoffset="${offset}"
-                ></circle>
-              </svg>
-              <div id="percentage-text">${totalPercentage}%</div>
-            </div>
+        <div
+          class="flex flex-row justify-between items-center p-4 mb-8 border-primary border rounded-lg"
+        >
+          <div id="circular-progress">
+            <svg width="100" height="100">
+              <circle id="circular-progress-bg" cx="50" cy="50" r="45"></circle>
+              <circle
+                id="circular-progress-progress"
+                cx="50"
+                cy="50"
+                r="45"
+                stroke-dasharray="${circumference}"
+                stroke-dashoffset="${offset}"
+              ></circle>
+            </svg>
+            <div id="percentage-text">${totalPercentage}%</div>
           </div>
 
-          <div class="text-center mt-2">
+          <div class="text-right mt-2">
             <p class="text-lg font-medium text-gray-900">
               Total Supply Held by Top ${this.displayCount} Holders
             </p>
@@ -200,10 +194,6 @@ class TokenHoldersTab extends LitElement {
             </p>
           </div>
         </div>
-
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-          Top ${this.displayCount} Holders
-        </h3>
 
         <ul class="space-y-4 list-none p-0">
           ${sortedHolders.map((holder, index) => {
