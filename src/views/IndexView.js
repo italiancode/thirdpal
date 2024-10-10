@@ -39,30 +39,48 @@ class IndexView extends LitElement {
       <div class="flex flex-col min-h-screen bg-white text-[#131c23]">
         <section
           class="w-full py-12 md:py-12 lg:py-14 xl:py-24 ${this.darkMode
-        ? "dark"
-        : "light"}"
+            ? "dark"
+            : "light"}"
         >
           <div class="container max-w-6xl mx-auto px-8 xl:px-5">
             <div class="flex flex-wrap items-center sm:-mx-3">
               <!-- Left Text Section -->
               <div class="w-full md:w-1/2 md:px-3">
-                <div class="space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 pb-6 md:pb-0 sm:pr-5 lg:pr-0">
-                  <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
-                    <span class="block xl:inline">AI-Powered </span>
-                    <span class="block text-primary xl:inline">Blockchain Insights</span>
-                    <span class="block xl:inline">for Everyone</span>
+                <div
+                  class="space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 pb-6 md:pb-0 sm:pr-5 lg:pr-0"
+                >
+                  <!-- Title -->
+                  <h1
+                    class="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl"
+                  >
+                    Smart Blockchain Analysis Tool
                   </h1>
-                  <p class="text-base lg:text-xl mx-auto sm:max-w-md md:max-w-3xl">
-                    ThirdPal transforms complex Solana blockchain data into clear, actionable insights, empowering analysts, traders, and enthusiasts to make informed decisions for a smarter digital economy.
+                  <!-- Subtitle -->
+                  <h2
+                    class="text-2xl font-bold tracking-tight sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl"
+                  >
+                    <span class="block xl:inline">AI-Powered</span>
+                    <span class="block text-primary xl:inline"
+                      >Blockchain Insights</span
+                    >
+                    <span class="block xl:inline">for Everyone</span>
+                  </h2>
+                  <!-- Description -->
+                  <p
+                    class="text-base lg:text-xl mx-auto sm:max-w-md md:max-w-3xl"
+                  >
+                    ThirdPal transforms complex Solana blockchain data into
+                    clear, actionable insights, empowering analysts, traders,
+                    and enthusiasts to make informed decisions for a smarter
+                    digital economy.
                   </p>
-                  
                 </div>
               </div>
               <!-- Right Image Section -->
               <div class="w-full md:w-1/2">
                 <div class="h-auto overflow-hidden rounded-md sm:rounded-xl">
                   <img
-                    src=${assets.appIcon}
+                    src="${assets.appIcon}"
                     alt="ThirdPal App Icon"
                     class="w-full h-auto"
                   />
@@ -75,8 +93,8 @@ class IndexView extends LitElement {
         <section
           id="features"
           class="w-full py-12 md:py-24 lg:py-32  ${this.darkMode
-        ? "section-dark"
-        : "section-light"}"
+            ? "section-dark"
+            : "section-light"}"
         >
           <div class=" px-4 md:px-6 mx-auto">
             <h2
@@ -86,8 +104,8 @@ class IndexView extends LitElement {
             </h2>
             <div class="grid gap-6 lg:grid-cols-2 lg:gap-12">
               ${this.renderFeatureCard(
-          "Token Analyzer",
-          html`
+                "Token Analyzer",
+                html`
                   <p>
                     Gain deep analytical insights into Solana tokens, offering a
                     comprehensive overview of key token metrics and blockchain
@@ -205,56 +223,55 @@ class IndexView extends LitElement {
                     </a>
                   </div>
                 `
-        )}
+              )}
               ${this.renderFeatureCard(
-          "Wallet Insights",
-          "Comprehensive wallet tracking with insights into wallet activities, reputation, and security alerts."
-        )}
+                "Wallet Insights",
+                "Comprehensive wallet tracking with insights into wallet activities, reputation, and security alerts."
+              )}
               ${this.renderFeatureCard(
-          "Transaction Simulator",
-          "Understand the potential outcomes of transactions before executing them on the blockchain."
-        )}
+                "Transaction Simulator",
+                "Understand the potential outcomes of transactions before executing them on the blockchain."
+              )}
               ${this.renderFeatureCard(
-          "Address Reputation and Drainer Checker",
-          "Assess the safety and reputation of addresses, with real-time warnings for malicious activities."
-        )}
+                "Address Reputation and Drainer Checker",
+                "Assess the safety and reputation of addresses, with real-time warnings for malicious activities."
+              )}
             </div>
           </div>
         </section>
 
-         <section
-      id="audience"
-      class="w-full py-12 md:py-24 lg:py-32 ${this.darkMode
-        ? "dark"
-        : "light"}"
-    >
-      <div class=" px-4 md:px-6 mx-auto">
-        <h2
-          class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center text-primary mb-8"
+        <section
+          id="audience"
+          class="w-full py-12 md:py-24 lg:py-32 ${this.darkMode
+            ? "dark"
+            : "light"}"
         >
-          Who It's For
-        </h2>
-        <div class="grid gap-6 lg:grid-cols-3 lg:gap-12">
-          ${this.renderAudienceCard(
-          "Crypto Analysts",
-          "Ideal for professionals who need deep insights into Solana tokens, market trends, and blockchain data for informed decision-making and research."
-        )}
-          ${this.renderAudienceCard(
-          "Traders & Investors",
-          "Perfect for those actively trading or investing in Solana-based assets, offering real-time data, price information, and transaction simulation for strategic planning."
-        )}
-         ${this.renderAudienceCard(
-          "Solana Users",
-          "Ideal for active users of the Solana blockchain who want to track their portfolio, analyze token performance, and enhance their security."
-        )}
-          ${this.renderAudienceCard(
-          "Blockchain Developers",
-          "Valuable for developers building on Solana, providing detailed token metadata, transaction insights, and wallet analysis to enhance their projects and understanding."
-        )}
-        
-        </div>
-      </div>
-    </section>
+          <div class=" px-4 md:px-6 mx-auto">
+            <h2
+              class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center text-primary mb-8"
+            >
+              Who It's For
+            </h2>
+            <div class="grid gap-6 lg:grid-cols-3 lg:gap-12">
+              ${this.renderAudienceCard(
+                "Crypto Analysts",
+                "Ideal for professionals who need deep insights into Solana tokens, market trends, and blockchain data for informed decision-making and research."
+              )}
+              ${this.renderAudienceCard(
+                "Traders & Investors",
+                "Perfect for those actively trading or investing in Solana-based assets, offering real-time data, price information, and transaction simulation for strategic planning."
+              )}
+              ${this.renderAudienceCard(
+                "Solana Users",
+                "Ideal for active users of the Solana blockchain who want to track their portfolio, analyze token performance, and enhance their security."
+              )}
+              ${this.renderAudienceCard(
+                "Blockchain Developers",
+                "Valuable for developers building on Solana, providing detailed token metadata, transaction insights, and wallet analysis to enhance their projects and understanding."
+              )}
+            </div>
+          </div>
+        </section>
       </div>
     `;
   }
@@ -263,8 +280,8 @@ class IndexView extends LitElement {
     return html`
       <div
         class=" ${this.darkMode
-        ? "dark"
-        : "light"} border-primary border rounded-lg p-6"
+          ? "dark"
+          : "light"} border-primary border rounded-lg p-6"
       >
         <h3 class="text-xl font-bold mb-2">${title}</h3>
         <p class="">${description}</p>
@@ -276,8 +293,8 @@ class IndexView extends LitElement {
     return html`
       <div
         class="${this.darkMode
-        ? "dark"
-        : "light"} border-primary border rounded-lg p-6"
+          ? "dark"
+          : "light"} border-primary border rounded-lg p-6"
       >
         <h3 class="text-xl font-bold mb-2">${title}</h3>
         <p class="">${description}</p>
@@ -289,8 +306,8 @@ class IndexView extends LitElement {
     return html`
       <div
         class="${this.darkMode
-        ? "dark"
-        : "light"} border-primary border rounded-lg p-6"
+          ? "dark"
+          : "light"} border-primary border rounded-lg p-6"
       >
         <h3 class="text-xl font-bold mb-2">${title}</h3>
         <p class="">${description}</p>
@@ -300,7 +317,11 @@ class IndexView extends LitElement {
 
   renderTeamMember(name, role, description) {
     return html`
-      <div class="${this.darkMode ? "dark" : "light"} border-primary border rounded-lg p-6">
+      <div
+        class="${this.darkMode
+          ? "dark"
+          : "light"} border-primary border rounded-lg p-6"
+      >
         <h3 class="text-xl font-bold mb-2">${name}</h3>
         <p class="font-semibold mb-2">${role}</p>
         <p>${description}</p>

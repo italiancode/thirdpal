@@ -5,7 +5,7 @@ import { getFirestoreUserData } from "../utils/firestoreUtils";
 import { isAuthenticated } from "../utils/userUtils.js";
 import { page_config, publicRoutes, organizerRoutes, adminRoutes } from "./pageConfig.js";
 
-function updateTitleAndMeta(title, description) {
+export function updateTitleAndMeta(title, description) {
   document.title = `${title} - ${appName}`;
   document.querySelector('meta[name="description"]')?.setAttribute("content", description);
 }

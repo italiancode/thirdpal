@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { Buffer } from "buffer";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
+import rollupNodePolyFill from 'rollup-plugin-polyfill-node';
 
 export default defineConfig({
   plugins: [
@@ -16,7 +16,45 @@ export default defineConfig({
     alias: {
       "@views": "./src/views",
       buffer: "buffer",
-    
+      crypto: "crypto-browserify",
+      stream: "stream-browserify",
+      assert: "assert",
+      http: "stream-http",
+      https: "https-browserify",
+      os: "os-browserify",
+      url: "url",
+    },
+  },
+
+  define: {
+    'process.env': {},
+    global: 'globalThis',
+  },
+
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      },
+    },
+    include: [
+      "buffer", 
+      "crypto-browserify",
+      "stream-browserify",
+      "assert",
+      "stream-http",
+      "https-browserify",
+      "os-browserify",
+      "url",
+    ],
+  },
+
+  build: {
+    rollupOptions: {
+      plugins: [rollupNodePolyFill()],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
   },
 
@@ -24,14 +62,5 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
-  },
-
-  define: {
-    Buffer: "globalThis.Buffer",
-    global: {},
-  },
-
-  optimizeDeps: {
-    include: ["buffer"], // Add crypto-browserify to optimizeDeps
   },
 });
